@@ -64,7 +64,7 @@ export default function SignInPage() {
             required
             autoComplete="email"
             placeholder="you@example.com"
-            className="rounded-md border border-foreground/15 bg-foreground/[0.03] px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            className="rounded-md border border-foreground/15 bg-foreground/3 px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
           />
         </label>
 
@@ -84,7 +84,7 @@ export default function SignInPage() {
             required
             autoComplete="current-password"
             placeholder="••••••••"
-            className="rounded-md border border-foreground/15 bg-foreground/[0.03] px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            className="rounded-md border border-foreground/15 bg-foreground/3 px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
           />
         </label>
 

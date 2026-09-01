@@ -1,69 +1,132 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "@/lib/auth-client";
+
+export default function HomePage() {
+  const router = useRouter();
+  const { data: session, isPending } = useSession();
+
+  if (isPending) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background text-foreground">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground/20 border-t-foreground" />
+      </main>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background p-8 text-foreground">
+        <h1 className="font-serif text-4xl font-semibold text-foreground">
+          Welcome
+        </h1>
+
+        <p className="max-w-md text-center text-lg text-foreground/60">
+          Sign in to access your personal space or create an account to get
+          started.
+        </p>
+
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <button
+            type="button"
+            onClick={() => router.push("/sign-in")}
+            className="rounded-md bg-foreground px-6 py-3 text-base font-semibold text-background transition hover:opacity-90"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Sign in
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/sign-up")}
+            className="rounded-md border border-foreground/20 px-6 py-3 text-base font-semibold text-foreground transition hover:bg-foreground/5"
           >
-            Documentation
-          </a>
+            Sign up
+          </button>
         </div>
       </main>
-    </div>
+    );
+  }
+
+  return (
+    <main className="flex min-h-screen flex-col bg-background p-8 text-foreground">
+      <header className="mx-auto flex w-full max-w-4xl items-center justify-between border-b border-foreground/10 pb-6">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground font-serif text-xl font-semibold text-background">
+            {session.user.name?.charAt(0).toUpperCase() || "U"}
+          </div>
+
+          <div>
+            <h2 className="font-serif text-xl font-semibold">
+              {session.user.name}
+            </h2>
+            <p className="text-sm text-foreground/60">{session.user.email}</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={async () => {
+            await signOut();
+            router.push("/");
+          }}
+          className="rounded-md border border-red-500/30 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-500/10 dark:text-red-400"
+        >
+          Sign out
+        </button>
+      </header>
+
+      <div className="mx-auto mt-12 w-full max-w-4xl">
+        <h1 className="mb-6 font-serif text-3xl font-semibold">Dashboard</h1>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-lg border border-foreground/10 bg-foreground/2 p-6">
+            <h3 className="mb-3 font-mono text-xs uppercase tracking-widest text-foreground/50">
+              Account Information
+            </h3>
+
+            <div className="space-y-2 text-foreground/80">
+              <p>
+                <strong>Name:</strong> {session.user.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {session.user.email}
+              </p>
+              <p>
+                <strong>Email verified:</strong>{" "}
+                {session.user.emailVerified ? "Yes" : "No"}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-foreground/10 bg-foreground/2 p-6">
+            <h3 className="mb-3 font-mono text-xs uppercase tracking-widest text-foreground/50">
+              Session Status
+            </h3>
+
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+              <span className="text-foreground/80">Active session</span>
+            </div>
+
+            <p className="mt-4 text-sm text-foreground/60">
+              Session ID:{" "}
+              <span className="font-mono text-foreground/80">
+                {session.session.id.slice(0, 8)}...
+              </span>
+            </p>
+
+            <p className="mt-2 text-sm text-foreground/60">
+              Expires on:{" "}
+              <span className="font-mono text-foreground/80">
+                {new Date(session.session.expiresAt).toLocaleDateString(
+                  "en-US",
+                )}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
