@@ -2,8 +2,8 @@
 
 import Form from "next/form";
 import { useRouter } from "next/navigation";
-import { useFormStatus } from "react-dom";
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import { signIn } from "@/lib/auth-client";
 
 function SubmitButton() {
@@ -44,7 +44,10 @@ export default function SignInPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center p-8 bg-background text-foreground">
-      <Form action={handleSubmit} className="flex w-full max-w-sm flex-col gap-5">
+      <Form
+        action={handleSubmit}
+        className="flex w-full max-w-sm flex-col gap-5"
+      >
         <span className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/50">
           Sign In
         </span>

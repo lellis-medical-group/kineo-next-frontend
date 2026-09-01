@@ -2,8 +2,8 @@
 
 import Form from "next/form";
 import { useRouter } from "next/navigation";
-import { useFormStatus } from "react-dom";
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import { signUp } from "@/lib/auth-client";
 
 function SubmitButton() {
