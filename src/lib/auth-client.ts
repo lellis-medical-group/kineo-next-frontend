@@ -1,7 +1,12 @@
 import { createAuthClient } from "better-auth/react";
 
+const frontendURL =
+  typeof window !== "undefined"
+    ? window.location.origin
+    : process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3001";
+
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000",
+  baseURL: `${frontendURL}/api/auth`,
   fetchOptions: {
     credentials: "include",
   },
