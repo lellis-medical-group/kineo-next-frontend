@@ -14,7 +14,10 @@ export function JoinCta() {
           </p>
         </div>
 
-        <SignupEmailForm />
+        <SignupEmailForm
+          placeholder={joinCta.emailPlaceholder}
+          submitLabel={joinCta.submitLabel}
+        />
       </div>
     </section>
   );

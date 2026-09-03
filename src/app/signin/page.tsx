@@ -28,6 +28,32 @@ function SubmitButton() {
   );
 }
 
+/**
+ * Convertit une erreur better-auth en message français compréhensible.
+ * Vérifie `error.code` en priorité, puis `error.message`.
+ */
+function mapAuthError(error: { code?: string; message?: string }): string {
+  const code = error.code?.toUpperCase();
+  const message = error.message?.toUpperCase() || "";
+
+  if (
+    code === "EMAIL_NOT_VERIFIED" ||
+    message.includes("EMAIL NOT VERIFIED") ||
+    message.includes("EMAIL_NOT_VERIFIED")
+  ) {
+    return "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.";
+  }
+
+  if (
+    code === "INVALID_EMAIL_OR_PASSWORD" ||
+    message.includes("INVALID EMAIL OR PASSWORD")
+  ) {
+    return "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.";
+  }
+
+  return "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.";
+}
+
 export default function SignInPage() {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -45,34 +71,31 @@ export default function SignInPage() {
       });
 
       if (error) {
+        // Serveur indisponible (pas de statut ou 5xx)
         if (!error.status || error.status >= 500) {
           setError(
             "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
           );
           return;
         }
-        switch (error.code) {
-          case "INVALID_EMAIL_OR_PASSWORD":
-            setError(
-              "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.",
-            );
-            break;
-          case "EMAIL_NOT_VERIFIED":
-            setError(
-              "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.",
-            );
-            break;
-          default:
-            setError(
-              "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
-            );
-        }
+        setError(mapAuthError(error));
         return;
       }
 
       router.push("/");
       router.refresh();
-    } catch {
+    } catch (err) {
+      // Erreur réseau ou exception inattendue
+      const message = err instanceof Error ? err.message?.toUpperCase() : "";
+      if (
+        message.includes("EMAIL NOT VERIFIED") ||
+        message.includes("EMAIL_NOT_VERIFIED")
+      ) {
+        setError(
+          "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.",
+        );
+        return;
+      }
       setError(
         "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
       );
@@ -92,7 +115,7 @@ export default function SignInPage() {
             type="email"
             required
             autoComplete="email"
-            placeholder="dr.julien.martin@gmail.com"
+            placeholder="jean.dupont@exemple.fr"
             className="field-input"
           />
         </label>

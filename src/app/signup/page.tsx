@@ -91,7 +91,7 @@ export default function SignUpPage() {
             type="text"
             required
             autoComplete="name"
-            placeholder="Dr Julien Martin"
+            placeholder="Dr Jean Dupont"
             className="field-input"
           />
         </label>
@@ -103,7 +103,7 @@ export default function SignUpPage() {
             type="email"
             required
             autoComplete="email"
-            placeholder="dr.julien.martin@gmail.com"
+            placeholder="jean.dupont@exemple.fr"
             className="field-input"
           />
         </label>

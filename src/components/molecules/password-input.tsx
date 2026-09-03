@@ -2,56 +2,7 @@
 
 import type { ComponentProps, KeyboardEvent } from "react";
 import { useState } from "react";
-
-function EyeIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      aria-hidden="true"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {open ? (
-        <>
-          <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-          <circle cx="12" cy="12" r="3" />
-        </>
-      ) : (
-        <>
-          <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
-          <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
-          <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
-          <path d="m2 2 20 20" />
-        </>
-      )}
-    </svg>
-  );
-}
-
-function AlertIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 20h16a2 2 0 0 0 1.73-2" />
-      <path d="M12 9v4" />
-      <path d="M12 17h.01" />
-    </svg>
-  );
-}
+import { AlertIcon, EyeIcon, EyeOffIcon } from "@/components/atoms/icons";
 
 export function PasswordInput({
   className = "",
@@ -96,12 +47,16 @@ export function PasswordInput({
         }
         className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition-colors hover:text-foreground"
       >
-        <EyeIcon open={visible} />
+        {visible ? (
+          <EyeOffIcon className="h-[18px] w-[18px]" />
+        ) : (
+          <EyeIcon className="h-[18px] w-[18px]" />
+        )}
       </button>
 
       {capsLock && (
         <output className="mt-1.5 flex items-center gap-1.5 text-xs text-warning">
-          <AlertIcon />
+          <AlertIcon className="h-3.5 w-3.5" />
           Verr. Maj activé : les lettres seront en majuscules
         </output>
       )}

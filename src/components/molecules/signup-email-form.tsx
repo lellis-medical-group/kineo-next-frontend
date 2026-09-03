@@ -3,13 +3,19 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
-import { joinCta } from "@/lib/marketing";
+
+export interface SignupEmailFormProps {
+  placeholder?: string;
+  submitLabel?: string;
+}
 
 /**
- * Redirects to signup with the email pre-filled (`?email=` query),
- * which the signup page will be able to consume later.
+ * Redirige vers l'inscription avec l'e-mail pré-rempli (`?email=`).
  */
-export function SignupEmailForm() {
+export function SignupEmailForm({
+  placeholder = "votre.email@rpps.fr",
+  submitLabel = "Commencer",
+}: SignupEmailFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
 
@@ -30,11 +36,11 @@ export function SignupEmailForm() {
           autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          placeholder={joinCta.emailPlaceholder}
+          placeholder={placeholder}
           className="field-input"
         />
       </label>
-      <Button type="submit">{joinCta.submitLabel}</Button>
+      <Button type="submit">{submitLabel}</Button>
     </form>
   );
 }

@@ -111,7 +111,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="dr.julien.martin@gmail.com"
+                placeholder="jean.dupont@exemple.fr"
                 className="field-input"
               />
             </label>
