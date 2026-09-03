@@ -125,7 +125,6 @@ export const footerContent = {
     { label: "Fonctionnalités", href: "#features" },
     { label: "Comment ça marche", href: "#" },
     { label: "Tarifs", href: "#" },
-    { label: "Console Live", href: "#" },
   ],
   legalLinks: [
     { label: "À propos", href: "#" },

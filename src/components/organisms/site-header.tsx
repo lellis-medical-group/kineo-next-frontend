@@ -5,15 +5,6 @@ import { UserIdentity } from "@/components/molecules/user-identity";
 import type { UserSummary } from "@/lib/dashboard";
 import type { HeaderLink } from "@/lib/marketing";
 
-function ConsoleLiveBadge() {
-  return (
-    <span className="hidden items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-foreground/85 lg:inline-flex">
-      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-success" />
-      Console Live
-    </span>
-  );
-}
-
 function NotificationsButton() {
   return (
     <button
@@ -71,21 +62,19 @@ export function SiteHeader({
   links,
   activeHref,
   user,
-  showConsoleBadge = false,
   onSignOut,
 }: {
   links: HeaderLink[];
   activeHref?: string;
   /** Only present in the authenticated area. */
   user?: UserSummary;
-  showConsoleBadge?: boolean;
   /** Sign-out callback (injected by AppHeader, DIP). */
   onSignOut?: () => void;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-[76px] w-full max-w-[1440px] items-center justify-between gap-6 px-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-8">
+      <div className="mx-auto flex h-[76px] w-full max-w-[1440px] items-center justify-between gap-6 px-4 sm:px-8 lg:px-10">
+        <div className="flex min-w-0 items-center gap-10">
           <Link href="/" aria-label="Kineo — Accueil">
             <KineoLogo />
           </Link>
@@ -97,9 +86,7 @@ export function SiteHeader({
           />
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {user && showConsoleBadge && <ConsoleLiveBadge />}
-
+        <div className="flex items-center gap-3">
           {user ? (
             <>
               <NotificationsButton />

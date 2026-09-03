@@ -31,12 +31,11 @@ export function AppHeader() {
       );
     });
 
-    return (
+        return (
       <SiteHeader
         links={memberNav}
         activeHref={activeLink?.href}
         user={identity}
-        showConsoleBadge
         onSignOut={() => {
           void signOut();
         }}
