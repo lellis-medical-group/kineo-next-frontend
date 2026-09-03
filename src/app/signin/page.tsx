@@ -100,7 +100,7 @@ export default function SignInPage() {
       <p className="mt-7 text-center text-sm text-muted">
         Nouveau sur Kineo ?{" "}
         <a
-          href="/sign-up"
+          href="/signup"
           className="font-semibold text-primary transition-colors hover:text-primary-hover"
         >
           Créer un compte

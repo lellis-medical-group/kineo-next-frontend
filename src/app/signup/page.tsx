@@ -121,7 +121,7 @@ export default function SignUpPage() {
       <p className="mt-6 text-center text-sm text-muted">
         Déjà sur Kineo ?{" "}
         <a
-          href="/sign-in"
+          href="/signin"
           className="font-semibold text-primary transition-colors hover:text-primary-hover"
         >
           Se connecter

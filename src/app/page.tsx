@@ -30,7 +30,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 sm:flex-row">
           <button
             type="button"
-            onClick={() => router.push("/sign-in")}
+            onClick={() => router.push("/signin")}
             className="rounded-md bg-foreground px-6 py-3 text-base font-semibold text-background transition hover:opacity-90"
           >
             Sign in
@@ -38,7 +38,7 @@ export default function HomePage() {
 
           <button
             type="button"
-            onClick={() => router.push("/sign-up")}
+            onClick={() => router.push("/signup")}
             className="rounded-md border border-foreground/20 px-6 py-3 text-base font-semibold text-foreground transition hover:bg-foreground/5"
           >
             Sign up
