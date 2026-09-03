@@ -37,33 +37,46 @@ export default function SignInPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const { error } = await signIn.email({
-      email,
-      password,
-      callbackURL: "/",
-    });
+    try {
+      const { error } = await signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+      });
 
-    if (error) {
-      switch (error.code) {
-        case "INVALID_EMAIL_OR_PASSWORD":
+      if (error) {
+        if (!error.status || error.status >= 500) {
           setError(
-            "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.",
+            "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
           );
-          break;
-        case "EMAIL_NOT_VERIFIED":
-          setError(
-            "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.",
-          );
-          break;
-        default:
-          setError(
-            "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
-          );
+          return;
+        }
+        switch (error.code) {
+          case "INVALID_EMAIL_OR_PASSWORD":
+            setError(
+              "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.",
+            );
+            break;
+          case "EMAIL_NOT_VERIFIED":
+            setError(
+              "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.",
+            );
+            break;
+          default:
+            setError(
+              "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
+            );
+        }
+        return;
       }
-      return;
-    }
 
-    router.push("/");
+      router.push("/");
+      router.refresh();
+    } catch {
+      setError(
+        "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
+      );
+    }
   }
 
   return (
