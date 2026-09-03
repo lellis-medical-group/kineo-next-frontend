@@ -54,7 +54,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>{footerContent.copyright}</p>
+          <p>© {new Date().getFullYear()} Kineo. Tous droits réservés.</p>
           <p>{footerContent.tagline}</p>
         </div>
       </div>

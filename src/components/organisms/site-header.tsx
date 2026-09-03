@@ -66,9 +66,9 @@ export function SiteHeader({
 }: {
   links: HeaderLink[];
   activeHref?: string;
-  /** Only present in the authenticated area. */
+  /** Présent uniquement dans la zone connectée. */
   user?: UserSummary;
-  /** Sign-out callback (injected by AppHeader, DIP). */
+  /** Callback de déconnexion (injecté par AppHeader). */
   onSignOut?: () => void;
 }) {
   return (

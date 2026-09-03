@@ -5,12 +5,9 @@ import { AppHeader } from "@/components/organisms/app-header";
 import { SiteFooter } from "@/components/organisms/site-footer";
 
 /**
- * Shell of public and member pages: the navbar and footer live here, once,
- * no longer in every page/template (SRP). Auth pages, outside this route
- * group, stay chromeless.
- *
- * The header is rendered optimistically (public nav) while the session
- * resolves: SSR content stays complete, no splash screen.
+ * Shell des pages publiques et membres : navbar + footer définis ici, une
+ * seule fois, plutôt que répétés dans chaque page. Les pages de connexion,
+ * hors de ce groupe de routes, restent sans chrome.
  */
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (

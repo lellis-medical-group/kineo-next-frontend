@@ -7,8 +7,8 @@ import type { UserSummary } from "@/lib/dashboard";
 import { memberNav, publicNav } from "@/lib/marketing";
 
 /**
- * App header: owns session and current-route knowledge (SRP), then
- * delegates rendering to the presentational SiteHeader (DIP).
+ * Header applicatif : gère la session et la route active, puis délègue
+ * le rendu au composant présentational SiteHeader.
  */
 export function AppHeader() {
   const pathname = usePathname();
@@ -31,7 +31,7 @@ export function AppHeader() {
       );
     });
 
-        return (
+    return (
       <SiteHeader
         links={memberNav}
         activeHref={activeLink?.href}

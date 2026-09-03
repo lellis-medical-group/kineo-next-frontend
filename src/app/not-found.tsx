@@ -1,9 +1,3 @@
-/**
- * Global 404 — rendered by Next.js when no route matches.
- * Dark "Transcope" shell: centered card on the app background.
- * Reuses design-system tokens (card / btn / btn-primary), no inline
- * colours so it tracks the theme automatically.
- */
 import Link from "next/link";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
 

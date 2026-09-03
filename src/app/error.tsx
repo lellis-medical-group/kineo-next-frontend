@@ -1,8 +1,4 @@
-/**
- * Root error boundary — rendered by Next.js on server render failures
- * (prod fallback, "500"). Dark "Transcope" shell, design-system tokens.
- */
-"use client"; // Error boundaries must be client components.
+"use client";
 
 import Link from "next/link";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
@@ -22,6 +18,7 @@ export default function RootError({
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <button
+            type="button"
             onClick={reset}
             className="btn btn-secondary"
             aria-label="Réessayer"

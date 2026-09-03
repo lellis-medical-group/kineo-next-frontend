@@ -16,9 +16,8 @@ const comingSoonFeatures = [
 ];
 
 /**
- * Profile placeholder — will be wired to GET /profile/me (cf.
- * templates/api.json) once the backend exposes it. The shell (navbar +
- * footer) is inherited from the (site) route group.
+ * Page profil — succédera au GET /profile/me une fois exposé par le
+ * backend. Le shell (navbar + footer) est hérité du groupe (site).
  */
 export default function ProfilePage() {
   return (

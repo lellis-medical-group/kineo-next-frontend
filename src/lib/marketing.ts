@@ -1,7 +1,6 @@
 /**
- * Editorial content of the public page (marketing landing).
- * Kept separate from components (SRP): organisms stay presentational and
- * receive their data via props (DIP).
+ * Editorial content of the public pages.
+ * Kept separate from components so organisms stay presentational.
  */
 
 export interface HeaderLink {
@@ -16,11 +15,11 @@ export const publicNav: HeaderLink[] = [
 ];
 
 export const memberNav: HeaderLink[] = [
-  // Routes in English (project convention); labels stay in French.
+  // Routes restent en anglais (convention projet), libellés en français.
   { label: "Annonces", href: "/listings" },
   { label: "Cabinets", href: "/practices" },
-  { label: "Candidatures", href: "/applications" },
-  { label: "Profil", href: "/profile" },
+  { label: "Mes candidatures", href: "/applications" },
+  { label: "Mon Profil", href: "/profile" },
 ];
 
 export const hero = {
@@ -38,14 +37,6 @@ export const trustBar = {
     { icon: "calendar", label: "Suivi en temps réel" },
     { icon: "percent", label: "Gratuit en bêta" },
   ] as const,
-};
-
-export const consoleContract = {
-  reference: "#8012",
-  status: "Actif",
-  practice: "Cabinet Médical des Pins",
-  doctor: "Dr. J. Martin",
-  period: "15 Fév. - 22 Fév. (Gironde)",
 };
 
 export interface FeatureItem {
@@ -78,38 +69,6 @@ export const featuresSection = {
   ] as FeatureItem[],
 };
 
-export interface TestimonialItem {
-  quote: string;
-  author: string;
-  role: string;
-}
-
-export const testimonialsSection = {
-  title: "Plus de 2000 médecins nous font confiance",
-  rating: "4.9/5",
-  ratingLabel: "avis professionnels",
-  items: [
-    {
-      quote:
-        "Grâce à Kineo, j'ai trouvé un remplaçant sérieux pour mes deux semaines de congés en moins de 48h.",
-      author: "Dr. Michel V.",
-      role: "Généraliste - Lyon",
-    },
-    {
-      quote:
-        "L'automatisation du contrat et de la signature électronique m'évite de longues heures de paperasse.",
-      author: "Dr. Clara D.",
-      role: "Médecin remplaçante - Bordeaux",
-    },
-    {
-      quote:
-        "Une interface claire et des profils vérifiés. C'est exactement ce qu'il manquait pour nos cabinets ruraux.",
-      author: "Dr. Étienne L.",
-      role: "Pédiatre - Dax",
-    },
-  ] as TestimonialItem[],
-};
-
 export const joinCta = {
   title: "Rejoignez Kineo gratuitement",
   subtitle:
@@ -132,6 +91,5 @@ export const footerContent = {
     { label: "CGU", href: "/terms" },
     { label: "Confidentialité", href: "#" },
   ],
-  copyright: "© 2025 Kineo. Tous droits réservés.",
   tagline: "Conçu pour les professionnels de santé français.",
 };
