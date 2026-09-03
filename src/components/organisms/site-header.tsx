@@ -106,7 +106,7 @@ export function SiteHeader({
               <UserIdentity
                 name={user.name}
                 subtitle={user.subtitle}
-                textClassName="hidden xl:block"
+                showText={false}
                 href="/profile"
               />
 
