@@ -12,19 +12,19 @@ export async function proxy(request: NextRequest) {
     });
 
     if (!sessionResponse.ok) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      return NextResponse.redirect(new URL("/signin", request.url));
     }
 
     const { data: session } = await sessionResponse.json();
 
     if (!session) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      return NextResponse.redirect(new URL("/signin", request.url));
     }
 
     return NextResponse.next();
   } catch (error) {
     console.error("Auth proxy error:", error);
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    return NextResponse.redirect(new URL("/signin", request.url));
   }
 }
 
