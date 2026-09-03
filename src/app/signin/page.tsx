@@ -43,11 +43,22 @@ export default function SignInPage() {
     });
 
     if (error) {
-      setError(
-        error.message === "Invalid email or password"
-          ? "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez."
-          : "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
-      );
+      switch (error.code) {
+        case "INVALID_EMAIL_OR_PASSWORD":
+          setError(
+            "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.",
+          );
+          break;
+        case "EMAIL_NOT_VERIFIED":
+          setError(
+            "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.",
+          );
+          break;
+        default:
+          setError(
+            "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
+          );
+      }
       return;
     }
 
