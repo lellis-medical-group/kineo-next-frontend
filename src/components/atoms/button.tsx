@@ -11,11 +11,11 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
 };
 
 export interface ButtonProps {
-  /** Style visuel. Toutes les variantes sont substituables (LSP). */
+  /** Visual variant. Variants are interchangeable (LSP). */
   variant?: ButtonVariant;
   className?: string;
   children: ReactNode;
-  /** Si fourni, rend un lien Next.js stylé identiquement au bouton. */
+  /** When set, renders a Next.js link styled like the button. */
   href?: string;
   type?: ComponentProps<"button">["type"];
   disabled?: boolean;

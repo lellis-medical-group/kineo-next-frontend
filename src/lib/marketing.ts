@@ -1,7 +1,7 @@
 /**
- * Contenu éditorial de la page publique (landing marketing).
- * Séparé des composants (SRP) : les organisms restent présentationnels
- * et reçoivent leurs données par props (DIP).
+ * Editorial content of the public page (marketing landing).
+ * Kept separate from components (SRP): organisms stay presentational and
+ * receive their data via props (DIP).
  */
 
 export interface HeaderLink {
@@ -16,7 +16,7 @@ export const publicNav: HeaderLink[] = [
 ];
 
 export const memberNav: HeaderLink[] = [
-  // Routage en anglais (convention du projet) ; les libellés restent en français.
+  // Routes in English (project convention); labels stay in French.
   { label: "Annonces", href: "/listings" },
   { label: "Cabinets", href: "/practices" },
   { label: "Candidatures", href: "/applications" },

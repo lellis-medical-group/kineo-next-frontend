@@ -1,7 +1,7 @@
 export interface StatRowProps {
   label: string;
   value: string;
-  /** Met la valeur en vert (indicateur positif). */
+  /** Highlights the value in green (positive indicator). */
   accent?: boolean;
 }
 

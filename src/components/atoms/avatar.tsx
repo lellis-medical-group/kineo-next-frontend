@@ -1,15 +1,15 @@
 import { forwardRef } from "react";
 
 export interface AvatarProps {
-  /** Nom complet ; l'initiale (sans le préfixe « Dr. ») est affichée. */
+  /** Full name; the first letter (after a "Dr." prefix) is displayed. */
   name: string;
-  /** Classes supplémentaires (taille…) */
+  /** Extra classes (sizing…) */
   className?: string;
 }
 
 /**
- * Avatar circulaire avec initiale — atome visuel réutilisable.
- * Rendu pur, aucune dépendance (SRP) ; stylé via les tokens du thème.
+ * Circular initials avatar — a reusable visual atom.
+ * Pure render, no dependencies (SRP); styled through theme tokens.
  */
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   { name, className = "" },

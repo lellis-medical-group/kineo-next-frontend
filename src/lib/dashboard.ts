@@ -1,11 +1,11 @@
 /**
- * Données du tableau de bord (homepage connectée).
+ * Dashboard data (logged-in homepage).
  *
- * Les composants de la homepage connectée dépendent uniquement de ces
- * abstractions (DIP) : aujourd'hui alimentées par un jeu de démonstration,
- * demain par un adapter branché sur les routes du backend
- * (`/replacement-listings/mine`, `/applications`, `/profile/me` — cf.
- * templates/api.json) sans changer le moindre composant de présentation.
+ * Logged-in homepage components depend only on these abstractions (DIP):
+ * today they are fed by a demo dataset, tomorrow by an adapter wired to the
+ * backend routes (`/replacement-listings/mine`, `/applications`,
+ * `/profile/me` — see templates/api.json) without touching any
+ * presentation component.
  */
 
 import type { BadgeTone } from "@/components/atoms/badge";
@@ -37,7 +37,7 @@ export interface DashboardStat {
 export interface ActivityEntry {
   id: string;
   icon: "users" | "check" | "star" | "file";
-  /** Segments du message ; `bold` met le segment en évidence. */
+  /** Message segments; `bold` emphasizes the segment. */
   message: Array<{ text: string; bold?: boolean }>;
   timestamp: string;
   href?: string;

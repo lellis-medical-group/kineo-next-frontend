@@ -4,8 +4,8 @@ import { MarketingHero } from "@/components/organisms/marketing-hero";
 import { TestimonialsSection } from "@/components/organisms/testimonials-section";
 
 /**
- * Contenu de la page publique (visiteur non connecté) — le shell
- * (navbar + footer) est fourni par le layout du route group (site).
+ * Content of the public page (logged-out visitor) — the shell (navbar +
+ * footer) is provided by the (site) route group layout.
  */
 export function PublicHome() {
   return (

@@ -1,13 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 /**
- * Middleware de garde : autorise si un cookie de session better-auth est
- * présent, redirige vers /signin sinon.
+ * Guard middleware: allows the request if a better-auth session cookie is
+ * present, redirects to /signin otherwise.
  *
- * On évite volontairement d'appeler le backend ici : le check repose sur le
- * même cookie posé par le client (`better-auth.*`), cohérent avec la session
- * côté navigateur. Quand le backend est momentanément indisponible, l'accès
- * n'est donc pas bloqué par erreur (l'état réel est vérifié côté client).
+ * Deliberately avoids calling the backend here: the check relies on the same
+ * cookie the client set (`better-auth.*`), consistent with the session seen
+ * by the browser. When the backend is temporarily unavailable, access is not
+ * blocked by mistake (actual state is checked client-side).
  */
 export function proxy(request: NextRequest) {
   const hasSessionCookie = request.cookies

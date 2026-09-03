@@ -5,7 +5,7 @@ export interface StatCardProps {
   title: string;
   value: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
-  /** Contenu libre sous la valeur : badges, note, sous-titre… */
+  /** Free content below the value: badges, note, caption… */
   footer?: ReactNode;
 }
 

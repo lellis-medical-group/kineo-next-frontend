@@ -4,30 +4,27 @@ import { Avatar } from "@/components/atoms/avatar";
 export interface UserIdentityProps {
   name: string;
   subtitle: string;
-  /** Masque le bloc nom/rôle (ex. dans la navbar, avatar seul). */
+  /** Hides the name/role block (e.g. avatar-only in the navbar). */
   showText?: boolean;
-  /** Classes pour la zone texte (permet des ajustements fins). */
-  textClassName?: string;
-  /** Si fourni, toute l'identité devient un lien (ex. vers /profile). */
+  /** When set, the whole identity becomes a link (e.g. to /profile). */
   href?: string;
 }
 
 /**
- * Affiche l'utilisateur courant : prénom/rôle + avatar circulaire.
- * En mode compact (showText=false), seul l'avatar est rendu, avec un
- * tooltip accessible (title) portant le nom.
+ * Shows the current user: name/role + circular avatar.
+ * In compact mode (showText=false) only the avatar is rendered, with an
+ * accessible tooltip (title) carrying the name.
  */
 export function UserIdentity({
   name,
   subtitle,
   showText = true,
-  textClassName = "",
   href,
 }: UserIdentityProps) {
   const inner = (
     <>
       {showText && (
-        <div className={`min-w-0 text-right ${textClassName}`}>
+        <div className="min-w-0 text-right">
           <p className="truncate text-sm font-bold text-foreground">{name}</p>
           <p className="truncate text-xs text-muted">{subtitle}</p>
         </div>

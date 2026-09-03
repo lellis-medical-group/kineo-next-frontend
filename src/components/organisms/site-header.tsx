@@ -76,10 +76,10 @@ export function SiteHeader({
 }: {
   links: HeaderLink[];
   activeHref?: string;
-  /** Présent uniquement sur l'espace connecté. */
+  /** Only present in the authenticated area. */
   user?: UserSummary;
   showConsoleBadge?: boolean;
-  /** Déconnexion (injectée par AppHeader, DIP). */
+  /** Sign-out callback (injected by AppHeader, DIP). */
   onSignOut?: () => void;
 }) {
   return (
@@ -140,7 +140,7 @@ export function SiteHeader({
             </>
           )}
 
-          {/* Menu mobile sans JS : <details> natif, accessible */}
+          {/* JS-free mobile menu: native <details>, accessible */}
           <details className="relative lg:hidden">
             <summary
               aria-label="Ouvrir le menu"

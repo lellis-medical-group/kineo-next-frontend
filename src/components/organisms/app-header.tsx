@@ -7,8 +7,8 @@ import type { UserSummary } from "@/lib/dashboard";
 import { memberNav, publicNav } from "@/lib/marketing";
 
 /**
- * En-tête applicatif : encapsule la connaissance de la session et de la
- * route courante (SRP), puis délègue le rendu au SiteHeader présentationnel (DIP).
+ * App header: owns session and current-route knowledge (SRP), then
+ * delegates rendering to the presentational SiteHeader (DIP).
  */
 export function AppHeader() {
   const pathname = usePathname();

@@ -6,8 +6,8 @@ import { Button } from "@/components/atoms/button";
 import { joinCta } from "@/lib/marketing";
 
 /**
- * Redirige vers l'inscription en pré-pasant l'e-mail (query `?email=`),
- * que la page d'inscription pourra consommer plus tard.
+ * Redirects to signup with the email pre-filled (`?email=` query),
+ * which the signup page will be able to consume later.
  */
 export function SignupEmailForm() {
   const router = useRouter();

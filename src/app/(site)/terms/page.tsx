@@ -81,8 +81,8 @@ export default function TermsPage() {
           </div>
         </header>
 
-        {/* Texte de substitution (lorem ipsum) — à remplacer par la version
-            finale validée juridiquement avant la mise en production. */}
+        {/* Placeholder text (lorem ipsum) — replace with the final
+            legally-reviewed version before going to production. */}
         <div className="space-y-9">
           {sections.map((section) => (
             <section key={section.title} className="space-y-3">
