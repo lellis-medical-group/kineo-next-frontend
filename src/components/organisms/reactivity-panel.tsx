@@ -1,4 +1,4 @@
-import { Card } from "@/components/atoms/card";
+import { GlowCard } from "@/components/atoms/glow-card";
 import { ShieldIcon } from "@/components/atoms/icons";
 import { StatRow } from "@/components/molecules/stat-row";
 import type { ReactivityStat } from "@/lib/dashboard";
@@ -16,7 +16,7 @@ export function ReactivityPanel({
 }) {
   return (
     <div className="space-y-6">
-      <Card className="p-6">
+      <GlowCard innerClassName="p-6">
         <h2 className="mb-2 text-base font-bold">{title}</h2>
         <div>
           {stats.map((stat) => (
@@ -28,9 +28,9 @@ export function ReactivityPanel({
             />
           ))}
         </div>
-      </Card>
+      </GlowCard>
 
-      <Card className="p-6">
+      <GlowCard innerClassName="p-6">
         <p className="mb-3 flex items-center gap-2 text-sm font-bold">
           <span className="text-primary">
             <ShieldIcon />
@@ -38,7 +38,7 @@ export function ReactivityPanel({
           {tipTitle}
         </p>
         <p className="text-sm leading-relaxed text-muted">{tip}</p>
-      </Card>
+      </GlowCard>
     </div>
   );
 }

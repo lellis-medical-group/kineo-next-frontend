@@ -73,7 +73,7 @@ export function SiteHeader({
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-[76px] w-full max-w-[1440px] items-center justify-between gap-6 px-4 sm:px-8 lg:px-10">
+      <div className="mx-auto flex h-19 w-full max-w-360 items-center justify-between gap-6 px-4 sm:px-8 lg:px-10">
         <div className="flex min-w-0 items-center gap-10">
           <Link href="/" aria-label="Kineo — Accueil">
             <KineoLogo />

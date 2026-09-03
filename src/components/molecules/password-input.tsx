@@ -48,9 +48,9 @@ export function PasswordInput({
         className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition-colors hover:text-foreground"
       >
         {visible ? (
-          <EyeOffIcon className="h-[18px] w-[18px]" />
+          <EyeOffIcon className="h-4.5 w-4.5" />
         ) : (
-          <EyeIcon className="h-[18px] w-[18px]" />
+          <EyeIcon className="h-4.5 w-4.5" />
         )}
       </button>
 

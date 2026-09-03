@@ -110,7 +110,7 @@ function DashboardError({
           : "Le service est temporairement indisponible. Veuillez réessayer."}
       </p>
       {isDev && message && (
-        <p className="mb-4 max-w-sm break-words rounded bg-surface px-3 py-2 font-mono text-xs text-muted">
+        <p className="mb-4 max-w-sm wrap-break-word rounded bg-surface px-3 py-2 font-mono text-xs text-muted">
           [dev] {message}
         </p>
       )}
