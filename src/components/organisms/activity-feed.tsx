@@ -1,0 +1,72 @@
+import Link from "next/link";
+import type { ComponentType, SVGProps } from "react";
+import { Card } from "@/components/atoms/card";
+import {
+  CheckIcon,
+  FileTextIcon,
+  StarIcon,
+  UsersIcon,
+} from "@/components/atoms/icons";
+import { SectionHeading } from "@/components/atoms/section-heading";
+import { ActivityItem } from "@/components/molecules/activity-item";
+import type { ActivityEntry } from "@/lib/dashboard";
+
+const ACTIVITY_ICONS: Record<
+  ActivityEntry["icon"],
+  ComponentType<SVGProps<SVGSVGElement>>
+> = {
+  users: UsersIcon,
+  check: CheckIcon,
+  star: StarIcon,
+  file: FileTextIcon,
+};
+
+export function ActivityFeed({
+  items,
+  seeAllHref,
+}: {
+  items: ActivityEntry[];
+  seeAllHref?: string;
+}) {
+  return (
+    <Card className="p-5 sm:p-6">
+      <SectionHeading
+        title="Activité récente"
+        action={
+          seeAllHref && (
+            <Link
+              href={seeAllHref}
+              className="text-sm text-muted transition-colors hover:text-primary"
+            >
+              Tout voir
+            </Link>
+          )
+        }
+      />
+
+      <ul className="mt-5 space-y-3">
+        {items.map((entry) => (
+          <li key={entry.id}>
+            <ActivityItem
+              icon={ACTIVITY_ICONS[entry.icon]}
+              timestamp={entry.timestamp}
+              href={entry.href}
+            >
+              {entry.message.map((segment, index) =>
+                segment.bold ? (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
+                  <strong key={index} className="font-bold text-foreground">
+                    {segment.text}
+                  </strong>
+                ) : (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
+                  <span key={index}>{segment.text}</span>
+                ),
+              )}
+            </ActivityItem>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}

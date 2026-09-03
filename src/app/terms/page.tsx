@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { KineoLogo } from "@/components/kineo-logo";
+import { KineoLogo } from "@/components/atoms/kineo-logo";
 
 export const metadata: Metadata = {
   title: "Conditions d'utilisation — Kineo",

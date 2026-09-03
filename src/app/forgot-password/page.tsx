@@ -3,7 +3,7 @@
 import Form from "next/form";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { AuthCard } from "@/components/auth-card";
+import { AuthCard } from "@/components/organisms/auth-card";
 import { requestPasswordReset } from "@/lib/auth-client";
 
 function SubmitButton() {

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { KineoLogo } from "@/components/kineo-logo";
+import { KineoLogo } from "@/components/atoms/kineo-logo";
 
 export function AuthCard({
   title,

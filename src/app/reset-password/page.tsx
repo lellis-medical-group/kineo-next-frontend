@@ -4,8 +4,8 @@ import Form from "next/form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { AuthCard } from "@/components/auth-card";
-import { PasswordInput } from "@/components/password-input";
+import { PasswordInput } from "@/components/molecules/password-input";
+import { AuthCard } from "@/components/organisms/auth-card";
 import { resetPassword } from "@/lib/auth-client";
 
 function SubmitButton() {
