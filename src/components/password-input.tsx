@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import type { ComponentProps, KeyboardEvent } from "react";
 import { useState } from "react";
 
 function EyeIcon({ open }: { open: boolean }) {
@@ -33,11 +33,40 @@ function EyeIcon({ open }: { open: boolean }) {
   );
 }
 
+function AlertIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 20h16a2 2 0 0 0 1.73-2" />
+      <path d="M12 9v4" />
+      <path d="M12 17h.01" />
+    </svg>
+  );
+}
+
 export function PasswordInput({
   className = "",
+  onKeyDown,
+  onKeyUp,
+  onBlur,
+  onInput,
   ...props
 }: ComponentProps<"input">) {
   const [visible, setVisible] = useState(false);
+  const [capsLock, setCapsLock] = useState(false);
+
+  const syncCapsLock = (event: KeyboardEvent<HTMLInputElement>) => {
+    setCapsLock(event.getModifierState("CapsLock"));
+  };
 
   return (
     <div className="relative">
@@ -45,6 +74,19 @@ export function PasswordInput({
         {...props}
         type={visible ? "text" : "password"}
         className={`field-input pr-14 ${className}`}
+        onKeyDown={(event) => {
+          syncCapsLock(event);
+          onKeyDown?.(event);
+        }}
+        onKeyUp={(event) => {
+          syncCapsLock(event);
+          onKeyUp?.(event);
+        }}
+        onBlur={(event) => {
+          setCapsLock(false);
+          onBlur?.(event);
+        }}
+        onInput={onInput}
       />
       <button
         type="button"
@@ -56,6 +98,13 @@ export function PasswordInput({
       >
         <EyeIcon open={visible} />
       </button>
+
+      {capsLock && (
+        <output className="mt-1.5 flex items-center gap-1.5 text-xs text-warning">
+          <AlertIcon />
+          Verr. Maj activé : les lettres seront en majuscules
+        </output>
+      )}
     </div>
   );
 }

@@ -14,9 +14,15 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="mt-2 w-full rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
+      className="mt-2 flex w-full items-center justify-center gap-2.5 rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
     >
-      {pending ? "Connexion..." : "Se connecter"}
+      {pending && (
+        <span
+          aria-hidden="true"
+          className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
+        />
+      )}
+      {pending ? "Connexion en cours..." : "Se connecter"}
     </button>
   );
 }
@@ -39,8 +45,8 @@ export default function SignInPage() {
     if (error) {
       setError(
         error.message === "Invalid email or password"
-          ? "E-mail ou mot de passe incorrect."
-          : (error.message ?? "Connexion impossible. Réessayez."),
+          ? "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez."
+          : "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
       );
       return;
     }
