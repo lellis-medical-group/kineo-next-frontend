@@ -1,0 +1,31 @@
+import type { ReactNode } from "react";
+import { KineoLogo } from "@/components/kineo-logo";
+
+export function AuthCard({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  children: ReactNode;
+}) {
+  return (
+    <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10 text-foreground sm:px-6">
+      <div className="w-full max-w-[27.5rem] rounded-2xl border border-border bg-surface px-6 py-10 shadow-2xl shadow-black/50 sm:px-9">
+        <div className="mb-9 flex flex-col items-center gap-8 text-center">
+          <KineoLogo />
+
+          <div className="space-y-2">
+            <h1 className="text-[1.7rem] leading-tight font-bold tracking-tight">
+              {title}
+            </h1>
+            <p className="text-sm text-muted">{subtitle}</p>
+          </div>
+        </div>
+
+        {children}
+      </div>
+    </main>
+  );
+}

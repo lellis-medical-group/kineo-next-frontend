@@ -4,6 +4,8 @@ import Form from "next/form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { AuthCard } from "@/components/auth-card";
+import { PasswordInput } from "@/components/password-input";
 import { signIn } from "@/lib/auth-client";
 
 function SubmitButton() {
@@ -12,9 +14,9 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="mt-2 rounded-md bg-foreground py-3.5 text-base font-semibold text-background transition-opacity hover:opacity-85 disabled:opacity-50"
+      className="mt-2 w-full rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
     >
-      {pending ? "Signing in..." : "Sign in"}
+      {pending ? "Connexion..." : "Se connecter"}
     </button>
   );
 }
@@ -35,7 +37,11 @@ export default function SignInPage() {
     });
 
     if (error) {
-      setError(error.message || "Invalid credentials");
+      setError(
+        error.message === "Invalid email or password"
+          ? "E-mail ou mot de passe incorrect."
+          : (error.message ?? "Connexion impossible. Réessayez."),
+      );
       return;
     }
 
@@ -43,69 +49,63 @@ export default function SignInPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-8 bg-background text-foreground">
-      <Form
-        action={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-5"
-      >
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/50">
-          Sign In
-        </span>
-
-        <h1 className="mb-1 font-serif text-3xl font-semibold text-foreground">
-          Welcome back
-        </h1>
-
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground/80">
-          Email
+    <AuthCard
+      title="Connexion"
+      subtitle="Accédez à la console de remplacement Kineo"
+    >
+      <Form action={handleSubmit} className="flex flex-col gap-5">
+        <label className="flex flex-col gap-2">
+          <span className="field-label">Adresse e-mail</span>
           <input
             name="email"
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
-            className="rounded-md border border-foreground/15 bg-foreground/3 px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            placeholder="dr.julien.martin@gmail.com"
+            className="field-input"
           />
         </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground/80">
+        <label className="flex flex-col gap-2" htmlFor="password">
           <span className="flex items-center justify-between">
-            Password
+            <span className="field-label">Mot de passe</span>
             <a
               href="/forgot-password"
-              className="text-xs font-normal text-foreground/60 hover:text-foreground"
+              className="text-xs text-muted transition-colors hover:text-primary"
             >
-              Forgot?
+              Oublié ?
             </a>
           </span>
-          <input
+          <PasswordInput
             name="password"
-            type="password"
+            id="password"
             required
             autoComplete="current-password"
-            placeholder="••••••••"
-            className="rounded-md border border-foreground/15 bg-foreground/3 px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            placeholder="••••••••••••"
           />
         </label>
 
         {error && (
-          <div className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400">
+          <p
+            role="alert"
+            className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
+          >
             {error}
-          </div>
+          </p>
         )}
 
         <SubmitButton />
-
-        <p className="mt-2 text-center text-sm text-foreground/60">
-          Don&apos;t have an account?{" "}
-          <a
-            href="/sign-up"
-            className="border-b border-foreground font-semibold text-foreground hover:opacity-70"
-          >
-            Sign up
-          </a>
-        </p>
       </Form>
-    </main>
+
+      <p className="mt-7 text-center text-sm text-muted">
+        Nouveau sur Kineo ?{" "}
+        <a
+          href="/sign-up"
+          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+        >
+          Créer un compte
+        </a>
+      </p>
+    </AuthCard>
   );
 }

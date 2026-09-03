@@ -4,6 +4,8 @@ import Form from "next/form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { AuthCard } from "@/components/auth-card";
+import { PasswordInput } from "@/components/password-input";
 import { signUp } from "@/lib/auth-client";
 
 function SubmitButton() {
@@ -12,9 +14,9 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="mt-2 rounded-md bg-foreground py-3.5 text-base font-semibold text-background transition-opacity hover:opacity-85 disabled:opacity-50"
+      className="mt-2 w-full rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
     >
-      {pending ? "Creating..." : "Create my account"}
+      {pending ? "Création..." : "Créer mon compte"}
     </button>
   );
 }
@@ -38,104 +40,93 @@ export default function SignUpPage() {
       });
 
       if (error) {
-        setError(error.message || "Registration failed");
+        setError(error.message || "Inscription impossible. Réessayez.");
         return;
       }
 
       router.push("/");
     } catch {
-      setError("Unable to contact the server. Please try again later.");
+      setError("Impossible de contacter le serveur. Réessayez plus tard.");
     }
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-8 bg-background text-foreground">
-      <Form
-        action={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-5"
-      >
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-foreground/50">
-          Sign Up
-        </span>
-
-        <h1 className="mb-1 font-serif text-3xl font-semibold text-foreground">
-          Create an account
-        </h1>
-        <p className="-mt-3 text-sm text-foreground/60">
-          Join us in a few seconds.
-        </p>
-
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground/80">
-          Name
+    <AuthCard
+      title="Créer un compte"
+      subtitle="Rejoignez la console de remplacement Kineo"
+    >
+      <Form action={handleSubmit} className="flex flex-col gap-5">
+        <label className="flex flex-col gap-2">
+          <span className="field-label">Nom complet</span>
           <input
             name="name"
             type="text"
             required
             autoComplete="name"
-            placeholder="John Doe"
-            className="rounded-md border border-foreground/15 bg-foreground/[0.03] px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            placeholder="Dr Julien Martin"
+            className="field-input"
           />
         </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground/80">
-          Email
+        <label className="flex flex-col gap-2">
+          <span className="field-label">Adresse e-mail</span>
           <input
             name="email"
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
-            className="rounded-md border border-foreground/15 bg-foreground/[0.03] px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            placeholder="dr.julien.martin@gmail.com"
+            className="field-input"
           />
         </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground/80">
+        <label className="flex flex-col gap-2" htmlFor="password">
           <span className="flex items-center justify-between">
-            Password
-            <span className="text-xs font-normal text-foreground/50">
-              Min. 8 characters
-            </span>
+            <span className="field-label">Mot de passe</span>
+            <span className="text-xs text-muted">8 caractères min.</span>
           </span>
-          <input
+          <PasswordInput
             name="password"
-            type="password"
+            id="password"
             required
             minLength={8}
             autoComplete="new-password"
-            placeholder="••••••••"
-            className="rounded-md border border-foreground/15 bg-foreground/[0.03] px-3.5 py-3 text-base text-foreground outline-none transition placeholder:text-foreground/30 focus:border-foreground focus:bg-transparent"
+            placeholder="••••••••••••"
           />
         </label>
 
         {error && (
-          <div className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400">
+          <p
+            role="alert"
+            className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
+          >
             {error}
-          </div>
+          </p>
         )}
 
         <SubmitButton />
 
-        <p className="mt-2 text-center text-xs text-foreground/50">
-          By creating an account, you agree to our{" "}
+        <p className="text-center text-xs leading-relaxed text-muted">
+          En créant un compte, vous acceptez nos{" "}
           <a
             href="/terms"
-            className="border-b border-foreground/30 hover:border-foreground"
+            className="underline decoration-border underline-offset-2 transition-colors hover:text-foreground"
           >
-            terms of service
+            conditions d&apos;utilisation
           </a>
           .
         </p>
-
-        <p className="text-center text-sm text-foreground/60">
-          Already have an account?{" "}
-          <a
-            href="/sign-in"
-            className="border-b border-foreground font-semibold text-foreground hover:opacity-70"
-          >
-            Sign in
-          </a>
-        </p>
       </Form>
-    </main>
+
+      <p className="mt-6 text-center text-sm text-muted">
+        Déjà sur Kineo ?{" "}
+        <a
+          href="/sign-in"
+          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+        >
+          Se connecter
+        </a>
+      </p>
+    </AuthCard>
   );
 }
