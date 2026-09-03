@@ -5,9 +5,8 @@ import { ReactivityPanel } from "@/components/organisms/reactivity-panel";
 import type { DashboardData } from "@/lib/dashboard";
 
 /**
- * Content of the logged-in page — receives dashboard data via props (DIP).
- * The user identity is handled by AppHeader in the layout; the shell
- * (navbar + footer) is provided by the (site) route group.
+ * Contenu de la page connectée — reçoit les données via props.
+ * Le shell (navbar + footer) est fourni par le layout du groupe (site).
  */
 export function MemberHome({ data }: { data: DashboardData }) {
   return (

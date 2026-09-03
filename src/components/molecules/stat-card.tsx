@@ -5,13 +5,21 @@ export interface StatCardProps {
   title: string;
   value: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
-  /** Free content below the value: badges, note, caption… */
+  /** Légende discrète expliquant la valeur. */
+  label?: string;
+  /** Contenu libre sous la valeur : badges, note, légende… */
   footer?: ReactNode;
 }
 
-export function StatCard({ title, value, icon: Icon, footer }: StatCardProps) {
+export function StatCard({
+  title,
+  value,
+  icon: Icon,
+  label,
+  footer,
+}: StatCardProps) {
   return (
-    <Card className="flex flex-col gap-4 p-5 sm:p-6">
+    <Card className="flex flex-col gap-1.5 p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm text-muted">{title}</h3>
         <Icon className="text-xl text-primary" />
@@ -19,8 +27,10 @@ export function StatCard({ title, value, icon: Icon, footer }: StatCardProps) {
 
       <p className="text-2xl font-bold tracking-tight sm:text-3xl">{value}</p>
 
+      {label && <p className="text-sm text-muted">{label}</p>}
+
       {footer && (
-        <div className="flex flex-wrap items-center gap-2">{footer}</div>
+        <div className="mt-2 flex flex-wrap items-center gap-2">{footer}</div>
       )}
     </Card>
   );

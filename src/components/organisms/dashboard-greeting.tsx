@@ -13,7 +13,7 @@ export function DashboardGreeting({
   greeting,
   actions,
 }: {
-  greeting: { name: string; subtitle: string };
+  greeting: { name: string; subtitle: string; meta?: string };
   actions: DashboardAction[];
 }) {
   return (
@@ -21,6 +21,9 @@ export function DashboardGreeting({
       <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
         Bonjour {greeting.name}
       </h1>
+      {greeting.meta && (
+        <p className="mt-1 text-sm font-medium text-primary">{greeting.meta}</p>
+      )}
       <p className="mt-2 text-sm leading-relaxed text-muted sm:text-base">
         {greeting.subtitle}
       </p>

@@ -1,5 +1,4 @@
 import type { ComponentType, SVGProps } from "react";
-import { Badge } from "@/components/atoms/badge";
 import { CalendarIcon, LayersIcon, UsersIcon } from "@/components/atoms/icons";
 import { StatCard } from "@/components/molecules/stat-card";
 import type { DashboardStat } from "@/lib/dashboard";
@@ -14,20 +13,8 @@ const STAT_ICONS: Record<
 };
 
 function StatFooter({ stat }: { stat: DashboardStat }) {
-  if (stat.chips?.length) {
-    return (
-      <>
-        {stat.chips.map((chip) => (
-          <Badge key={chip.label} tone={chip.tone ?? "neutral"}>
-            {chip.label}
-          </Badge>
-        ))}
-      </>
-    );
-  }
-
-  if (stat.note) {
-    return <p className="text-xs text-muted">{stat.note}</p>;
+  if (stat.detail) {
+    return <p className="text-xs text-muted">{stat.detail}</p>;
   }
 
   return null;
@@ -43,6 +30,7 @@ export function DashboardStats({ stats }: { stats: DashboardStat[] }) {
             key={stat.id}
             title={stat.title}
             value={stat.value}
+            label={stat.label}
             icon={Icon}
             footer={<StatFooter stat={stat} />}
           />
