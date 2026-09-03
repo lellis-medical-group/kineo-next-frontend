@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BellIcon, MenuIcon } from "@/components/atoms/icons";
+import { BellIcon, LogOutIcon, MenuIcon } from "@/components/atoms/icons";
 import { KineoLogo } from "@/components/atoms/kineo-logo";
 import { UserIdentity } from "@/components/molecules/user-identity";
 import type { UserSummary } from "@/lib/dashboard";
@@ -72,12 +72,15 @@ export function SiteHeader({
   activeHref,
   user,
   showConsoleBadge = false,
+  onSignOut,
 }: {
   links: HeaderLink[];
   activeHref?: string;
   /** Présent uniquement sur l'espace connecté. */
   user?: UserSummary;
   showConsoleBadge?: boolean;
+  /** Déconnexion (injectée par AppHeader, DIP). */
+  onSignOut?: () => void;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
@@ -104,7 +107,18 @@ export function SiteHeader({
                 name={user.name}
                 subtitle={user.subtitle}
                 textClassName="hidden xl:block"
+                href="/profile"
               />
+
+              <button
+                type="button"
+                onClick={onSignOut}
+                aria-label="Se déconnecter"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-border px-3 text-sm font-medium text-muted transition-colors hover:border-primary/50 hover:text-foreground"
+              >
+                <LogOutIcon />
+                <span className="hidden sm:inline">Se déconnecter</span>
+              </button>
             </>
           ) : (
             <>
@@ -140,6 +154,20 @@ export function SiteHeader({
                 activeHref={activeHref}
                 orientation="vertical"
               />
+
+              {user && onSignOut && (
+                <>
+                  <div className="my-2 border-t border-border" />
+                  <button
+                    type="button"
+                    onClick={onSignOut}
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                  >
+                    <LogOutIcon />
+                    Se déconnecter
+                  </button>
+                </>
+              )}
             </div>
           </details>
         </div>

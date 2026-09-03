@@ -71,16 +71,16 @@ export const defaultDashboardData: DashboardData = {
   actions: [
     {
       label: "Publier une annonce",
-      href: "/annonces/nouvelle",
+      href: "/listings/new",
       variant: "primary",
       icon: "plus",
     },
     {
       label: "Voir mes candidatures",
-      href: "/candidatures",
+      href: "/applications",
       variant: "outline",
     },
-    { label: "Gérer mes cabinets", href: "/cabinets", variant: "outline" },
+    { label: "Gérer mes cabinets", href: "/practices", variant: "outline" },
   ],
   stats: [
     {
@@ -118,7 +118,7 @@ export const defaultDashboardData: DashboardData = {
         { text: " pour Cabinet des Pins" },
       ],
       timestamp: "il y a 2 heures",
-      href: "/candidatures",
+      href: "/applications",
     },
     {
       id: "act-2",
@@ -128,7 +128,7 @@ export const defaultDashboardData: DashboardData = {
         { text: "Clinique du Lac (Arcachon)", bold: true },
       ],
       timestamp: "hier",
-      href: "/candidatures",
+      href: "/applications",
     },
     {
       id: "act-3",
@@ -148,7 +148,7 @@ export const defaultDashboardData: DashboardData = {
         { text: " a été mise à jour" },
       ],
       timestamp: "il y a 3 jours",
-      href: "/annonces",
+      href: "/listings",
     },
   ],
   reactivity: {

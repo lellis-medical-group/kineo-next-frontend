@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { SiteHeader } from "@/components/organisms/site-header";
-import { useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import type { UserSummary } from "@/lib/dashboard";
 import { memberNav, publicNav } from "@/lib/marketing";
 
@@ -37,6 +37,9 @@ export function AppHeader() {
         activeHref={activeLink?.href}
         user={identity}
         showConsoleBadge
+        onSignOut={() => {
+          void signOut();
+        }}
       />
     );
   }

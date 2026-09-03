@@ -16,10 +16,11 @@ export const publicNav: HeaderLink[] = [
 ];
 
 export const memberNav: HeaderLink[] = [
-  { label: "Annonces", href: "/annonces" },
-  { label: "Cabinets", href: "/cabinets" },
-  { label: "Candidatures", href: "/candidatures" },
-  { label: "Profil", href: "/profil" },
+  // Routage en anglais (convention du projet) ; les libellés restent en français.
+  { label: "Annonces", href: "/listings" },
+  { label: "Cabinets", href: "/practices" },
+  { label: "Candidatures", href: "/applications" },
+  { label: "Profil", href: "/profile" },
 ];
 
 export const hero = {
