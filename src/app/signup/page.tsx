@@ -176,6 +176,13 @@ export default function SignUpPage() {
           Se connecter
         </a>
       </p>
+
+      <a
+        href="/"
+        className="mt-4 flex items-center justify-center gap-1 text-center text-sm text-muted transition-colors hover:text-foreground"
+      >
+        ← Retour à l’accueil
+      </a>
     </AuthCard>
   );
 }
