@@ -80,7 +80,8 @@ body {
   border: 1px solid var(--border);
   background: rgb(17 16 15 / 65%);
   padding: 0.8rem 1rem;
-  font-size: 0.925rem;
+  /* 16px min : évite le zoom automatique de Safari iOS au focus (< 16px) */
+  font-size: 1rem;
   color: var(--foreground);
   transition:
     border-color 150ms ease,
@@ -104,6 +105,13 @@ body {
   cursor: not-allowed;
 }
 
+/* ≥ sm : resserrage typographique des champs sur écrans larges */
+@media (min-width: 640px) {
+  .field-input {
+    font-size: 0.925rem;
+  }
+}
+
 /* Correctif autofill jaune de Chrome/Safari sur fond sombre */
 .field-input:-webkit-autofill,
 .field-input:-webkit-autofill:hover,
@@ -112,4 +120,13 @@ body {
   -webkit-box-shadow: 0 0 0 1000px #191817 inset;
   caret-color: var(--foreground);
   transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Respect du mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  .field-input,
+  a,
+  button {
+    transition-duration: 0s;
+  }
 }

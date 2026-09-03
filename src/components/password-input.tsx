@@ -44,7 +44,7 @@ export function PasswordInput({
       <input
         {...props}
         type={visible ? "text" : "password"}
-        className={`field-input pr-12 ${className}`}
+        className={`field-input pr-14 ${className}`}
       />
       <button
         type="button"
@@ -52,7 +52,7 @@ export function PasswordInput({
         aria-label={
           visible ? "Masquer le mot de passe" : "Afficher le mot de passe"
         }
-        className="absolute top-1/2 right-3.5 -translate-y-1/2 text-muted transition-colors hover:text-foreground"
+        className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition-colors hover:text-foreground"
       >
         <EyeIcon open={visible} />
       </button>

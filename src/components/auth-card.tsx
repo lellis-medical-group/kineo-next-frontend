@@ -11,9 +11,11 @@ export function AuthCard({
   children: ReactNode;
 }) {
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-10 text-foreground sm:px-6">
-      <div className="w-full max-w-[27.5rem] rounded-2xl border border-border bg-surface px-6 py-10 shadow-2xl shadow-black/50 sm:px-9">
-        <div className="mb-9 flex flex-col items-center gap-8 text-center">
+    <main className="flex min-h-dvh flex-col items-center justify-center bg-background px-4 py-8 text-foreground sm:px-6 sm:py-10">
+      {/* my-auto : centrage vertical qui reste scrollable quand la carte
+          dépasse le viewport (paysage, clavier ouvert) */}
+      <div className="my-auto w-full max-w-[27.5rem] rounded-2xl border border-border bg-surface px-5 py-8 shadow-2xl shadow-black/50 sm:px-9 sm:py-10">
+        <div className="mb-8 flex flex-col items-center gap-6 text-center sm:mb-9 sm:gap-8">
           <KineoLogo />
 
           <div className="space-y-2">
