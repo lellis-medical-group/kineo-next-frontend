@@ -7,13 +7,22 @@ import type { HeaderLink } from "@/lib/marketing";
 
 function ConsoleLiveBadge() {
   return (
-    <span className="hidden items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground/80 lg:inline-flex">
-      <span
-        aria-hidden="true"
-        className="h-1.5 w-1.5 rounded-full bg-success"
-      />
+    <span className="hidden items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-foreground/85 lg:inline-flex">
+      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-success" />
       Console Live
     </span>
+  );
+}
+
+function NotificationsButton() {
+  return (
+    <button
+      type="button"
+      aria-label="Notifications"
+      className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-foreground/80 transition-colors hover:border-primary/50 hover:text-foreground"
+    >
+      <BellIcon />
+    </button>
   );
 }
 
@@ -33,7 +42,7 @@ function HeaderNav({
       aria-label="Navigation principale"
       className={
         isHorizontal
-          ? "hidden items-center gap-6 md:flex"
+          ? "hidden items-center gap-1.5 lg:flex"
           : "flex flex-col gap-1"
       }
     >
@@ -44,12 +53,10 @@ function HeaderNav({
             key={`${link.href}-${link.label}`}
             href={link.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-md px-2 py-1.5 text-sm transition-colors ${
-              isHorizontal ? "" : ""
-            } ${
+            className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
               isActive
-                ? "font-semibold text-primary underline decoration-primary underline-offset-8"
-                : "text-muted hover:text-foreground"
+                ? "bg-primary font-semibold text-primary-foreground"
+                : "text-muted hover:bg-surface hover:text-foreground"
             }`}
           >
             {link.label}
@@ -74,39 +81,53 @@ export function SiteHeader({
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6">
+      <div className="mx-auto flex h-[76px] w-full max-w-[1440px] items-center justify-between gap-6 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-8">
           <Link href="/" aria-label="Kineo — Accueil">
             <KineoLogo />
           </Link>
 
-          <div className="hidden md:block">
-            <HeaderNav
-              links={links}
-              activeHref={activeHref}
-              orientation="horizontal"
-            />
-          </div>
+          <HeaderNav
+            links={links}
+            activeHref={activeHref}
+            orientation="horizontal"
+          />
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2.5">
           {user && showConsoleBadge && <ConsoleLiveBadge />}
 
-          {user && (
+          {user ? (
             <>
-              <button
-                type="button"
-                aria-label="Notifications"
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-foreground/80 transition-colors hover:text-foreground"
+              <NotificationsButton />
+              <UserIdentity
+                name={user.name}
+                subtitle={user.subtitle}
+                textClassName="hidden xl:block"
+              />
+            </>
+          ) : (
+            <>
+              <span className="hidden items-center gap-2 border-r border-border pr-4 sm:flex">
+                <Link
+                  href="/signin"
+                  className="rounded-full px-3.5 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-foreground"
+                >
+                  Se connecter
+                </Link>
+              </span>
+
+              <Link
+                href="/signup"
+                className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
               >
-                <BellIcon />
-              </button>
-              <UserIdentity name={user.name} subtitle={user.subtitle} />
+                Créer un compte
+              </Link>
             </>
           )}
 
           {/* Menu mobile sans JS : <details> natif, accessible */}
-          <details className="relative md:hidden">
+          <details className="relative lg:hidden">
             <summary
               aria-label="Ouvrir le menu"
               className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-border text-foreground/80 [&::-webkit-details-marker]:hidden"

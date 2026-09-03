@@ -21,10 +21,20 @@ export function AppHeader() {
       subtitle: "Professionnel de santé",
     };
 
+    const activeSegments = pathname.split("/").filter(Boolean);
+    const activeLink = memberNav.find((link) => {
+      if (link.href === "/") return activeSegments.length === 0;
+      const linkSegments = link.href.split("/").filter(Boolean);
+      return (
+        activeSegments.length >= linkSegments.length &&
+        linkSegments.every((seg, i) => activeSegments[i] === seg)
+      );
+    });
+
     return (
       <SiteHeader
         links={memberNav}
-        activeHref={memberNav.find((link) => link.href === pathname)?.href}
+        activeHref={activeLink?.href}
         user={identity}
         showConsoleBadge
       />

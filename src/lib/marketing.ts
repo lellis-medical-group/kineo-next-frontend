@@ -16,9 +16,8 @@ export const publicNav: HeaderLink[] = [
 ];
 
 export const memberNav: HeaderLink[] = [
-  { label: "Accueil", href: "/" },
-  { label: "Mes annonces", href: "/annonces" },
-  { label: "Mes cabinets", href: "/cabinets" },
+  { label: "Annonces", href: "/annonces" },
+  { label: "Cabinets", href: "/cabinets" },
   { label: "Candidatures", href: "/candidatures" },
   { label: "Profil", href: "/profil" },
 ];
