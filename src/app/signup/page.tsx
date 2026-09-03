@@ -4,6 +4,7 @@ import Form from "next/form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { ArrowLeftIcon } from "@/components/atoms/icons";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { signUp } from "@/lib/auth-client";
@@ -14,7 +15,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="mt-2 flex w-full items-center justify-center gap-2.5 rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
+      className="btn btn-primary mt-2 w-full py-3.5 text-[0.9375rem]"
     >
       {pending && (
         <span
@@ -136,7 +137,7 @@ export default function SignUpPage() {
         {error && (
           <p
             role="alert"
-            className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
+            className="rounded-control border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
           >
             {error}
           </p>
@@ -146,7 +147,7 @@ export default function SignUpPage() {
           <p className="-mt-3 text-center text-sm">
             <a
               href="/signin"
-              className="font-semibold text-primary transition-colors hover:text-primary-hover"
+              className="font-medium text-primary transition-colors hover:text-primary-hover"
             >
               Se connecter avec cet e-mail
             </a>
@@ -171,18 +172,18 @@ export default function SignUpPage() {
         Déjà sur Kineo ?{" "}
         <a
           href="/signin"
-          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="font-medium text-primary transition-colors hover:text-primary-hover"
         >
           Se connecter
         </a>
       </p>
 
-      <a
-        href="/"
-        className="mt-4 flex items-center justify-center gap-1 text-center text-sm text-muted transition-colors hover:text-foreground"
-      >
-        ← Retour à l’accueil
-      </a>
+      <div className="mt-4 text-center">
+        <a href="/" className="btn btn-ghost" aria-label="Retour à l'accueil">
+          <ArrowLeftIcon className="h-4 w-4" />
+          <span>Accueil</span>
+        </a>
+      </div>
     </AuthCard>
   );
 }

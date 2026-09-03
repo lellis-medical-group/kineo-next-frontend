@@ -19,6 +19,14 @@ function Svg({ children, ...props }: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ArrowLeftIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Svg {...props}>
+      <path d="M19 12H5m7-7-7 7 7 7" />
+    </Svg>
+  );
+}
+
 export function LayersIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Svg {...props}>

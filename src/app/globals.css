@@ -1,136 +1,494 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/*  Kineo — design system (cf. /templates)                             */
-/*  Palette :                                                          */
-/*    crème    #D7D1B0  → accent, actions primaires                    */
-/*    noir     #11100F  → arrière-plan                                 */
-/*    surface  #201F1E  → cartes, panneaux                             */
+/*  Kineo — design system (cf. /templates, maquettes « Transcope »)    */
+/*                                                                     */
+/*  Palette (branding sheet) :                                         */
+/*    crème    #D7D1B0  → accent unique : actions primaires, états     */
+/*                       actifs (chip « Assigned » sur la maquette)    */
+/*    noir     #11100F  → arrière-plan de l'app                        */
+/*    surface  #201F1E  → cartes / panneaux                            */
 /*    blanc    #FFFFFF  → texte                                        */
+/*                                                                     */
+/*  Principes issus des maquettes :                                    */
+/*    • UI quasi monochrome, le crème reste rare                       */
+/*    • gros rayons : cartes 20px, contrôles en pilule                 */
+/*    • bordures blanches très transparentes (7–13 %)                  */
+/*    • texte secondaire gris chaud #A6A29A                            */
 /* ------------------------------------------------------------------ */
 
 :root {
   color-scheme: dark;
 
+  /* --- Surfaces : 3 niveaux d'empilement, comme sur la maquette --- */
   --background: #11100f;
-  --foreground: #ffffff;
+  /* fond app                            */
   --surface: #201f1e;
-  --surface-hover: #282726;
+  /* cartes posées sur le fond (charte)  */
+  --surface-2: #262523;
+  /* blocs internes, chips, inputs       */
+  --surface-3: #2d2b28;
+  /* niveau le plus élevé / survol       */
+  --surface-hover: #2a2826;
+
+  /* --- Texte --- */
+  --foreground: #ffffff;
+  --muted: #a6a29a;
+  /* libellés, métadonnées, en-têtes     */
+  --faint: rgb(255 255 255 / 38%);
+
+  /* --- Accent crème --- */
   --primary: #d7d1b0;
   --primary-hover: #e3ddc4;
+  --primary-active: #c9c3a0;
   --primary-foreground: #11100f;
-  --muted: #a6a29a;
-  --border: rgb(255 255 255 / 8%);
+
+  /* --- Contours --- */
+  --border: rgb(255 255 255 / 7%);
+  --border-strong: rgb(255 255 255 / 13%);
   --ring: rgb(215 209 176 / 35%);
+
+  /* --- Sémantiques (sobres : la charte reste quasi mono) --- */
   --danger: #f87171;
   --warning: #fbbf24;
   --success: #4ade80;
+  --info: #93c5fd;
+
+  /* --- Élévation douce (pas d'ombres marquées sur la maquette) --- */
+  --shadow-card: inset 0 1px 0 rgb(255 255 255 / 3%);
+  --shadow-pop: 0 16px 40px rgb(0 0 0 / 45%);
+
+  /* --- Rayons --- */
+  --radius-card: 1.25rem;
+  /* cartes, panneaux (20 px)            */
+  --radius-panel: 1rem;
+  /* blocs internes (16 px)              */
+  --radius-control: 0.75rem;
+  /* inputs, menus (12 px)               */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-surface-hover: var(--surface-hover);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-primary-foreground: var(--primary-foreground);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-ring: var(--ring);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
+  --color-info: var(--info);
+
+  --radius-card: var(--radius-card);
+  --radius-panel: var(--radius-panel);
+  --radius-control: var(--radius-control);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
 
   --font-sans:
     var(--font-space-grotesk), "Space Grotesk", ui-sans-serif, system-ui,
     sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family:
-    var(--font-space-grotesk), "Space Grotesk", ui-sans-serif, system-ui,
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+@layer base {
 
-::selection {
-  background: var(--primary);
-  color: var(--primary-foreground);
-}
+  /* Tout `border` hérite du contour discret par défaut (comportement
+     v3-like) : cohérence immédiate avec les liserés des maquettes. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
 
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family:
+      var(--font-space-grotesk), "Space Grotesk", ui-sans-serif, system-ui,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-/* --- Champs de formulaire (signin / signup) ------------------------- */
+  /* Titres serrés, graisse moyenne — comme la branding sheet. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
 
-.field-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
 
-.field-input {
-  width: 100%;
-  border-radius: 0.625rem;
-  border: 1px solid var(--border);
-  background: rgb(17 16 15 / 65%);
-  padding: 0.8rem 1rem;
-  /* 16px min : évite le zoom automatique de Safari iOS au focus (< 16px) */
-  font-size: 1rem;
-  color: var(--foreground);
-  transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease,
-    background-color 150ms ease;
-}
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 
-.field-input::placeholder {
-  color: rgb(255 255 255 / 32%);
-}
+  /* Scrollbars discrètes, dans la gamme sombre */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 14%) transparent;
+  }
 
-.field-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--ring);
-  background: rgb(17 16 15 / 85%);
-}
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
 
-.field-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-/* ≥ sm : resserrage typographique des champs sur écrans larges */
-@media (min-width: 640px) {
-  .field-input {
-    font-size: 0.925rem;
+  ::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 14%);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(255 255 255 / 22%);
   }
 }
 
-/* Correctif autofill jaune de Chrome/Safari sur fond sombre */
-.field-input:-webkit-autofill,
-.field-input:-webkit-autofill:hover,
-.field-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: var(--foreground);
-  -webkit-box-shadow: 0 0 0 1000px #191817 inset;
-  caret-color: var(--foreground);
-  transition: background-color 9999s ease-in-out 0s;
+@layer components {
+
+  /* --- Cartes / panneaux ------------------------------------------- */
+  .card {
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* --- Boutons ------------------------------------------------------ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    /* pilule, comme sur la maquette */
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    background: var(--primary-active);
+  }
+
+  .btn-secondary {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+    color: var(--foreground);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--surface-3);
+  }
+
+  .btn-ghost {
+    color: var(--muted);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    color: var(--foreground);
+    background: rgb(255 255 255 / 5%);
+  }
+
+  /* Boutons ronds d'icônes (recherche, notifications, +/− de la carte) */
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+
+  .btn-icon:hover {
+    background: var(--surface-2);
+  }
+
+  /* --- Chips de filtre (« All / Pending / Assigned… ») -------------- */
+  .chip {
+    border-radius: 9999px;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--muted);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .chip:hover {
+    color: var(--foreground);
+    background: rgb(255 255 255 / 5%);
+  }
+
+  .chip[aria-pressed="true"],
+  .chip[aria-current="true"],
+  .chip.is-active {
+    background: var(--primary);
+    /* état actif = crème, comme la maquette */
+    color: var(--primary-foreground);
+  }
+
+  /* --- Badges de statut --------------------------------------------- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    background: rgb(255 255 255 / 4%);
+    border: 1px solid var(--border);
+  }
+
+  .badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: currentColor;
+  }
+
+  .badge-success {
+    color: var(--success);
+    background: rgb(74 222 128 / 8%);
+    border-color: rgb(74 222 128 / 20%);
+  }
+
+  .badge-warning {
+    color: var(--warning);
+    background: rgb(251 191 36 / 8%);
+    border-color: rgb(251 191 36 / 20%);
+  }
+
+  .badge-danger {
+    color: var(--danger);
+    background: rgb(248 113 113 / 8%);
+    border-color: rgb(248 113 113 / 20%);
+  }
+
+  /* --- Navigation ---------------------------------------------------- */
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+
+  .nav-link:hover {
+    color: var(--foreground);
+  }
+
+  .nav-link:hover:not([aria-current="page"]):not(.is-active) {
+    background: rgb(255 255 255 / 4%);
+  }
+
+  /* Maquette : l'item actif est blanc, sans pastille. */
+  .nav-link[aria-current="page"],
+  .nav-link.is-active {
+    color: var(--foreground);
+  }
+
+  /* --- Tableaux (commandes, listes) ---------------------------------- */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .table thead th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    color: var(--muted);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .table tbody td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .table tbody tr {
+    transition: background-color 150ms ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgb(255 255 255 / 3%);
+  }
+
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* --- Jauge segmentée (« Fleet distribution by type ») -------------- */
+  /* Usage : <div class="meter" style="--meter-value: 84%"></div>        */
+  .meter {
+    --meter-value: 0%;
+    position: relative;
+    height: 0.875rem;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .meter::before,
+  .meter::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(to right,
+        currentColor 0 2px,
+        transparent 2px 4px);
+  }
+
+  .meter::before {
+    color: rgb(255 255 255 / 14%);
+    /* piste */
+  }
+
+  .meter::after {
+    color: rgb(255 255 255 / 85%);
+    /* valeur */
+    clip-path: inset(0 calc(100% - var(--meter-value)) 0 0);
+  }
+
+  .meter-primary::after {
+    color: var(--primary);
+  }
+
+  /* --- Champs de formulaire (signin / signup) ------------------------ */
+
+  .field-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field-input {
+    width: 100%;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--border);
+    background: rgb(0 0 0 / 24%);
+    padding: 0.8rem 1rem;
+    /* 16px min : évite le zoom automatique de Safari iOS au focus (< 16px) */
+    font-size: 1rem;
+    color: var(--foreground);
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease;
+  }
+
+  .field-input:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+  }
+
+  .field-input::placeholder {
+    color: var(--faint);
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--ring);
+    background: rgb(0 0 0 / 34%);
+  }
+
+  .field-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* ≥ sm : resserrage typographique des champs sur écrans larges */
+  @media (min-width: 640px) {
+    .field-input {
+      font-size: 0.925rem;
+    }
+  }
+
+  /* Correctif autofill jaune de Chrome/Safari sur fond sombre */
+  .field-input:-webkit-autofill,
+  .field-input:-webkit-autofill:hover,
+  .field-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--foreground);
+    -webkit-box-shadow: 0 0 0 1000px #191817 inset;
+    caret-color: var(--foreground);
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
 
 /* Respect du mouvement réduit */
 @media (prefers-reduced-motion: reduce) {
-  .field-input,
-  a,
-  button {
-    transition-duration: 0s;
+
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
   }
 }
