@@ -1,70 +1,43 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------ */
-/*  Kineo — design system (cf. /templates, maquettes « Transcope »)    */
-/*                                                                     */
-/*  Palette (branding sheet) :                                         */
-/*    crème    #D7D1B0  → accent unique : actions primaires, états     */
-/*                       actifs (chip « Assigned » sur la maquette)    */
-/*    noir     #11100F  → arrière-plan de l'app                        */
-/*    surface  #201F1E  → cartes / panneaux                            */
-/*    blanc    #FFFFFF  → texte                                        */
-/*                                                                     */
-/*  Principes issus des maquettes :                                    */
-/*    • UI quasi monochrome, le crème reste rare                       */
-/*    • gros rayons : cartes 20px, contrôles en pilule                 */
-/*    • bordures blanches très transparentes (7–13 %)                  */
-/*    • texte secondaire gris chaud #A6A29A                            */
-/* ------------------------------------------------------------------ */
-
 :root {
   color-scheme: dark;
 
-  /* --- Surfaces : 3 niveaux d'empilement, comme sur la maquette --- */
   --background: #11100f;
-  /* fond app                            */
   --surface: #201f1e;
-  /* cartes posées sur le fond (charte)  */
   --surface-2: #262523;
-  /* blocs internes, chips, inputs       */
   --surface-3: #2d2b28;
-  /* niveau le plus élevé / survol       */
   --surface-hover: #2a2826;
 
-  /* --- Texte --- */
   --foreground: #ffffff;
   --muted: #a6a29a;
-  /* libellés, métadonnées, en-têtes     */
   --faint: rgb(255 255 255 / 38%);
 
-  /* --- Accent crème --- */
   --primary: #d7d1b0;
   --primary-hover: #e3ddc4;
   --primary-active: #c9c3a0;
   --primary-foreground: #11100f;
 
-  /* --- Contours --- */
   --border: rgb(255 255 255 / 7%);
   --border-strong: rgb(255 255 255 / 13%);
   --ring: rgb(215 209 176 / 35%);
 
-  /* --- Sémantiques (sobres : la charte reste quasi mono) --- */
   --danger: #f87171;
   --warning: #fbbf24;
   --success: #4ade80;
   --info: #93c5fd;
 
-  /* --- Élévation douce (pas d'ombres marquées sur la maquette) --- */
   --shadow-card: inset 0 1px 0 rgb(255 255 255 / 3%);
   --shadow-pop: 0 16px 40px rgb(0 0 0 / 45%);
 
-  /* --- Rayons --- */
   --radius-card: 1.25rem;
-  /* cartes, panneaux (20 px)            */
   --radius-panel: 1rem;
-  /* blocs internes (16 px)              */
   --radius-control: 0.75rem;
-  /* inputs, menus (12 px)               */
+
+  --map-surface: #ffffff;
+  --map-foreground: #11100f;
+  --map-muted: #6b6862;
+  --map-border: rgb(0 0 0 / 8%);
 }
 
 @theme inline {
@@ -102,8 +75,6 @@
 
 @layer base {
 
-  /* Tout `border` hérite du contour discret par défaut (comportement
-     v3-like) : cohérence immédiate avec les liserés des maquettes. */
   *,
   ::before,
   ::after {
@@ -120,7 +91,6 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Titres serrés, graisse moyenne — comme la branding sheet. */
   h1,
   h2,
   h3,
@@ -139,7 +109,6 @@
     outline-offset: 2px;
   }
 
-  /* Scrollbars discrètes, dans la gamme sombre */
   * {
     scrollbar-width: thin;
     scrollbar-color: rgb(255 255 255 / 14%) transparent;
@@ -165,8 +134,6 @@
 }
 
 @layer components {
-
-  /* --- Cartes / panneaux ------------------------------------------- */
   .card {
     border-radius: var(--radius-card);
     border: 1px solid var(--border);
@@ -180,14 +147,12 @@
     letter-spacing: -0.01em;
   }
 
-  /* --- Boutons ------------------------------------------------------ */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     border-radius: 9999px;
-    /* pilule, comme sur la maquette */
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
     font-weight: 500;
@@ -238,7 +203,6 @@
     background: rgb(255 255 255 / 5%);
   }
 
-  /* Boutons ronds d'icônes (recherche, notifications, +/− de la carte) */
   .btn-icon {
     display: inline-flex;
     align-items: center;
@@ -257,13 +221,13 @@
     background: var(--surface-2);
   }
 
-  /* --- Chips de filtre (« All / Pending / Assigned… ») -------------- */
   .chip {
     border-radius: 9999px;
     padding: 0.375rem 0.875rem;
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--muted);
+    background: rgb(255 255 255 / 3%);
     border: 1px solid transparent;
     cursor: pointer;
     transition:
@@ -280,11 +244,9 @@
   .chip[aria-current="true"],
   .chip.is-active {
     background: var(--primary);
-    /* état actif = crème, comme la maquette */
     color: var(--primary-foreground);
   }
 
-  /* --- Badges de statut --------------------------------------------- */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -324,7 +286,28 @@
     border-color: rgb(248 113 113 / 20%);
   }
 
-  /* --- Navigation ---------------------------------------------------- */
+  .status-text {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .status-text-success {
+    color: var(--success);
+  }
+
+  .status-text-warning {
+    color: var(--warning);
+  }
+
+  .status-text-danger {
+    color: var(--danger);
+  }
+
+  .status-text-info {
+    color: var(--info);
+  }
+
   .nav-link {
     font-size: 0.875rem;
     font-weight: 500;
@@ -342,13 +325,11 @@
     background: rgb(255 255 255 / 4%);
   }
 
-  /* Maquette : l'item actif est blanc, sans pastille. */
   .nav-link[aria-current="page"],
   .nav-link.is-active {
     color: var(--foreground);
   }
 
-  /* --- Tableaux (commandes, listes) ---------------------------------- */
   .table {
     width: 100%;
     border-collapse: collapse;
@@ -383,8 +364,6 @@
     border-bottom: none;
   }
 
-  /* --- Jauge segmentée (« Fleet distribution by type ») -------------- */
-  /* Usage : <div class="meter" style="--meter-value: 84%"></div>        */
   .meter {
     --meter-value: 0%;
     position: relative;
@@ -405,20 +384,16 @@
 
   .meter::before {
     color: rgb(255 255 255 / 14%);
-    /* piste */
   }
 
   .meter::after {
     color: rgb(255 255 255 / 85%);
-    /* valeur */
     clip-path: inset(0 calc(100% - var(--meter-value)) 0 0);
   }
 
   .meter-primary::after {
     color: var(--primary);
   }
-
-  /* --- Champs de formulaire (signin / signup) ------------------------ */
 
   .field-label {
     display: block;
@@ -435,7 +410,6 @@
     border: 1px solid var(--border);
     background: rgb(0 0 0 / 24%);
     padding: 0.8rem 1rem;
-    /* 16px min : évite le zoom automatique de Safari iOS au focus (< 16px) */
     font-size: 1rem;
     color: var(--foreground);
     transition:
@@ -464,14 +438,12 @@
     cursor: not-allowed;
   }
 
-  /* ≥ sm : resserrage typographique des champs sur écrans larges */
   @media (min-width: 640px) {
     .field-input {
       font-size: 0.925rem;
     }
   }
 
-  /* Correctif autofill jaune de Chrome/Safari sur fond sombre */
   .field-input:-webkit-autofill,
   .field-input:-webkit-autofill:hover,
   .field-input:-webkit-autofill:focus {
@@ -480,9 +452,65 @@
     caret-color: var(--foreground);
     transition: background-color 9999s ease-in-out 0s;
   }
+
+  .map-panel {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--map-surface);
+  }
+
+  .map-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--map-foreground);
+    background: var(--map-surface);
+    border: 1px solid var(--map-border);
+    box-shadow: var(--shadow-pop);
+  }
+
+  .map-control-muted {
+    color: var(--map-muted);
+  }
+
+  .map-pin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.5rem 0.75rem;
+    background: var(--map-surface);
+    color: var(--map-foreground);
+    border: 1px solid var(--map-border);
+    box-shadow: var(--shadow-pop);
+    font-size: 0.75rem;
+  }
+
+  .map-pin-title {
+    font-weight: 600;
+  }
+
+  .map-pin-subtitle {
+    color: var(--map-muted);
+  }
+
+  .map-pin-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 9999px;
+    background: var(--surface);
+    color: var(--foreground);
+  }
 }
 
-/* Respect du mouvement réduit */
 @media (prefers-reduced-motion: reduce) {
 
   *,
