@@ -5,6 +5,7 @@
  * DashboardData shape consumed by presentation components (DIP).
  */
 
+import { apiFetch, notFoundAs } from "./api-client";
 import type {
   ActivityEntry,
   DashboardAction,
@@ -12,62 +13,13 @@ import type {
   DashboardStat,
   ReactivityStat,
 } from "./dashboard";
+import { SPECIALTY_LABELS } from "./profile";
 import type {
   ApiApplication,
   ApiPaginated,
   ApiProfile,
   ApiReplacementListing,
 } from "./types/api";
-
-/**
- * Backend base URL — must be set via NEXT_PUBLIC_BACKEND_URL env var.
- * Falls back to same-origin /api if unset (dev default).
- */
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "/api";
-
-/** Typed API error — exposes HTTP status and optional NestJS business message. */
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    path: string,
-    /** Business message from the API body, if JSON. */
-    public readonly apiMessage?: string,
-  ) {
-    super(
-      apiMessage
-        ? `API ${status} (${path}): ${apiMessage}`
-        : `API ${status}: ${path}`,
-    );
-    this.name = "ApiError";
-  }
-}
-
-/**
- * Fetch with credentials. Throws typed ApiError on non-OK so callers can
- * distinguish expected states (soft 404, see `notFoundAs`) from real failures.
- */
-async function apiFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    credentials: "include",
-    headers: { Accept: "application/json" },
-  });
-
-  if (!res.ok) {
-    // NestJS returns { message, error, statusCode } — surface the business message.
-    let apiMessage: string | undefined;
-    try {
-      const body = (await res.json()) as { message?: unknown };
-      if (typeof body.message === "string") {
-        apiMessage = body.message;
-      }
-    } catch {
-      // Non-JSON body (proxy, network cut) — nothing to extract.
-    }
-    throw new ApiError(res.status, path, apiMessage);
-  }
-
-  return res.json() as Promise<T>;
-}
 
 /**
  * Normalizes API responses — handles both paginated ({ data: [], meta: {} })
@@ -88,16 +40,6 @@ function extractData<T>(raw: T[] | { data: T[] }): T[] {
  * SOFT: /profile/me (documented), /replacement-listings/mine, /applications/mine.
  * BLOCKING: everything else (401/403, 5xx, unknown 404, network).
  */
-
-/** Converts an expected 404 to a fallback; other errors keep propagating. */
-function notFoundAs<T>(fallback: T) {
-  return (error: unknown): T => {
-    if (error instanceof ApiError && error.status === 404) {
-      return fallback;
-    }
-    throw error;
-  };
-}
 
 /** Soft 404: profile not yet created (onboarding, see `needsProfile`). */
 async function fetchProfile(): Promise<ApiProfile | null> {
@@ -392,17 +334,8 @@ function formatRelativeTime(dateStr: string): string {
   return `il y a ${Math.floor(diffDays / 7)} semaines`;
 }
 
-function formatSpecialty(
-  specialty: ApiProfile["specialty"],
-): string | undefined {
-  const labels: Record<ApiProfile["specialty"], string> = {
-    GENERALIST: "médecine générale",
-    DENTIST: "dentisterie",
-    DERMATOLOGIST: "dermatologie",
-    PSYCHIATRIST: "psychiatrie",
-    OTHER: "autre spécialité",
-  };
-  return labels[specialty];
+function formatSpecialty(specialty: ApiProfile["specialty"]): string {
+  return SPECIALTY_LABELS[specialty];
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────

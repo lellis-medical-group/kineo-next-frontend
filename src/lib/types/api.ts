@@ -3,16 +3,20 @@
  * Separate from presentation types in lib/dashboard.ts.
  */
 
+export type Specialty =
+  | "GENERALIST"
+  | "DENTIST"
+  | "DERMATOLOGIST"
+  | "PSYCHIATRIST"
+  | "OTHER";
+
+export type ProfileType = "INSTALLED" | "REPLACEMENT" | "BOTH";
+
 export interface ApiProfile {
   id: string;
   userId: string;
-  specialty:
-    | "GENERALIST"
-    | "DENTIST"
-    | "DERMATOLOGIST"
-    | "PSYCHIATRIST"
-    | "OTHER";
-  profileType: "INSTALLED" | "REPLACEMENT" | "BOTH";
+  specialty: Specialty;
+  profileType: ProfileType;
   rppsNumber?: string;
   city?: string;
   latitude?: number;
