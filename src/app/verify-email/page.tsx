@@ -2,6 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { Button } from "@/components/atoms/button";
+import { Spinner } from "@/components/atoms/spinner";
+import { InlineAlert } from "@/components/molecules/inline-alert";
 import { AuthCard } from "@/components/organisms/auth-card";
 import {
   checkAlreadyVerified,
@@ -59,10 +62,9 @@ function mapVerificationError(error: {
 function FullscreenSpinner() {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-background">
-      <output
-        aria-label="Chargement"
-        className="block h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-primary"
-      />
+      <output aria-label="Chargement">
+        <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
+      </output>
     </main>
   );
 }
@@ -154,49 +156,40 @@ function VerifyEmailContent() {
           </p>
 
           {resend === "sent" ? (
-            <output className="block rounded-lg border border-primary/30 bg-primary/10 px-4 py-3.5 text-sm leading-relaxed">
+            <InlineAlert tone="info" className="px-4 py-3.5">
               Si un compte existe avec cette adresse, un nouvel email de
               vérification vient de partir. Pensez à vérifier vos spams.
-            </output>
+            </InlineAlert>
           ) : null}
 
           {email && resend !== "sent" ? (
             <>
-              <button
-                type="button"
+              <Button
                 onClick={handleResend}
                 disabled={resend === "sending"}
-                className="flex w-full items-center justify-center gap-2.5 rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
+                size="lg"
+                className="w-full"
               >
                 {resend === "sending" && (
-                  <span
-                    aria-hidden="true"
-                    className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
-                  />
+                  <Spinner className="h-4 w-4 border-primary-foreground/30 border-t-primary-foreground" />
                 )}
                 {resend === "sending"
                   ? "Envoi en cours..."
                   : "Renvoyer l'email de vérification"}
-              </button>
+              </Button>
 
               {resend === "error" ? (
-                <p
-                  role="alert"
-                  className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
-                >
+                <InlineAlert as="p" tone="danger">
                   L&apos;envoi a échoué. Vérifiez votre connexion, puis
                   réessayez.
-                </p>
+                </InlineAlert>
               ) : null}
             </>
           ) : null}
 
-          <a
-            href="/signin"
-            className="flex w-full items-center justify-center rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover"
-          >
+          <Button href="/signin" size="lg" className="w-full">
             Se connecter
-          </a>
+          </Button>
         </div>
       </AuthCard>
     );
@@ -209,21 +202,21 @@ function VerifyEmailContent() {
         subtitle="Votre compte est désormais actif"
       >
         <div className="space-y-6">
-          <output className="block rounded-lg border border-primary/30 bg-primary/10 px-4 py-3.5 text-sm leading-relaxed">
+          <InlineAlert tone="info" className="px-4 py-3.5">
             Vous êtes connecté. Vous pouvez accéder à votre espace dès
             maintenant.
-          </output>
+          </InlineAlert>
 
-          <button
-            type="button"
+          <Button
             onClick={() => {
               router.push(callbackURL);
               router.refresh();
             }}
-            className="flex w-full items-center justify-center rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover"
+            size="lg"
+            className="w-full"
           >
             Continuer
-          </button>
+          </Button>
         </div>
       </AuthCard>
     );
@@ -235,10 +228,9 @@ function VerifyEmailContent() {
       subtitle="Nous validons votre adresse e-mail"
     >
       <div className="flex justify-center">
-        <output
-          aria-label="Vérification en cours"
-          className="block h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-primary"
-        />
+        <output aria-label="Vérification en cours">
+          <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
+        </output>
       </div>
     </AuthCard>
   );

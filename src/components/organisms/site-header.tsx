@@ -3,7 +3,7 @@ import { BellIcon, LogOutIcon, MenuIcon } from "@/components/atoms/icons";
 import { KineoLogo } from "@/components/atoms/kineo-logo";
 import { UserIdentity } from "@/components/molecules/user-identity";
 import type { UserSummary } from "@/lib/dashboard";
-import type { HeaderLink } from "@/lib/marketing";
+import type { HeaderLink } from "@/lib/navigation";
 
 function NotificationsButton() {
   return (

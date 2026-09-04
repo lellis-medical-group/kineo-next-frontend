@@ -23,17 +23,23 @@ const ACTIVITY_ICONS: Record<
 
 export function ActivityFeed({
   items,
+  title = "Activité récente",
+  emptyMessage,
   seeAllHref,
 }: {
   items: ActivityEntry[];
+  title?: string;
+  /** Message affiché quand il n'y a aucune activité (onboarding). */
+  emptyMessage?: string;
   seeAllHref?: string;
 }) {
   return (
     <Card className="p-5 sm:p-6">
       <SectionHeading
-        title="Activité récente"
+        title={title}
         action={
-          seeAllHref && (
+          seeAllHref &&
+          items.length > 0 && (
             <Link
               href={seeAllHref}
               className="text-sm text-muted transition-colors hover:text-primary"
@@ -44,29 +50,37 @@ export function ActivityFeed({
         }
       />
 
-      <ul className="mt-5 space-y-3">
-        {items.map((entry) => (
-          <li key={entry.id}>
-            <ActivityItem
-              icon={ACTIVITY_ICONS[entry.icon]}
-              timestamp={entry.timestamp}
-              href={entry.href}
-            >
-              {entry.message.map((segment, index) =>
-                segment.bold ? (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
-                  <strong key={index} className="font-bold text-foreground">
-                    {segment.text}
-                  </strong>
-                ) : (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
-                  <span key={index}>{segment.text}</span>
-                ),
-              )}
-            </ActivityItem>
-          </li>
-        ))}
-      </ul>
+      {items.length === 0 ? (
+        emptyMessage && (
+          <p className="mt-5 text-sm leading-relaxed text-muted">
+            {emptyMessage}
+          </p>
+        )
+      ) : (
+        <ul className="mt-5 space-y-3">
+          {items.map((entry) => (
+            <li key={entry.id}>
+              <ActivityItem
+                icon={ACTIVITY_ICONS[entry.icon]}
+                timestamp={entry.timestamp}
+                href={entry.href}
+              >
+                {entry.message.map((segment, index) =>
+                  segment.bold ? (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
+                    <strong key={index} className="font-bold text-foreground">
+                      {segment.text}
+                    </strong>
+                  ) : (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
+                    <span key={index}>{segment.text}</span>
+                  ),
+                )}
+              </ActivityItem>
+            </li>
+          ))}
+        </ul>
+      )}
     </Card>
   );
 }

@@ -17,7 +17,12 @@ export function MemberHome({ data }: { data: DashboardData }) {
 
           <DashboardStats stats={data.stats} />
 
-          <ActivityFeed items={data.activity} seeAllHref="/applications" />
+          <ActivityFeed
+            items={data.activity}
+            title="Vos dernières candidatures"
+            emptyMessage="Aucune candidature pour l'instant. Parcourez les annonces ouvertes pour trouver un remplacement."
+            seeAllHref="/applications"
+          />
         </div>
 
         <aside className="space-y-6">

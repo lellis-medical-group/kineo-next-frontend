@@ -8,7 +8,7 @@ import type { ButtonVariant } from "@/components/atoms/button";
 
 export interface UserSummary {
   name: string;
-  /** Warm, personalized welcome line. */
+  /** Résumé informatif et déterministe de l'activité de l'utilisateur (annonces actives, candidatures envoyées). */
   subtitle: string;
   /** Small contextual line — e.g. "médecine générale · Paris". */
   meta?: string;

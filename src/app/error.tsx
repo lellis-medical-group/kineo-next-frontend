@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/atoms/card";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
 
 export default function RootError({
@@ -11,26 +12,21 @@ export default function RootError({
 }) {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-background px-4 text-foreground">
-      <div className="card p-10 w-full max-w-md text-center">
+      <Card className="w-full max-w-md p-10 text-center">
         <h1 className="text-5xl font-medium tracking-[-0.02em]">500</h1>
         <p className="mt-4 text-sm text-muted">
           Quelque chose s’est mal passé. Réessayez ou revenez à l’accueil.
         </p>
         <div className="mt-6 flex justify-center gap-3">
-          <button
-            type="button"
-            onClick={reset}
-            className="btn btn-secondary"
-            aria-label="Réessayer"
-          >
+          <Button variant="secondary" onClick={reset}>
             Réessayer
-          </button>
-          <Link href="/" className="btn btn-primary" aria-label="Accueil">
+          </Button>
+          <Button href="/">
             <ArrowLeftIcon className="h-4 w-4" />
             Accueil
-          </Link>
+          </Button>
         </div>
-      </div>
+      </Card>
     </main>
   );
 }

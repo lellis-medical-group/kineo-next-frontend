@@ -75,31 +75,23 @@ async function fetchMyApplications(): Promise<ApiApplication[]> {
 
 // ── Adapters (raw API → presentation types) ──────────────────────────────────
 
-const WARM_GREETINGS = [
-  "Ravi de vous revoir !",
-  "Heureux de vous retrouver parmi nous !",
-  "Bienvenue sur votre espace !",
-  "Bonne journée, et merci d'être là !",
-  "Content de vous voir !",
-  "Votre tableau de bord vous attend !",
-  "Prêt pour une belle journée ?",
-  "Toujours un plaisir de vous accueillir !",
-  "Bienvenue, on est heureux de vous compter parmi nous !",
-  "Bon retour parmi nous !",
-  "Votre communauté a besoin de vous !",
-  "Ensemble, facilitons les remplacements !",
-  "Merci de faire vivre Kineo !",
-  "Votre engagement fait la différence !",
-  "Bienvenue dans votre espace dédié !",
-];
-
-function pickWarmGreeting(): string {
-  return WARM_GREETINGS[Math.floor(Math.random() * WARM_GREETINGS.length)];
+/**
+ * Pluralise un suffixe français selon le nombre.
+ */
+function plural(count: number, suffix = "s"): string {
+  return count > 1 ? suffix : "";
 }
 
+/**
+ * Sous-titre informatif et déterministe : résume ce que la page affiche et
+ * d'où viennent les chiffres (annonces publiées par l'utilisateur,
+ * candidatures qu'il a envoyées). Remplace les messages d'accueil aléatoires.
+ */
 function adaptGreeting(
   profile: ApiProfile,
-  userName?: string,
+  userName: string | undefined,
+  listings: ApiReplacementListing[],
+  applications: ApiApplication[],
 ): DashboardData["greeting"] {
   const displayName =
     userName ||
@@ -111,23 +103,55 @@ function adaptGreeting(
     .filter(Boolean)
     .join(" · ");
 
+  const activeListings = listings.filter(
+    (l) => l.status === "OPEN" || l.status === "DISCUSSION",
+  ).length;
+  const pendingApps = applications.filter((a) => a.status === "PENDING").length;
+
+  let subtitle: string;
+  if (activeListings > 0 && pendingApps > 0) {
+    subtitle = `Ravi de vous revoir ! Vous avez ${activeListings} annonce${plural(activeListings)} active${plural(activeListings)} et ${pendingApps} candidature${plural(pendingApps)} en attente de réponse.`;
+  } else if (activeListings > 0) {
+    subtitle = `Vous avez ${activeListings} annonce${plural(activeListings)} active${plural(activeListings)}. Aucune candidature envoyée pour le moment.`;
+  } else if (pendingApps > 0) {
+    subtitle = `Vous avez ${pendingApps} candidature${plural(pendingApps)} envoyée${plural(pendingApps)}. Aucune annonce active pour le moment.`;
+  } else {
+    subtitle =
+      "Créez votre première annonce ou candidatez à un remplacement pour démarrer.";
+  }
+
   return {
     name: displayName,
-    subtitle: pickWarmGreeting(),
+    subtitle,
     meta: meta || undefined,
   };
 }
 
+/**
+ * Actions proposées dès l'arrivée — une par rôle : publier une annonce
+ * (cabinet) ou chercher un remplacement (remplaçant), puis le suivi.
+ */
 function adaptActions(): DashboardAction[] {
   return [
     {
-      label: "Créer une annonce",
+      label: "Publier une annonce",
       href: "/listings/new",
       variant: "primary",
       icon: "plus",
     },
-    { label: "Mes candidatures", href: "/applications", variant: "outline" },
-    { label: "Mes cabinets", href: "/practices", variant: "outline" },
+    {
+      label: "Chercher un remplacement",
+      href: "/listings",
+      variant: "outline",
+      icon: "layers",
+    },
+    {
+      label: "Voir mes candidatures",
+      href: "/applications",
+      variant: "outline",
+      icon: "file",
+    },
+    { label: "Gérer mes cabinets", href: "/practices", variant: "outline" },
   ];
 }
 
@@ -137,8 +161,10 @@ function adaptStats(
 ): DashboardStat[] {
   const open = listings.filter((l) => l.status === "OPEN").length;
   const discussion = listings.filter((l) => l.status === "DISCUSSION").length;
+  // Candidatures ENVOYÉES par l'utilisateur (source : /applications/mine).
   const pendingApps = applications.filter((a) => a.status === "PENDING").length;
-  const newApps = applications.filter(
+  // viewedAt est posé quand le cabinet consulte la candidature.
+  const unseenApps = applications.filter(
     (a) => !a.viewedAt && a.status === "PENDING",
   ).length;
 
@@ -156,7 +182,7 @@ function adaptStats(
         id: "next-replacement",
         title: "Prochain remplacement",
         value: formatDateRange(upcoming.startDate, upcoming.endDate),
-        label: "période à pourvoir",
+        label: "période à couvrir par un remplaçant",
         detail: upcoming.title,
         icon: "calendar",
       }
@@ -164,31 +190,31 @@ function adaptStats(
         id: "next-replacement",
         title: "Prochain remplacement",
         value: "Aucun",
-        label: "aucun remplacement à prévoir",
-        detail: "Créez une annonce pour trouver un remplaçant",
+        label: "aucune période à couvrir",
+        detail: "Publiez une annonce pour trouver un remplaçant",
         icon: "calendar",
       };
 
   return [
     {
       id: "listings",
-      title: "Annonces actives",
+      title: "Mes annonces",
       value: `${activeListings}`,
-      label: `annonce${activeListings > 1 ? "s" : ""} en cours de recrutement`,
+      label: `annonce${plural(activeListings)} active${plural(activeListings)} · en recherche de remplaçant`,
       detail:
         open > 0 || discussion > 0
-          ? `${open} ouverte${open > 1 ? "s" : ""} · ${discussion} en discussion`
+          ? `${open} ouverte${plural(open)} · ${discussion} en discussion`
           : undefined,
       icon: "layers",
     },
     {
       id: "applications",
-      title: "Candidatures",
+      title: "Mes candidatures",
       value: `${pendingApps}`,
-      label: `candidature${pendingApps > 1 ? "s" : ""} en attente de réponse`,
+      label: `candidature${plural(pendingApps)} envoyée${plural(pendingApps)} · en attente de réponse du cabinet`,
       detail:
-        newApps > 0
-          ? `${newApps} nouvelle${newApps > 1 ? "s" : ""} reçue${newApps > 1 ? "s" : ""}`
+        unseenApps > 0
+          ? `dont ${unseenApps} pas encore vue${plural(unseenApps)} par le cabinet`
           : undefined,
       icon: "users",
     },
@@ -202,6 +228,8 @@ function adaptActivity(
 ): ActivityEntry[] {
   const listingTitles = new Map(listings.map((l) => [l.id, l.title]));
 
+  // Le fil reflète UNIQUEMENT les candidatures envoyées par l'utilisateur
+  // (source : /applications/mine) — messages rédigés de son point de vue.
   return applications
     .sort(
       (a, b) =>
@@ -217,19 +245,27 @@ function adaptActivity(
       switch (app.status) {
         case "ACCEPTED":
           message = [
-            { text: "Candidature acceptée pour " },
+            { text: "Votre candidature à " },
             { text: listingLabel, bold: true },
+            { text: " a été acceptée" },
           ];
           break;
         case "REJECTED":
           message = [
-            { text: "Candidature refusée pour " },
+            { text: "Votre candidature à " },
+            { text: listingLabel, bold: true },
+            { text: " n'a pas été retenue" },
+          ];
+          break;
+        case "WITHDRAWN":
+          message = [
+            { text: "Vous avez retiré votre candidature à " },
             { text: listingLabel, bold: true },
           ];
           break;
         default:
           message = [
-            { text: "Nouvelle candidature pour " },
+            { text: "Candidature envoyée pour " },
             { text: listingLabel, bold: true },
           ];
       }
@@ -237,7 +273,7 @@ function adaptActivity(
       return {
         id: `act-${i + 1}`,
         icon:
-          app.status === "ACCEPTED" ? ("check" as const) : ("users" as const),
+          app.status === "ACCEPTED" ? ("check" as const) : ("file" as const),
         message,
         timestamp: formatRelativeTime(app.createdAt),
         href: "/applications",
@@ -248,22 +284,24 @@ function adaptActivity(
 function adaptReactivity(
   applications: ApiApplication[],
 ): DashboardData["reactivity"] {
+  // Toutes les métriques portent sur les candidatures ENVOYÉES par
+  // l'utilisateur — le libellé « reçues » était factuellement faux.
   const responded = applications.filter((a) => a.respondedAt).length;
   const total = applications.length;
   const rate = total > 0 ? Math.round((responded / total) * 100) : 0;
   const accepted = applications.filter((a) => a.status === "ACCEPTED").length;
 
   const stats: ReactivityStat[] = [
-    { label: "Taux de réponse", value: `${rate}%`, accent: true },
-    { label: "Candidatures reçues", value: `${total}` },
+    { label: "Taux de réponse des cabinets", value: `${rate}%`, accent: true },
+    { label: "Candidatures envoyées", value: `${total}` },
     { label: "Acceptées", value: `${accepted}` },
   ];
 
   return {
-    title: "Vos indicateurs",
+    title: "Vos candidatures, en chiffres",
     stats,
     tipTitle: "Conseil Kineo",
-    tip: "Les profils avec un taux de réponse supérieur à 80% reçoivent en moyenne 2,5 fois plus de candidatures. Répondez rapidement !",
+    tip: "Un message personnalisé fait la différence : mentionnez votre expérience et vos disponibilités dans chaque candidature pour augmenter vos chances d'acceptation.",
   };
 }
 
@@ -336,7 +374,7 @@ export async function fetchDashboardData(
   ]);
 
   return {
-    greeting: adaptGreeting(profile, userName),
+    greeting: adaptGreeting(profile, userName, listings, applications),
     actions: adaptActions(),
     stats: adaptStats(listings, applications),
     activity: adaptActivity(applications, listings),

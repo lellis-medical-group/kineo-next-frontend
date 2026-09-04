@@ -1,32 +1,16 @@
 "use client";
 
 import Form from "next/form";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
+import { Button } from "@/components/atoms/button";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
+import { InlineAlert } from "@/components/molecules/inline-alert";
 import { PasswordInput } from "@/components/molecules/password-input";
+import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { signIn } from "@/lib/auth-client";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="btn btn-primary mt-2 w-full py-3.5 text-[0.9375rem]"
-    >
-      {pending && (
-        <span
-          aria-hidden="true"
-          className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
-        />
-      )}
-      {pending ? "Connexion en cours..." : "Se connecter"}
-    </button>
-  );
-}
 
 /**
  * Convertit une erreur better-auth en message français compréhensible.
@@ -140,32 +124,32 @@ export default function SignInPage() {
         </label>
 
         {error && (
-          <p
-            role="alert"
-            className="rounded-control border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
-          >
+          <InlineAlert as="p" tone="danger">
             {error}
-          </p>
+          </InlineAlert>
         )}
 
-        <SubmitButton />
+        <SubmitButton
+          label="Se connecter"
+          pendingLabel="Connexion en cours..."
+        />
       </Form>
 
       <p className="mt-7 text-center text-sm text-muted">
         Nouveau sur Kineo ?{" "}
-        <a
+        <Link
           href="/signup"
           className="font-medium text-primary transition-colors hover:text-primary-hover"
         >
           Créer un compte
-        </a>
+        </Link>
       </p>
 
       <div className="mt-4 text-center">
-        <a href="/" className="btn btn-ghost" aria-label="Retour à l'accueil">
+        <Button href="/" variant="ghost">
           <ArrowLeftIcon className="h-4 w-4" />
           <span>Accueil</span>
-        </a>
+        </Button>
       </div>
     </AuthCard>
   );

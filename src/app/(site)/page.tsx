@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardContainer } from "@/components/organisms/dashboard-container";
+import { DashboardContainer } from "@/components/templates/dashboard-container";
 import { PublicHome } from "@/components/templates/public-home";
 import { useSession } from "@/lib/auth-client";
 

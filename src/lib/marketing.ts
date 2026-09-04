@@ -1,33 +1,15 @@
 /**
  * Editorial content of the public pages.
  * Kept separate from components so organisms stay presentational.
+ * La navigation structurelle vit dans `lib/navigation.ts`.
  */
-
-export interface HeaderLink {
-  label: string;
-  href: string;
-}
-
-export const publicNav: HeaderLink[] = [
-  { label: "Fonctionnalités", href: "#features" },
-  { label: "Comment ça marche", href: "#" },
-  { label: "Tarifs", href: "#" },
-];
-
-export const memberNav: HeaderLink[] = [
-  // Routes restent en anglais (convention projet), libellés en français.
-  { label: "Annonces", href: "/listings" },
-  { label: "Cabinets", href: "/practices" },
-  { label: "Mes candidatures", href: "/applications" },
-  { label: "Mon Profil", href: "/profile" },
-];
 
 export const hero = {
   title: "Le remplacement médical, simplifié.",
   subtitle:
-    "Kineo connecte médecins installés et remplaçants avec un suivi transparent et une gestion administrative automatisée.",
-  primaryCta: { label: "Trouver un remplaçant", href: "/signup" },
-  secondaryCta: { label: "Chercher un remplacement", href: "/signup" },
+    "Médecin installé, publiez votre annonce et choisissez le remplaçant qui vous convient. Remplaçant, trouvez les remplacements qui correspondent à vos dates et candidatez en un clic.",
+  primaryCta: { label: "Publier une annonce", href: "/signup" },
+  secondaryCta: { label: "Trouver un remplacement", href: "/signup" },
 };
 
 export const trustBar = {
@@ -46,25 +28,27 @@ export interface FeatureItem {
 }
 
 export const featuresSection = {
-  title: "Tout pour gérer vos remplacements",
+  title: "Deux rôles, une seule plateforme",
+  subtitle:
+    "Vous pouvez être médecin installé, remplaçant, ou les deux — Kineo s'adapte à votre situation.",
   features: [
     {
       icon: "pencil",
-      title: "Publiez en 2 minutes",
+      title: "Vous cherchez un remplaçant ?",
       description:
-        "Remplissez un court questionnaire avec vos besoins, les dates et la rétrocession proposée.",
+        "Publiez votre annonce en 2 minutes : dates, rétrocession, attentes. Les remplaçants vérifiés vous adressent leurs candidatures, et vous choisissez.",
     },
     {
       icon: "users",
-      title: "Candidatures transparentes",
+      title: "Vous cherchez un remplacement ?",
       description:
-        "Consultez les profils qualifiés, vérifiés par l'Ordre des Médecins, et échangez en direct.",
+        "Parcourez les annonces ouvertes près de chez vous, consultez les dates et la rétrocession, puis candidatez en un clic avec un message personnalisé.",
     },
     {
       icon: "mapPin",
-      title: "Recherche géolocalisée",
+      title: "Un suivi transparent, des deux côtés",
       description:
-        "Trouvez des opportunités ou des remplaçants ciblés dans votre département.",
+        "Envoyée, vue, acceptée, refusée : chaque candidature affiche son statut en temps réel. Fini les réponses qui se perdent.",
     },
   ] as FeatureItem[],
 };
@@ -72,8 +56,8 @@ export const featuresSection = {
 export const joinCta = {
   title: "Rejoignez Kineo gratuitement",
   subtitle:
-    "Inscrivez-vous dès aujourd'hui pour simplifier votre prochain remplacement médical.",
-  emailPlaceholder: "votre.email@rpps.fr",
+    "Créez votre compte : publiez vos annonces ou candidatez aux remplacements. Gratuit pendant la bêta, sans engagement.",
+  emailPlaceholder: "prenom.nom@exemple.fr",
   submitLabel: "Commencer",
 };
 

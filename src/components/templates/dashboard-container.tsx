@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/atoms/button";
 import { MemberHome } from "@/components/templates/member-home";
 import type { DashboardData } from "@/lib/dashboard";
 import { fetchDashboardData } from "@/lib/dashboard-service";
@@ -8,8 +9,10 @@ import { fetchDashboardData } from "@/lib/dashboard-service";
 type Status = "loading" | "error" | "success";
 
 /**
- * Conteneur côté client du tableau de bord : orchestre le chargement des
- * données (loading / erreur / succès) et délègue le rendu à MemberHome.
+ * Template orchestrateur de la page connectée : acquiert les données
+ * (chargement / erreur / succès) et délègue le rendu à MemberHome.
+ * Vit dans `templates/` car il compose le gabarit de page — les organismes
+ * ne doivent jamais importer de templates.
  */
 export function DashboardContainer({ userName }: { userName?: string }) {
   const [status, setStatus] = useState<Status>("loading");
@@ -114,13 +117,7 @@ function DashboardError({
           [dev] {message}
         </p>
       )}
-      <button
-        type="button"
-        onClick={onRetry}
-        className="btn btn-primary px-6 py-2.5"
-      >
-        Réessayer
-      </button>
+      <Button onClick={onRetry}>Réessayer</Button>
     </div>
   );
 }

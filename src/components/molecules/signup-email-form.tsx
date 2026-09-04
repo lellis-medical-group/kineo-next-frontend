@@ -13,7 +13,7 @@ export interface SignupEmailFormProps {
  * Redirige vers l'inscription avec l'e-mail pré-rempli (`?email=`).
  */
 export function SignupEmailForm({
-  placeholder = "votre.email@rpps.fr",
+  placeholder = "prenom.nom@exemple.fr",
   submitLabel = "Commencer",
 }: SignupEmailFormProps) {
   const router = useRouter();

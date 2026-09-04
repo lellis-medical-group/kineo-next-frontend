@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { SiteHeader } from "@/components/organisms/site-header";
 import { signOut, useSession } from "@/lib/auth-client";
 import type { UserSummary } from "@/lib/dashboard";
-import { memberNav, publicNav } from "@/lib/marketing";
+import { memberNav, publicNav } from "@/lib/navigation";
 
 /**
  * Header applicatif : gère la session et la route active, puis délègue
