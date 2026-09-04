@@ -11,29 +11,12 @@ import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { signIn } from "@/lib/auth-client";
-
-/** Maps a better-auth error to a user-friendly French message. Checks `error.code` first, then `error.message`. */
-function mapAuthError(error: { code?: string; message?: string }): string {
-  const code = error.code?.toUpperCase();
-  const message = error.message?.toUpperCase() || "";
-
-  if (
-    code === "EMAIL_NOT_VERIFIED" ||
-    message.includes("EMAIL NOT VERIFIED") ||
-    message.includes("EMAIL_NOT_VERIFIED")
-  ) {
-    return "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.";
-  }
-
-  if (
-    code === "INVALID_EMAIL_OR_PASSWORD" ||
-    message.includes("INVALID EMAIL OR PASSWORD")
-  ) {
-    return "E-mail ou mot de passe incorrect. Vérifiez votre saisie, puis réessayez.";
-  }
-
-  return "Connexion impossible pour le moment. Vérifiez votre connexion, puis réessayez.";
-}
+import {
+  AUTH_SERVICE_UNAVAILABLE_MESSAGE,
+  isAuthServiceUnavailable,
+  mapNetworkSignInError,
+  mapSignInError,
+} from "@/lib/auth-errors";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -53,13 +36,11 @@ export default function SignInPage() {
 
       if (error) {
         // Server unavailable (no status or 5xx)
-        if (!error.status || error.status >= 500) {
-          setError(
-            "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
-          );
+        if (isAuthServiceUnavailable(error)) {
+          setError(AUTH_SERVICE_UNAVAILABLE_MESSAGE);
           return;
         }
-        setError(mapAuthError(error));
+        setError(mapSignInError(error));
         return;
       }
 
@@ -67,19 +48,7 @@ export default function SignInPage() {
       router.refresh();
     } catch (err) {
       // Network error or unexpected exception
-      const message = err instanceof Error ? err.message?.toUpperCase() : "";
-      if (
-        message.includes("EMAIL NOT VERIFIED") ||
-        message.includes("EMAIL_NOT_VERIFIED")
-      ) {
-        setError(
-          "Adresse e-mail non vérifiée. Consultez votre boîte de réception et cliquez sur le lien de vérification pour activer votre compte.",
-        );
-        return;
-      }
-      setError(
-        "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
-      );
+      setError(mapNetworkSignInError(err));
     }
   }
 

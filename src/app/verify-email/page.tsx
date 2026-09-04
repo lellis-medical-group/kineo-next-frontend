@@ -11,10 +11,12 @@ import {
   sendVerificationEmail,
   verifyEmail,
 } from "@/lib/auth-client";
+import { mapVerificationError } from "@/lib/auth-errors";
 
 type VerificationStatus = "verifying" | "success" | "error" | "invalid";
 type ResendStatus = "idle" | "sending" | "sent" | "error";
 
+/** Shape of the fallback error used when the server can't be reached. */
 type AuthError = Parameters<typeof mapVerificationError>[0];
 
 /** Accepts only an internal path (single leading "/") to prevent open redirects. */
@@ -23,34 +25,6 @@ function safeCallbackURL(raw: string | null): string {
     return raw;
   }
   return "/";
-}
-
-/** Maps a better-auth error to a user-friendly French message. Checks `error.code` first, then `error.message`. */
-function mapVerificationError(error: {
-  code?: string | null;
-  message?: string | null;
-  status?: number;
-}): string {
-  const code = (error.code ?? "").toUpperCase();
-  const message = (error.message ?? "").toUpperCase();
-
-  if (code === "TOKEN_EXPIRED" || message.includes("TOKEN_EXPIRED")) {
-    return "Ce lien de vérification a expiré. Demandez un nouvel email ci-dessous.";
-  }
-
-  if (code === "INVALID_TOKEN" || message.includes("INVALID_TOKEN")) {
-    return "Ce lien de vérification est invalide ou a déjà été utilisé.";
-  }
-
-  if (code === "USER_NOT_FOUND" || message.includes("USER_NOT_FOUND")) {
-    return "Aucun compte ne correspond à ce lien de vérification.";
-  }
-
-  if (!error.status || error.status >= 500) {
-    return "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.";
-  }
-
-  return "Vérification impossible pour le moment. Réessayez ou demandez un nouvel email.";
 }
 
 function FullscreenSpinner() {

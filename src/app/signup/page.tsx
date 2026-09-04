@@ -11,6 +11,7 @@ import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { sendVerificationEmail, signUp } from "@/lib/auth-client";
+import { mapSignUpError } from "@/lib/auth-errors";
 
 type ResendStatus = "idle" | "sending" | "sent" | "error";
 
@@ -39,25 +40,11 @@ export default function SignUpPage() {
       });
 
       if (error) {
-        const message = (error.message ?? "").toLowerCase();
-        if (
-          message.includes("already exists") ||
-          message.includes("user exists")
-        ) {
+        const mapped = mapSignUpError(error);
+        if (mapped.existingAccount) {
           setExistingAccount(true);
-          setError(
-            "Un compte existe déjà avec cet e-mail. Vous pouvez vous connecter directement.",
-          );
-        } else if (
-          message.includes("too short") ||
-          message.includes("too long")
-        ) {
-          setError("Le mot de passe doit contenir entre 8 et 128 caractères.");
-        } else {
-          setError(
-            "Inscription impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
-          );
         }
+        setError(mapped.message);
         return;
       }
 

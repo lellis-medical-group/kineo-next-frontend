@@ -10,6 +10,7 @@ import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { resetPassword } from "@/lib/auth-client";
+import { mapResetPasswordError } from "@/lib/auth-errors";
 
 function FullscreenSpinner() {
   return (
@@ -41,21 +42,7 @@ function ResetPasswordForm() {
       const { error } = await resetPassword({ newPassword, token });
 
       if (error) {
-        const message = (error.message ?? "").toUpperCase();
-        if (message.includes("INVALID_TOKEN")) {
-          setError(
-            "Ce lien a expiré ou a déjà été utilisé. Demandez un nouveau lien.",
-          );
-        } else if (
-          message.includes("TOO_SHORT") ||
-          message.includes("TOO_LONG")
-        ) {
-          setError("Le mot de passe doit contenir entre 8 et 128 caractères.");
-        } else {
-          setError(
-            "Modification impossible. Vérifiez votre connexion, puis réessayez.",
-          );
-        }
+        setError(mapResetPasswordError(error));
         return;
       }
 
