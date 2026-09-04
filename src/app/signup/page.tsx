@@ -1,37 +1,27 @@
 "use client";
 
 import Form from "next/form";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
-import { AuthCard } from "@/components/auth-card";
-import { PasswordInput } from "@/components/password-input";
-import { signUp } from "@/lib/auth-client";
+import { Button } from "@/components/atoms/button";
+import { ArrowLeftIcon } from "@/components/atoms/icons";
+import { Spinner } from "@/components/atoms/spinner";
+import { InlineAlert } from "@/components/molecules/inline-alert";
+import { PasswordInput } from "@/components/molecules/password-input";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import { AuthCard } from "@/components/organisms/auth-card";
+import { sendVerificationEmail, signUp } from "@/lib/auth-client";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="mt-2 flex w-full items-center justify-center gap-2.5 rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
-    >
-      {pending && (
-        <span
-          aria-hidden="true"
-          className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
-        />
-      )}
-      {pending ? "Création du compte..." : "Créer mon compte"}
-    </button>
-  );
-}
+type ResendStatus = "idle" | "sending" | "sent" | "error";
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [error, setError] = useState("");
   const [existingAccount, setExistingAccount] = useState(false);
   const [passwordLength, setPasswordLength] = useState(0);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(
+    null,
+  );
+  const [resend, setResend] = useState<ResendStatus>("idle");
 
   async function handleSubmit(formData: FormData) {
     setError("");
@@ -71,10 +61,86 @@ export default function SignUpPage() {
         return;
       }
 
-      router.push("/");
+      setConfirmationEmail(email);
     } catch {
       setError("Impossible de contacter le serveur. Réessayez plus tard.");
     }
+  }
+
+  async function handleResend() {
+    if (!confirmationEmail) {
+      return;
+    }
+
+    setResend("sending");
+    try {
+      const { error } = await sendVerificationEmail({
+        email: confirmationEmail,
+      });
+      setResend(error ? "error" : "sent");
+    } catch {
+      setResend("error");
+    }
+  }
+
+  if (confirmationEmail) {
+    return (
+      <AuthCard
+        title="Vérifiez votre boîte mail"
+        subtitle="Une dernière étape avant votre première connexion"
+      >
+        <div className="space-y-6 text-center">
+          <InlineAlert tone="info">
+            Un lien de vérification vient d&apos;être envoyé à{" "}
+            <strong className="font-semibold text-foreground">
+              {confirmationEmail}
+            </strong>
+            . Ouvrez-le pour activer votre compte.
+          </InlineAlert>
+
+          <p className="text-sm leading-relaxed text-muted">
+            Le lien est valable 1 heure. Pensez à vérifier vos spams si vous ne
+            le trouvez pas.
+          </p>
+
+          {resend === "sent" ? (
+            <InlineAlert tone="info">
+              Si un compte existe avec cette adresse, un nouvel email de
+              vérification vient de partir.
+            </InlineAlert>
+          ) : null}
+
+          {resend !== "sent" ? (
+            <>
+              <Button
+                onClick={handleResend}
+                disabled={resend === "sending"}
+                size="lg"
+                className="w-full"
+              >
+                {resend === "sending" && (
+                  <Spinner className="h-4 w-4 border-primary-foreground/30 border-t-primary-foreground" />
+                )}
+                {resend === "sending"
+                  ? "Envoi en cours..."
+                  : "Renvoyer l'email de vérification"}
+              </Button>
+
+              {resend === "error" ? (
+                <InlineAlert as="p" tone="danger">
+                  L&apos;envoi a échoué. Vérifiez votre connexion, puis
+                  réessayez.
+                </InlineAlert>
+              ) : null}
+            </>
+          ) : null}
+
+          <Button href="/signin" size="lg" className="w-full">
+            Aller à la connexion
+          </Button>
+        </div>
+      </AuthCard>
+    );
   }
 
   return (
@@ -90,7 +156,7 @@ export default function SignUpPage() {
             type="text"
             required
             autoComplete="name"
-            placeholder="Dr Julien Martin"
+            placeholder="Dr Jean Dupont"
             className="field-input"
           />
         </label>
@@ -102,7 +168,7 @@ export default function SignUpPage() {
             type="email"
             required
             autoComplete="email"
-            placeholder="dr.julien.martin@gmail.com"
+            placeholder="jean.dupont@exemple.fr"
             className="field-input"
           />
         </label>
@@ -134,48 +200,55 @@ export default function SignUpPage() {
         </label>
 
         {error && (
-          <p
-            role="alert"
-            className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
-          >
+          <InlineAlert as="p" tone="danger">
             {error}
-          </p>
+          </InlineAlert>
         )}
 
         {error && existingAccount && (
           <p className="-mt-3 text-center text-sm">
-            <a
+            <Link
               href="/signin"
-              className="font-semibold text-primary transition-colors hover:text-primary-hover"
+              className="font-medium text-primary transition-colors hover:text-primary-hover"
             >
               Se connecter avec cet e-mail
-            </a>
+            </Link>
           </p>
         )}
 
-        <SubmitButton />
+        <SubmitButton
+          label="Créer mon compte"
+          pendingLabel="Création du compte..."
+        />
 
         <p className="text-center text-xs leading-relaxed text-muted">
           En créant un compte, vous acceptez nos{" "}
-          <a
+          <Link
             href="/terms"
             className="underline decoration-border underline-offset-2 transition-colors hover:text-foreground"
           >
             conditions d&apos;utilisation
-          </a>
+          </Link>
           .
         </p>
       </Form>
 
       <p className="mt-6 text-center text-sm text-muted">
         Déjà sur Kineo ?{" "}
-        <a
+        <Link
           href="/signin"
-          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="font-medium text-primary transition-colors hover:text-primary-hover"
         >
           Se connecter
-        </a>
+        </Link>
       </p>
+
+      <div className="mt-4 text-center">
+        <Button href="/" variant="ghost">
+          <ArrowLeftIcon className="h-4 w-4" />
+          <span>Accueil</span>
+        </Button>
+      </div>
     </AuthCard>
   );
 }

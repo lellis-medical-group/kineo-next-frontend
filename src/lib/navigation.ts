@@ -1,0 +1,24 @@
+/**
+ * Structural navigation — separate from editorial/marketing content (`lib/marketing.ts`).
+ * Consumed by header organisms.
+ */
+
+export interface HeaderLink {
+  label: string;
+  href: string;
+}
+
+export const publicNav: HeaderLink[] = [
+  { label: "Fonctionnalités", href: "#features" },
+  { label: "Comment ça marche", href: "#" },
+  { label: "Tarifs", href: "#" },
+];
+
+export const memberNav: HeaderLink[] = [
+  // Routes stay in English (project convention), labels in French.
+  { label: "Accueil", href: "/" },
+  { label: "Annonces", href: "/listings" },
+  { label: "Cabinets", href: "/practices" },
+  { label: "Mes candidatures", href: "/applications" },
+  { label: "Mon Profil", href: "/profile" },
+];

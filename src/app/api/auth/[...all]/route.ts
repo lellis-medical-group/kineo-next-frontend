@@ -5,7 +5,7 @@ const BACKEND_URL =
 
 async function handleAuthRequest(request: NextRequest) {
   const path = request.nextUrl.pathname.replace("/api/auth", "");
-  const url = `${BACKEND_URL}/api/auth${path}`;
+  const url = `${BACKEND_URL}/api/auth${path}${request.nextUrl.search}`;
 
   const headers = new Headers(request.headers);
   headers.set("x-forwarded-host", request.nextUrl.host);

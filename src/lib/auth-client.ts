@@ -19,5 +19,25 @@ export const {
   useSession,
   requestPasswordReset,
   resetPassword,
+  sendVerificationEmail,
+  verifyEmail,
   getSession,
 } = authClient;
+
+export async function checkAlreadyVerified(token: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `/api/auth/check-email-verification?token=${encodeURIComponent(token)}`,
+    );
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = (await response.json()) as { verified?: boolean };
+
+    return data.verified === true;
+  } catch {
+    return false;
+  }
+}

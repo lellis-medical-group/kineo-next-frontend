@@ -1,31 +1,24 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+/**
+ * Guard middleware: allows the request if a better-auth session cookie is
+ * present, redirects to /signin otherwise.
+ *
+ * Deliberately avoids calling the backend here: the check relies on the same
+ * cookie the client set (`better-auth.*`), consistent with the session seen
+ * by the browser. When the backend is temporarily unavailable, access is not
+ * blocked by mistake (actual state is checked client-side).
+ */
+export function proxy(request: NextRequest) {
+  const hasSessionCookie = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith("better-auth."));
 
-export async function proxy(request: NextRequest) {
-  try {
-    const sessionResponse = await fetch(`${BACKEND_URL}/api/auth/get-session`, {
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-      },
-    });
-
-    if (!sessionResponse.ok) {
-      return NextResponse.redirect(new URL("/signin", request.url));
-    }
-
-    const { data: session } = await sessionResponse.json();
-
-    if (!session) {
-      return NextResponse.redirect(new URL("/signin", request.url));
-    }
-
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Auth proxy error:", error);
+  if (!hasSessionCookie) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
+
+  return NextResponse.next();
 }
 
 export const config = {

@@ -1,29 +1,13 @@
 "use client";
 
 import Form from "next/form";
+import Link from "next/link";
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
-import { AuthCard } from "@/components/auth-card";
+import { Button } from "@/components/atoms/button";
+import { InlineAlert } from "@/components/molecules/inline-alert";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import { AuthCard } from "@/components/organisms/auth-card";
 import { requestPasswordReset } from "@/lib/auth-client";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="mt-2 flex w-full items-center justify-center gap-2.5 rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
-    >
-      {pending && (
-        <span
-          aria-hidden="true"
-          className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
-        />
-      )}
-      {pending ? "Envoi du lien..." : "Recevoir le lien"}
-    </button>
-  );
-}
 
 export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
@@ -71,34 +55,28 @@ export default function ForgotPasswordPage() {
     >
       {sent ? (
         <div className="space-y-6">
-          <output className="block rounded-lg border border-primary/30 bg-primary/10 px-4 py-3.5 text-sm leading-relaxed">
+          <InlineAlert tone="info">
             Si un compte existe avec cet e-mail, vous recevrez un lien de
             réinitialisation dans quelques instants.
             <br />
             Pensez à vérifier votre dossier spam.
-          </output>
+          </InlineAlert>
 
-          <a
-            href="/signin"
-            className="flex w-full items-center justify-center rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover"
-          >
+          <Button href="/signin" size="lg" className="w-full">
             Retour à la connexion
-          </a>
+          </Button>
         </div>
       ) : notEnabled ? (
         <div className="space-y-6">
-          <output className="block rounded-lg border border-warning/30 bg-warning/10 px-4 py-3.5 text-sm leading-relaxed">
+          <InlineAlert tone="warning">
             La réinitialisation en ligne n&apos;est pas encore activée.
             Contactez l&apos;administrateur de votre structure pour
             réinitialiser votre mot de passe.
-          </output>
+          </InlineAlert>
 
-          <a
-            href="/signin"
-            className="flex w-full items-center justify-center rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover"
-          >
+          <Button href="/signin" size="lg" className="w-full">
             Retour à la connexion
-          </a>
+          </Button>
         </div>
       ) : (
         <>
@@ -111,31 +89,31 @@ export default function ForgotPasswordPage() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="dr.julien.martin@gmail.com"
+                placeholder="jean.dupont@exemple.fr"
                 className="field-input"
               />
             </label>
 
             {error && (
-              <p
-                role="alert"
-                className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
-              >
+              <InlineAlert as="p" tone="danger">
                 {error}
-              </p>
+              </InlineAlert>
             )}
 
-            <SubmitButton />
+            <SubmitButton
+              label="Recevoir le lien"
+              pendingLabel="Envoi du lien..."
+            />
           </Form>
 
           <p className="mt-6 text-center text-sm text-muted">
             Mot de passe retrouvé ?{" "}
-            <a
+            <Link
               href="/signin"
               className="font-semibold text-primary transition-colors hover:text-primary-hover"
             >
               Se connecter
-            </a>
+            </Link>
           </p>
         </>
       )}
