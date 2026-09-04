@@ -27,13 +27,17 @@ export function ProfileContainer() {
 
     fetchMyProfile()
       .then((loaded) => {
+        if (!loaded) {
+          router.replace("/profile/create");
+          return;
+        }
         setProfile(loaded);
         setStatus("success");
       })
       .catch((err) => {
         // 404 = no profile → redirect to creation form.
         if (err instanceof Error && /404/i.test(err.message)) {
-          router.replace("/profile/edit");
+          router.replace("/profile/create");
           return;
         }
         setError(err instanceof Error ? err.message : "Erreur inconnue");

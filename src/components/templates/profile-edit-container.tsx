@@ -9,9 +9,8 @@ import { Spinner } from "@/components/atoms/spinner";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
 import type { ProfileFormData } from "@/lib/profile";
-import { EMPTY_PROFILE_FORM, profileToFormValues } from "@/lib/profile";
+import { profileToFormValues } from "@/lib/profile";
 import {
-  createProfile,
   fetchMyProfile,
   mapProfileError,
   updateProfile,
@@ -20,11 +19,8 @@ import type { ApiProfile } from "@/lib/types/api";
 
 type Status = "loading" | "error" | "ready";
 
-/**
- * Orchestrator for /profile/edit: loads the current profile, presents the
- * create or edit form, and redirects back to /profile on cancel/success.
- */
-export function ProfileFormContainer() {
+/** Orchestrator for /profile/edit: edit form, redirects to /profile/create if no profile. */
+export function ProfileEditContainer() {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("loading");
   const [error, setError] = useState("");
@@ -35,15 +31,22 @@ export function ProfileFormContainer() {
     setError("");
     fetchMyProfile()
       .then((loaded) => {
+        if (!loaded) {
+          router.replace("/profile/create");
+          return;
+        }
         setProfile(loaded);
         setStatus("ready");
       })
-      .catch(() => {
-        // 404 = no profile yet → stay in create mode.
-        setProfile(null);
-        setStatus("ready");
+      .catch((err) => {
+        if (err instanceof Error && /404/i.test(err.message)) {
+          router.replace("/profile/create");
+          return;
+        }
+        setError(err instanceof Error ? err.message : "Erreur inconnue");
+        setStatus("error");
       });
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     load();
@@ -52,14 +55,13 @@ export function ProfileFormContainer() {
   async function handleSubmit(
     payload: ProfileFormData,
   ): Promise<string | undefined> {
+    if (!profile) {
+      router.replace("/profile/create");
+      return undefined;
+    }
     setError("");
     try {
-      if (profile) {
-        await updateProfile(profile.id, payload);
-      } else {
-        await createProfile(payload);
-      }
-      // Back to view on success — fresh fetch will run.
+      await updateProfile(profile.id, payload);
       router.replace("/profile");
       return undefined;
     } catch (err) {
@@ -81,10 +83,10 @@ export function ProfileFormContainer() {
     return <ErrorState message={error} onRetry={load} />;
   }
 
-  const mode = !profile ? "create" : "edit";
-  const initialValues = profile
-    ? profileToFormValues(profile)
-    : EMPTY_PROFILE_FORM;
+  if (!profile) {
+    router.replace("/profile/create");
+    return null;
+  }
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
@@ -99,27 +101,18 @@ export function ProfileFormContainer() {
 
       <Card className="p-6 sm:p-8">
         <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-          {mode === "create"
-            ? "Créez votre profil professionnel"
-            : "Modifier le profil professionnel"}
+          Modifier le profil professionnel
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          {mode === "create"
-            ? "Renseignez votre spécialité et votre type de pratique pour publier des annonces et candidater."
-            : "Mettez à jour vos informations professionnelles. Les changements seront visibles après enregistrement."}
+          Mettez à jour vos informations professionnelles. Les changements
+          seront visibles après enregistrement.
         </p>
 
         <div className="mt-6">
           <ProfileForm
-            initialValues={initialValues}
-            submitLabel={
-              mode === "create"
-                ? "Créer mon profil"
-                : "Enregistrer les modifications"
-            }
-            pendingLabel={
-              mode === "create" ? "Création du profil…" : "Enregistrement…"
-            }
+            initialValues={profileToFormValues(profile)}
+            submitLabel="Enregistrer les modifications"
+            pendingLabel="Enregistrement…"
             onSubmit={handleSubmit}
           />
         </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ProfileFormContainer } from "@/components/templates/profile-form-container";
+import { ProfileEditContainer } from "@/components/templates/profile-edit-container";
 
 export const metadata: Metadata = {
   title: "Modifier le profil — Kineo",
@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function ProfileEditPage() {
-  return <ProfileFormContainer />;
+  return <ProfileEditContainer />;
 }
