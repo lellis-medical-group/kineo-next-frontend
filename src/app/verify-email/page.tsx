@@ -6,15 +6,11 @@ import { Button } from "@/components/atoms/button";
 import { Spinner } from "@/components/atoms/spinner";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { AuthCard } from "@/components/organisms/auth-card";
-import {
-  checkAlreadyVerified,
-  sendVerificationEmail,
-  verifyEmail,
-} from "@/lib/auth-client";
+import { checkAlreadyVerified, verifyEmail } from "@/lib/auth-client";
 import { mapVerificationError } from "@/lib/auth-errors";
+import { useResendVerification } from "@/lib/use-resend-verification";
 
 type VerificationStatus = "verifying" | "success" | "error" | "invalid";
-type ResendStatus = "idle" | "sending" | "sent" | "error";
 
 /** Shape of the fallback error used when the server can't be reached. */
 type AuthError = Parameters<typeof mapVerificationError>[0];
@@ -47,7 +43,7 @@ function VerifyEmailContent() {
     token ? "verifying" : "invalid",
   );
   const [verifyError, setVerifyError] = useState("");
-  const [resend, setResend] = useState<ResendStatus>("idle");
+  const { status: resend, resend: resendEmail } = useResendVerification(email);
 
   useEffect(() => {
     if (!token) {
@@ -91,20 +87,6 @@ function VerifyEmailContent() {
     };
   }, [token]);
 
-  async function handleResend() {
-    if (!email) {
-      return;
-    }
-
-    setResend("sending");
-    try {
-      const { error } = await sendVerificationEmail({ email });
-      setResend(error ? "error" : "sent");
-    } catch {
-      setResend("error");
-    }
-  }
-
   if (status === "invalid" || status === "error") {
     return (
       <AuthCard
@@ -132,7 +114,7 @@ function VerifyEmailContent() {
           {email && resend !== "sent" ? (
             <>
               <Button
-                onClick={handleResend}
+                onClick={resendEmail}
                 disabled={resend === "sending"}
                 size="lg"
                 className="w-full"

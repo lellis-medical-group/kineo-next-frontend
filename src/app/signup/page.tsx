@@ -10,10 +10,9 @@ import { InlineAlert } from "@/components/molecules/inline-alert";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
-import { sendVerificationEmail, signUp } from "@/lib/auth-client";
+import { signUp } from "@/lib/auth-client";
 import { mapSignUpError } from "@/lib/auth-errors";
-
-type ResendStatus = "idle" | "sending" | "sent" | "error";
+import { useResendVerification } from "@/lib/use-resend-verification";
 
 export default function SignUpPage() {
   const [error, setError] = useState("");
@@ -22,7 +21,8 @@ export default function SignUpPage() {
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(
     null,
   );
-  const [resend, setResend] = useState<ResendStatus>("idle");
+  const { status: resend, resend: resendEmail } =
+    useResendVerification(confirmationEmail);
 
   async function handleSubmit(formData: FormData) {
     setError("");
@@ -51,22 +51,6 @@ export default function SignUpPage() {
       setConfirmationEmail(email);
     } catch {
       setError("Impossible de contacter le serveur. Réessayez plus tard.");
-    }
-  }
-
-  async function handleResend() {
-    if (!confirmationEmail) {
-      return;
-    }
-
-    setResend("sending");
-    try {
-      const { error } = await sendVerificationEmail({
-        email: confirmationEmail,
-      });
-      setResend(error ? "error" : "sent");
-    } catch {
-      setResend("error");
     }
   }
 
@@ -100,7 +84,7 @@ export default function SignUpPage() {
           {resend !== "sent" ? (
             <>
               <Button
-                onClick={handleResend}
+                onClick={resendEmail}
                 disabled={resend === "sending"}
                 size="lg"
                 className="w-full"
