@@ -5,7 +5,7 @@
  * DashboardData shape consumed by presentation components (DIP).
  */
 
-import { apiFetch, notFoundAs } from "./api-client";
+import { apiFetch, extractList, notFoundAs } from "./api-client";
 import type {
   ActivityEntry,
   DashboardAction,
@@ -13,6 +13,7 @@ import type {
   DashboardStat,
   ReactivityStat,
 } from "./dashboard";
+import { formatDateRange, formatRelativeTime, plural } from "./format";
 import { SPECIALTY_LABELS } from "./profile";
 import type {
   ApiApplication,
@@ -20,17 +21,6 @@ import type {
   ApiProfile,
   ApiReplacementListing,
 } from "./types/api";
-
-/**
- * Normalizes API responses — handles both paginated ({ data: [], meta: {} })
- * and direct array responses. Returns a flat array.
- */
-function extractData<T>(raw: T[] | { data: T[] }): T[] {
-  if (Array.isArray(raw)) return raw;
-  if (raw && typeof raw === "object" && "data" in raw)
-    return (raw as { data: T[] }).data;
-  return [];
-}
 
 // ── Raw data fetching ────────────────────────────────────────────────────────
 
@@ -51,7 +41,7 @@ async function fetchMyListings(): Promise<ApiReplacementListing[]> {
   const raw = await apiFetch<
     ApiPaginated<ApiReplacementListing> | ApiReplacementListing[]
   >("/replacement-listings/mine").catch(notFoundAs([]));
-  return extractData(raw);
+  return extractList(raw);
 }
 
 /**
@@ -61,16 +51,13 @@ async function fetchMyApplications(): Promise<ApiApplication[]> {
   const raw = await apiFetch<ApiPaginated<ApiApplication> | ApiApplication[]>(
     "/applications/mine",
   ).catch(notFoundAs([]));
-  return extractData(raw);
+  return extractList(raw);
 }
 
 // ── Adapters (raw API → presentation types) ──────────────────────────────────
 
-/**
- * Pluralise un suffixe français selon le nombre.
- */
-function plural(count: number, suffix = "s"): string {
-  return count > 1 ? suffix : "";
+function formatSpecialty(specialty: ApiProfile["specialty"]): string {
+  return SPECIALTY_LABELS[specialty];
 }
 
 /**
@@ -294,48 +281,6 @@ function adaptReactivity(
     tipTitle: "Conseil Kineo",
     tip: "Un message personnalisé fait la différence : mentionnez votre expérience et vos disponibilités dans chaque candidature pour augmenter vos chances d'acceptation.",
   };
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function formatDateRange(start: string, end: string): string {
-  const s = new Date(start);
-  const e = new Date(end);
-  const sameMonth =
-    s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
-
-  if (sameMonth) {
-    const startDay = s.toLocaleDateString("fr-FR", { day: "numeric" });
-    const endDate = e.toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "short",
-    });
-    return `Du ${startDay} au ${endDate}`;
-  }
-
-  const opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
-  return `Du ${s.toLocaleDateString("fr-FR", opts)} au ${e.toLocaleDateString(
-    "fr-FR",
-    opts,
-  )}`;
-}
-
-function formatRelativeTime(dateStr: string): string {
-  const now = new Date();
-  const date = new Date(dateStr);
-  const diffMs = now.getTime() - date.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffHours < 1) return "il y a moins d'une heure";
-  if (diffHours < 24) return `il y a ${diffHours} heures`;
-  if (diffDays === 1) return "hier";
-  if (diffDays < 7) return `il y a ${diffDays} jours`;
-  return `il y a ${Math.floor(diffDays / 7)} semaines`;
-}
-
-function formatSpecialty(specialty: ApiProfile["specialty"]): string {
-  return SPECIALTY_LABELS[specialty];
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
