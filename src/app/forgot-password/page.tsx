@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
     >
       {sent ? (
         <div className="space-y-6">
-          <InlineAlert tone="info" className="px-4 py-3.5">
+          <InlineAlert tone="info">
             Si un compte existe avec cet e-mail, vous recevrez un lien de
             réinitialisation dans quelques instants.
             <br />
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
         </div>
       ) : notEnabled ? (
         <div className="space-y-6">
-          <InlineAlert tone="warning" className="px-4 py-3.5">
+          <InlineAlert tone="warning">
             La réinitialisation en ligne n&apos;est pas encore activée.
             Contactez l&apos;administrateur de votre structure pour
             réinitialiser votre mot de passe.

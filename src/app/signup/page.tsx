@@ -90,7 +90,7 @@ export default function SignUpPage() {
         subtitle="Une dernière étape avant votre première connexion"
       >
         <div className="space-y-6 text-center">
-          <InlineAlert tone="info" className="px-4 py-3.5">
+          <InlineAlert tone="info">
             Un lien de vérification vient d&apos;être envoyé à{" "}
             <strong className="font-semibold text-foreground">
               {confirmationEmail}
@@ -104,7 +104,7 @@ export default function SignUpPage() {
           </p>
 
           {resend === "sent" ? (
-            <InlineAlert tone="info" className="px-4 py-3.5">
+            <InlineAlert tone="info">
               Si un compte existe avec cette adresse, un nouvel email de
               vérification vient de partir.
             </InlineAlert>

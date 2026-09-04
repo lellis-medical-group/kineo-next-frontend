@@ -91,7 +91,7 @@ function ResetPasswordForm() {
         subtitle="Votre nouveau mot de passe est actif"
       >
         <div className="space-y-6">
-          <InlineAlert tone="info" className="px-4 py-3.5">
+          <InlineAlert tone="info">
             Vous pouvez dès maintenant vous connecter avec votre nouveau mot de
             passe.
           </InlineAlert>

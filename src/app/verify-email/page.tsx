@@ -156,7 +156,7 @@ function VerifyEmailContent() {
           </p>
 
           {resend === "sent" ? (
-            <InlineAlert tone="info" className="px-4 py-3.5">
+            <InlineAlert tone="info">
               Si un compte existe avec cette adresse, un nouvel email de
               vérification vient de partir. Pensez à vérifier vos spams.
             </InlineAlert>
@@ -202,7 +202,7 @@ function VerifyEmailContent() {
         subtitle="Votre compte est désormais actif"
       >
         <div className="space-y-6">
-          <InlineAlert tone="info" className="px-4 py-3.5">
+          <InlineAlert tone="info">
             Vous êtes connecté. Vous pouvez accéder à votre espace dès
             maintenant.
           </InlineAlert>
