@@ -1,4 +1,3 @@
-import type { ComponentType, ReactNode, SVGProps } from "react";
 import { Avatar } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/atoms/card";
@@ -9,136 +8,34 @@ import {
   UsersIcon,
 } from "@/components/atoms/icons";
 import { InlineAlert } from "@/components/molecules/inline-alert";
+import { ProfileSection } from "@/components/molecules/profile-section";
 import { StatRow } from "@/components/molecules/stat-row";
-import { ProfileForm } from "@/components/organisms/profile-form";
 import {
-  EMPTY_PROFILE_FORM,
   formatMemberSince,
   PROFILE_TYPE_DESCRIPTIONS,
   PROFILE_TYPE_LABELS,
-  type ProfileFormData,
-  profileToFormValues,
   SPECIALTY_LABELS,
 } from "@/lib/profile";
 import type { ApiProfile } from "@/lib/types/api";
 
 type Feedback = "created" | "saved" | null;
-type SectionIcon = ComponentType<SVGProps<SVGSVGElement>>;
-
-/** Card with tinted icon header — shared section layout of the view mode. */
-function ProfileSection({
-  icon: Icon,
-  title,
-  description,
-  children,
-}: {
-  icon: SectionIcon;
-  title: string;
-  description?: string;
-  children: ReactNode;
-}) {
-  return (
-    <Card className="p-6">
-      <div className="flex items-center gap-3">
-        <span
-          aria-hidden="true"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary"
-        >
-          <Icon />
-        </span>
-        <div>
-          <h2 className="text-base font-bold">{title}</h2>
-          {description && (
-            <p className="mt-0.5 text-sm text-muted">{description}</p>
-          )}
-        </div>
-      </div>
-      <div className="mt-4">{children}</div>
-    </Card>
-  );
-}
 
 /**
- * Profile page layout — three modes:
- * - `view` (default): read-only sections
- * - `edit`: pre-filled, cancellable form
- * - `create`: form for a profile-less account
- * Shell (navbar + footer) is provided by the (site) layout.
+ * Profile page (read-only view mode): identity card + read-only sections.
+ * Create/edit flows live in their own containers (/profile/create, /profile/edit)
+ * and share the ProfileFormPage shell.
  */
 export function ProfileView({
-  mode,
   profile,
   userName,
   feedback,
   onEdit,
-  onCancel,
-  onSubmit,
 }: {
-  mode: "view" | "create" | "edit";
-  profile: ApiProfile | null;
+  profile: ApiProfile;
   userName: string;
   feedback: Feedback;
   onEdit: () => void;
-  onCancel: () => void;
-  /** Sends the payload to the API; returns an error message, or undefined on success. */
-  onSubmit: (payload: ProfileFormData) => Promise<string | undefined>;
 }) {
-  if (mode === "create" || !profile) {
-    return (
-      <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-        <Card className="p-6 sm:p-8">
-          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-            Créez votre profil professionnel
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            Renseignez votre spécialité et votre type de pratique pour publier
-            des annonces et candidater.
-          </p>
-
-          <div className="mt-6">
-            <ProfileForm
-              initialValues={EMPTY_PROFILE_FORM}
-              submitLabel="Créer mon profil"
-              pendingLabel="Création du profil..."
-              onSubmit={onSubmit}
-            />
-          </div>
-        </Card>
-      </div>
-    );
-  }
-
-  if (mode === "edit") {
-    return (
-      <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-        <Card className="p-6 sm:p-8">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-                Modifier le profil
-              </h1>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                Mettez à jour vos informations, puis enregistrez.
-              </p>
-            </div>
-            <Button variant="ghost" onClick={onCancel} className="shrink-0">
-              Annuler
-            </Button>
-          </div>
-
-          <div className="mt-6">
-            <ProfileForm
-              initialValues={profileToFormValues(profile)}
-              submitLabel="Enregistrer les modifications"
-              pendingLabel="Enregistrement..."
-              onSubmit={onSubmit}
-            />
-          </div>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
       {feedback === "created" && (

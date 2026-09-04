@@ -57,9 +57,12 @@ export function ProfileContainer() {
     return <ErrorState message={error} onRetry={load} />;
   }
 
+  if (!profile) {
+    return null;
+  }
+
   return (
     <ProfileView
-      mode="view"
       profile={profile}
       userName={session?.user?.name || "Professionnel"}
       feedback={feedback}
@@ -67,8 +70,6 @@ export function ProfileContainer() {
         setFeedback(null);
         router.push("/profile/edit");
       }}
-      onCancel={() => setFeedback(null)}
-      onSubmit={async () => undefined}
     />
   );
 }
