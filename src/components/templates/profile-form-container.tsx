@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/atoms/card";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
 import { Spinner } from "@/components/atoms/spinner";
-import { InlineAlert } from "@/components/molecules/inline-alert";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
 import type { ProfileFormData } from "@/lib/profile";
@@ -97,25 +97,33 @@ export function ProfileFormContainer() {
         Retour au profil
       </Button>
 
-      {mode === "edit" && (
-        <InlineAlert tone="info" className="mb-4">
-          Modification du profil professionnel. Les changements seront visibles
-          après enregistrement.
-        </InlineAlert>
-      )}
+      <Card className="p-6 sm:p-8">
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+          {mode === "create"
+            ? "Créez votre profil professionnel"
+            : "Modifier le profil professionnel"}
+        </h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          {mode === "create"
+            ? "Renseignez votre spécialité et votre type de pratique pour publier des annonces et candidater."
+            : "Mettez à jour vos informations professionnelles. Les changements seront visibles après enregistrement."}
+        </p>
 
-      <ProfileForm
-        initialValues={initialValues}
-        submitLabel={
-          mode === "create"
-            ? "Créer mon profil"
-            : "Enregistrer les modifications"
-        }
-        pendingLabel={
-          mode === "create" ? "Création du profil…" : "Enregistrement…"
-        }
-        onSubmit={handleSubmit}
-      />
+        <div className="mt-6">
+          <ProfileForm
+            initialValues={initialValues}
+            submitLabel={
+              mode === "create"
+                ? "Créer mon profil"
+                : "Enregistrer les modifications"
+            }
+            pendingLabel={
+              mode === "create" ? "Création du profil…" : "Enregistrement…"
+            }
+            onSubmit={handleSubmit}
+          />
+        </div>
+      </Card>
     </div>
   );
 }
