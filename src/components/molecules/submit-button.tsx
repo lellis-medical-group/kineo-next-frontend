@@ -5,17 +5,13 @@ import { Button } from "@/components/atoms/button";
 import { Spinner } from "@/components/atoms/spinner";
 
 export interface SubmitButtonProps {
-  /** Libellé au repos. */
+  /** Idle label. */
   label: string;
-  /** Libellé affiché pendant la soumission. */
+  /** Label shown during submission. */
   pendingLabel?: string;
 }
 
-/**
- * Bouton de soumission de formulaire : lit l'état `pending` du formulaire
- * parent (useFormStatus), se désactive et affiche un spinner.
- * Molécule réutilisée par toutes les pages d'authentification.
- */
+/** Form submit button: reads parent `pending` state (useFormStatus), disables and shows a spinner. */
 export function SubmitButton({
   label,
   pendingLabel = `${label}...`,

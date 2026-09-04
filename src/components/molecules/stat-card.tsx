@@ -5,9 +5,9 @@ export interface StatCardProps {
   title: string;
   value: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
-  /** Légende discrète expliquant la valeur. */
+  /** Subtle legend explaining the value. */
   label?: string;
-  /** Contenu libre sous la valeur : badges, note, légende… */
+  /** Free content below the value: badges, note, legend… */
   footer?: ReactNode;
 }
 

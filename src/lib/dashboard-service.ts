@@ -25,9 +25,26 @@ import type {
  */
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "/api";
 
+/** Typed API error — exposes HTTP status and optional NestJS business message. */
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    path: string,
+    /** Business message from the API body, if JSON. */
+    public readonly apiMessage?: string,
+  ) {
+    super(
+      apiMessage
+        ? `API ${status} (${path}): ${apiMessage}`
+        : `API ${status}: ${path}`,
+    );
+    this.name = "ApiError";
+  }
+}
+
 /**
- * Fetch with credentials and error handling.
- * Throws on non-OK responses so callers can distinguish network vs domain errors.
+ * Fetch with credentials. Throws typed ApiError on non-OK so callers can
+ * distinguish expected states (soft 404, see `notFoundAs`) from real failures.
  */
 async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -36,7 +53,17 @@ async function apiFetch<T>(path: string): Promise<T> {
   });
 
   if (!res.ok) {
-    throw new Error(`API ${res.status}: ${path}`);
+    // NestJS returns { message, error, statusCode } — surface the business message.
+    let apiMessage: string | undefined;
+    try {
+      const body = (await res.json()) as { message?: unknown };
+      if (typeof body.message === "string") {
+        apiMessage = body.message;
+      }
+    } catch {
+      // Non-JSON body (proxy, network cut) — nothing to extract.
+    }
+    throw new ApiError(res.status, path, apiMessage);
   }
 
   return res.json() as Promise<T>;
@@ -55,21 +82,43 @@ function extractData<T>(raw: T[] | { data: T[] }): T[] {
 
 // ── Raw data fetching ────────────────────────────────────────────────────────
 
-async function fetchProfile(): Promise<ApiProfile> {
-  return apiFetch<ApiProfile>("/profile/me");
+/**
+ * Error policy — soft 404 (expected, returns fallback) vs blocking (error screen).
+ *
+ * SOFT: /profile/me (documented), /replacement-listings/mine, /applications/mine.
+ * BLOCKING: everything else (401/403, 5xx, unknown 404, network).
+ */
+
+/** Converts an expected 404 to a fallback; other errors keep propagating. */
+function notFoundAs<T>(fallback: T) {
+  return (error: unknown): T => {
+    if (error instanceof ApiError && error.status === 404) {
+      return fallback;
+    }
+    throw error;
+  };
 }
 
+/** Soft 404: profile not yet created (onboarding, see `needsProfile`). */
+async function fetchProfile(): Promise<ApiProfile | null> {
+  return apiFetch<ApiProfile>("/profile/me").catch(notFoundAs(null));
+}
+
+/** Soft 404: without a profile, user can't have listings. */
 async function fetchMyListings(): Promise<ApiReplacementListing[]> {
   const raw = await apiFetch<
     ApiPaginated<ApiReplacementListing> | ApiReplacementListing[]
-  >("/replacement-listings/mine");
+  >("/replacement-listings/mine").catch(notFoundAs([]));
   return extractData(raw);
 }
 
+/**
+ * 404 soft : sans profil, l'utilisateur ne peut pas avoir de candidatures.
+ */
 async function fetchMyApplications(): Promise<ApiApplication[]> {
   const raw = await apiFetch<ApiPaginated<ApiApplication> | ApiApplication[]>(
     "/applications/mine",
-  );
+  ).catch(notFoundAs([]));
   return extractData(raw);
 }
 
@@ -88,20 +137,22 @@ function plural(count: number, suffix = "s"): string {
  * candidatures qu'il a envoyées). Remplace les messages d'accueil aléatoires.
  */
 function adaptGreeting(
-  profile: ApiProfile,
+  profile: ApiProfile | null,
   userName: string | undefined,
   listings: ApiReplacementListing[],
   applications: ApiApplication[],
 ): DashboardData["greeting"] {
   const displayName =
     userName ||
-    (profile.rppsNumber
+    (profile?.rppsNumber
       ? `Dr. ${profile.rppsNumber.slice(-4)}`
       : "Professionnel");
 
-  const meta = [profile.city, formatSpecialty(profile.specialty)]
-    .filter(Boolean)
-    .join(" · ");
+  const meta = profile
+    ? [profile.city, formatSpecialty(profile.specialty)]
+        .filter(Boolean)
+        .join(" · ")
+    : "";
 
   const activeListings = listings.filter(
     (l) => l.status === "OPEN" || l.status === "DISCUSSION",
@@ -161,9 +212,9 @@ function adaptStats(
 ): DashboardStat[] {
   const open = listings.filter((l) => l.status === "OPEN").length;
   const discussion = listings.filter((l) => l.status === "DISCUSSION").length;
-  // Candidatures ENVOYÉES par l'utilisateur (source : /applications/mine).
+  // Applications SENT by the user (source: /applications/mine).
   const pendingApps = applications.filter((a) => a.status === "PENDING").length;
-  // viewedAt est posé quand le cabinet consulte la candidature.
+  // viewedAt is set when the practice views the application.
   const unseenApps = applications.filter(
     (a) => !a.viewedAt && a.status === "PENDING",
   ).length;
@@ -228,8 +279,7 @@ function adaptActivity(
 ): ActivityEntry[] {
   const listingTitles = new Map(listings.map((l) => [l.id, l.title]));
 
-  // Le fil reflète UNIQUEMENT les candidatures envoyées par l'utilisateur
-  // (source : /applications/mine) — messages rédigés de son point de vue.
+  // The feed reflects ONLY applications sent by the user — first-person messages.
   return applications
     .sort(
       (a, b) =>
@@ -284,8 +334,7 @@ function adaptActivity(
 function adaptReactivity(
   applications: ApiApplication[],
 ): DashboardData["reactivity"] {
-  // Toutes les métriques portent sur les candidatures ENVOYÉES par
-  // l'utilisateur — le libellé « reçues » était factuellement faux.
+  // All metrics are about applications SENT by the user.
   const responded = applications.filter((a) => a.respondedAt).length;
   const total = applications.length;
   const rate = total > 0 ? Math.round((responded / total) * 100) : 0;
@@ -359,10 +408,9 @@ function formatSpecialty(
 // ── Public API ────────────────────────────────────────────────────────────────
 
 /**
- * Fetches all dashboard data from the backend and adapts it.
- * Throws if any critical endpoint fails — callers should handle errors.
- *
- * @param userName - Display name from the session (optional, for personalized greeting)
+ * Fetches and adapts all dashboard data. Throws on critical failure.
+ * Soft 404s (see error policy above) are not errors — missing profile is
+ * signaled via `needsProfile`.
  */
 export async function fetchDashboardData(
   userName?: string,
@@ -378,6 +426,7 @@ export async function fetchDashboardData(
     actions: adaptActions(),
     stats: adaptStats(listings, applications),
     activity: adaptActivity(applications, listings),
+    needsProfile: profile === null,
     reactivity: adaptReactivity(applications),
   };
 }

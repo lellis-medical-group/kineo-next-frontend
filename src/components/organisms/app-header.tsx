@@ -6,10 +6,7 @@ import { signOut, useSession } from "@/lib/auth-client";
 import type { UserSummary } from "@/lib/dashboard";
 import { memberNav, publicNav } from "@/lib/navigation";
 
-/**
- * Header applicatif : gère la session et la route active, puis délègue
- * le rendu au composant présentational SiteHeader.
- */
+/** App header: manages session and active route, then delegates to presentational SiteHeader. */
 export function AppHeader() {
   const pathname = usePathname();
   const { data: session } = useSession();

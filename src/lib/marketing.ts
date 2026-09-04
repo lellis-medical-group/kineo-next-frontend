@@ -1,7 +1,7 @@
 /**
  * Editorial content of the public pages.
  * Kept separate from components so organisms stay presentational.
- * La navigation structurelle vit dans `lib/navigation.ts`.
+ * Structural navigation lives in `lib/navigation.ts`.
  */
 
 export const hero = {

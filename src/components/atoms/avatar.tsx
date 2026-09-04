@@ -1,15 +1,13 @@
 import { forwardRef } from "react";
 
 export interface AvatarProps {
-  /** Nom complet ; initiale affichée (préfixe "Dr." ignoré). */
+  /** Full name; initial displayed ("Dr." prefix stripped). */
   name: string;
-  /** Classes supplémentaires (taille…). */
+  /** Additional classes (size…). */
   className?: string;
 }
 
-/**
- * Avatar circulaire avec initiale.
- */
+/** Circular avatar with initial. */
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   { name, className = "" },
   ref,

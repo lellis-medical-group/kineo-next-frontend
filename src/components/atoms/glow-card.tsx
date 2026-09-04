@@ -1,17 +1,14 @@
 import type { ReactNode } from "react";
 
 export interface GlowCardProps {
-  /** Classes wrappers (marge externe, largeur…). */
+  /** Wrapper classes (margin, width…). */
   className?: string;
-  /** Classes du contenu (padding, disposition…). */
+  /** Content classes (padding, layout…). */
   innerClassName?: string;
   children: ReactNode;
 }
 
-/**
- * Carte avec contour animé (dégradé conique tournant) et halo de
- * surbrillance. Le fond reste la surface du thème.
- */
+/** Card with animated conic-gradient border and highlight halo. Background stays the theme surface. */
 export function GlowCard({
   className = "",
   innerClassName = "",

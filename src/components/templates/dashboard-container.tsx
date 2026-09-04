@@ -9,10 +9,9 @@ import { fetchDashboardData } from "@/lib/dashboard-service";
 type Status = "loading" | "error" | "success";
 
 /**
- * Template orchestrateur de la page connectée : acquiert les données
- * (chargement / erreur / succès) et délègue le rendu à MemberHome.
- * Vit dans `templates/` car il compose le gabarit de page — les organismes
- * ne doivent jamais importer de templates.
+ * Orchestrator for the logged-in page: fetches data (loading/error/success)
+ * and delegates rendering to MemberHome. Lives in `templates/` — organisms
+ * must never import templates.
  */
 export function DashboardContainer({ userName }: { userName?: string }) {
   const [status, setStatus] = useState<Status>("loading");
@@ -59,18 +58,18 @@ function DashboardSkeleton() {
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0 space-y-6">
-          {/* Greeting skeleton */}
+          {/* Greeting */}
           <div className="h-28 animate-pulse rounded-control bg-surface" />
-          {/* Stats skeleton */}
+          {/* Stats */}
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="h-32 animate-pulse rounded-control bg-surface" />
             <div className="h-32 animate-pulse rounded-control bg-surface" />
             <div className="h-32 animate-pulse rounded-control bg-surface" />
           </div>
-          {/* Activity skeleton */}
+          {/* Activity */}
           <div className="h-64 animate-pulse rounded-control bg-surface" />
         </div>
-        {/* Sidebar skeleton */}
+        {/* Sidebar */}
         <aside className="h-96 animate-pulse rounded-control bg-surface" />
       </div>
     </div>
@@ -108,9 +107,12 @@ function DashboardError({
         Impossible de charger vos données
       </h2>
       <p className="mb-2 text-sm text-muted">
-        {message.includes("401") || message.includes("403")
+        {/* ApiError format: `API {status} (…): …` */}
+        {/^API (401|403)\b/.test(message)
           ? "Votre session a expiré. Veuillez vous reconnecter."
-          : "Le service est temporairement indisponible. Veuillez réessayer."}
+          : /^API 404\b/.test(message)
+            ? "Cette information n'est pas disponible. Veuillez réessayer."
+            : "Le service est temporairement indisponible. Veuillez réessayer."}
       </p>
       {isDev && message && (
         <p className="mb-4 max-w-sm wrap-break-word rounded bg-surface px-3 py-2 font-mono text-xs text-muted">

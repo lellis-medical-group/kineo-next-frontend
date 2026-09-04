@@ -8,9 +8,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * Mentions légales — le texte définitif est en cours de rédaction.
- * Les sections listées ci-dessous (structure standard des CGU) seront
- * complétées par le service juridique avant la mise en production.
+ * Terms of service — definitive text is being drafted.
+ * Sections listed below (standard ToS structure) will be completed by the legal team before production.
  */
 
 export default function TermsPage() {

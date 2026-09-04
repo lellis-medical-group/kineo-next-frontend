@@ -8,7 +8,7 @@ import type { ButtonVariant } from "@/components/atoms/button";
 
 export interface UserSummary {
   name: string;
-  /** Résumé informatif et déterministe de l'activité de l'utilisateur (annonces actives, candidatures envoyées). */
+  /** Deterministic summary of user activity (active listings, sent applications). */
   subtitle: string;
   /** Small contextual line — e.g. "médecine générale · Paris". */
   meta?: string;
@@ -26,7 +26,7 @@ export interface DashboardAction {
 export interface DashboardStat {
   id: string;
   title: string;
-  /** Value displayed large — a number or a key fact. */
+  /** Large-displayed value — number or key fact. */
   value: string;
   icon: "layers" | "users" | "calendar";
   label?: string;
@@ -52,6 +52,8 @@ export interface DashboardData {
   actions: DashboardAction[];
   stats: DashboardStat[];
   activity: ActivityEntry[];
+  /** True when GET /profile/me returns 404 — account exists, profile not yet created (onboarding, not an error). */
+  needsProfile: boolean;
   reactivity: {
     title: string;
     stats: ReactivityStat[];

@@ -15,10 +15,7 @@ const comingSoonFeatures = [
   "Vos documents et justificatifs",
 ];
 
-/**
- * Page profil — succédera au GET /profile/me une fois exposé par le
- * backend. Le shell (navbar + footer) est hérité du groupe (site).
- */
+/** Profile page — placeholder until GET /profile/me is exposed by the backend. Shell inherited from (site) group. */
 export default function ProfilePage() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">

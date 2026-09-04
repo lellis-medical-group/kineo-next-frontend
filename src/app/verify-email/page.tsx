@@ -17,10 +17,7 @@ type ResendStatus = "idle" | "sending" | "sent" | "error";
 
 type AuthError = Parameters<typeof mapVerificationError>[0];
 
-/**
- * N'accepte qu'un chemin interne (un seul « / » initial) afin d'éviter toute
- * redirection ouverte vers un domaine externe.
- */
+/** Accepts only an internal path (single leading "/") to prevent open redirects. */
 function safeCallbackURL(raw: string | null): string {
   if (raw?.startsWith("/") && !raw.startsWith("//")) {
     return raw;
@@ -28,10 +25,7 @@ function safeCallbackURL(raw: string | null): string {
   return "/";
 }
 
-/**
- * Convertit une erreur better-auth en message français compréhensible.
- * Vérifie `error.code` en priorité, puis `error.message`.
- */
+/** Maps a better-auth error to a user-friendly French message. Checks `error.code` first, then `error.message`. */
 function mapVerificationError(error: {
   code?: string | null;
   message?: string | null;
@@ -102,8 +96,7 @@ function VerifyEmailContent() {
         return;
       }
 
-      // Lien expiré ou déjà consommé : si l'adresse est déjà vérifiée, on
-      // affiche l'écran de succès plutôt qu'une erreur.
+      // Expired or consumed link: if the email is already verified, show success instead of an error.
       if (await checkAlreadyVerified(token)) {
         if (!cancelled) {
           setStatus("success");

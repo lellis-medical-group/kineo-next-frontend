@@ -1,12 +1,11 @@
 export interface SpinnerProps {
-  /** Taille + couleurs (ex. "h-4 w-4 border-primary/20 border-t-primary"). */
+  /** Size + colors (e.g. "h-4 w-4 border-primary/20 border-t-primary"). */
   className?: string;
 }
 
 /**
- * Indicateur de chargement circulaire — primitive visuelle sans état.
- * La taille et les couleurs sont injectées par l'appelant pour rester
- * conflict-free (aucune classe utilitaire dupliquée).
+ * Circular loading indicator — stateless visual primitive.
+ * Size and colors are injected by the caller to stay conflict-free.
  */
 export function Spinner({ className = "" }: SpinnerProps) {
   return (

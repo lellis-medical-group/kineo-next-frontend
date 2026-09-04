@@ -29,7 +29,7 @@ export function ActivityFeed({
 }: {
   items: ActivityEntry[];
   title?: string;
-  /** Message affiché quand il n'y a aucune activité (onboarding). */
+  /** Message shown when there is no activity (onboarding). */
   emptyMessage?: string;
   seeAllHref?: string;
 }) {
@@ -67,12 +67,12 @@ export function ActivityFeed({
               >
                 {entry.message.map((segment, index) =>
                   segment.bold ? (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static segments, stable order
                     <strong key={index} className="font-bold text-foreground">
                       {segment.text}
                     </strong>
                   ) : (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: segments statiques et ordre stable
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static segments, stable order
                     <span key={index}>{segment.text}</span>
                   ),
                 )}

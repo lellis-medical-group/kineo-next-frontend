@@ -4,13 +4,13 @@ import { Avatar } from "@/components/atoms/avatar";
 export interface UserIdentityProps {
   name: string;
   subtitle: string;
-  /** Masque le bloc nom/rôle (avatar seul dans la navbar). */
+  /** Hides name/role block (avatar only in navbar). */
   showText?: boolean;
-  /** Rend l'identité cliquable (ex. vers /profile). */
+  /** Makes identity clickable (e.g. to /profile). */
   href?: string;
 }
 
-/** Affiche l'utilisateur courant : nom/rôle + avatar circulaire. */
+/** Displays current user: name/role + circular avatar. */
 export function UserIdentity({
   name,
   subtitle,

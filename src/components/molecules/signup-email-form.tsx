@@ -9,9 +9,7 @@ export interface SignupEmailFormProps {
   submitLabel?: string;
 }
 
-/**
- * Redirige vers l'inscription avec l'e-mail pré-rempli (`?email=`).
- */
+/** Redirects to signup with pre-filled email (`?email=`). */
 export function SignupEmailForm({
   placeholder = "prenom.nom@exemple.fr",
   submitLabel = "Commencer",

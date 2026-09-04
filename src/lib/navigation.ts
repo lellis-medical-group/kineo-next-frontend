@@ -1,6 +1,6 @@
 /**
- * Navigation structurelle de l'application — distincte du contenu éditorial
- * marketing (`lib/marketing.ts`). Consommée par les organismes de header.
+ * Structural navigation — separate from editorial/marketing content (`lib/marketing.ts`).
+ * Consumed by header organisms.
  */
 
 export interface HeaderLink {
@@ -15,7 +15,7 @@ export const publicNav: HeaderLink[] = [
 ];
 
 export const memberNav: HeaderLink[] = [
-  // Routes restent en anglais (convention projet), libellés en français.
+  // Routes stay in English (project convention), labels in French.
   { label: "Annonces", href: "/listings" },
   { label: "Cabinets", href: "/practices" },
   { label: "Mes candidatures", href: "/applications" },

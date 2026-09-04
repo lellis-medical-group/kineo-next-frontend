@@ -1,6 +1,6 @@
 /**
- * Types bruts renvoyés par l'API (calqués sur templates/api.json).
- * Séparés des types de présentation de lib/dashboard.ts.
+ * Raw API types (mirrors templates/api.json).
+ * Separate from presentation types in lib/dashboard.ts.
  */
 
 export interface ApiProfile {

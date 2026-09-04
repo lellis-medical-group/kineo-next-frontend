@@ -12,10 +12,7 @@ import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { signIn } from "@/lib/auth-client";
 
-/**
- * Convertit une erreur better-auth en message français compréhensible.
- * Vérifie `error.code` en priorité, puis `error.message`.
- */
+/** Maps a better-auth error to a user-friendly French message. Checks `error.code` first, then `error.message`. */
 function mapAuthError(error: { code?: string; message?: string }): string {
   const code = error.code?.toUpperCase();
   const message = error.message?.toUpperCase() || "";
@@ -55,7 +52,7 @@ export default function SignInPage() {
       });
 
       if (error) {
-        // Serveur indisponible (pas de statut ou 5xx)
+        // Server unavailable (no status or 5xx)
         if (!error.status || error.status >= 500) {
           setError(
             "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.",
@@ -69,7 +66,7 @@ export default function SignInPage() {
       router.push("/");
       router.refresh();
     } catch (err) {
-      // Erreur réseau ou exception inattendue
+      // Network error or unexpected exception
       const message = err instanceof Error ? err.message?.toUpperCase() : "";
       if (
         message.includes("EMAIL NOT VERIFIED") ||

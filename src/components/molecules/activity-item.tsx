@@ -3,10 +3,10 @@ import type { ComponentType, ReactNode, SVGProps } from "react";
 
 export interface ActivityItemProps {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
-  /** Message riche : segments en gras, noms, etc. */
+  /** Rich message: bold segments, names, etc. */
   children: ReactNode;
   timestamp: string;
-  /** Lien de détail optionnel (bouton « Voir »). */
+  /** Optional detail link ("Voir" button). */
   href?: string;
 }
 

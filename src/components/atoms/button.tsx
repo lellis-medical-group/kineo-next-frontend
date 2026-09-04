@@ -20,13 +20,13 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
 };
 
 export interface ButtonProps {
-  /** Variante visuelle. */
+  /** Visual variant. */
   variant?: ButtonVariant;
-  /** md : actions de section · lg : actions principales (formulaires auth). */
+  /** md: section actions · lg: primary actions (auth forms). */
   size?: ButtonSize;
   className?: string;
   children: ReactNode;
-  /** Rendu en lien Next.js stylé comme un bouton. */
+  /** Renders as a Next.js Link styled as a button. */
   href?: string;
   type?: ComponentProps<"button">["type"];
   disabled?: boolean;

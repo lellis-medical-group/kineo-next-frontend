@@ -10,9 +10,9 @@ const TONE_CLASSES: Record<InlineAlertTone, string> = {
 };
 
 /**
- * Layout par type d'élément : `p` (erreur compacte) vs `output`/`div`
- * (confirmation aérée). Évite tout conflit de classes utilitaires —
- * sans tailwind-merge, deux classes concurrentes ont un gagnant non garanti.
+ * Layout per element type: `p` (compact error) vs `output`/`div` (spacious confirmation).
+ * Avoids utility class conflicts — without tailwind-merge, competing classes
+ * have an unpredictable winner.
  */
 const ELEMENT_CLASSES: Record<InlineAlertProps["as"] & string, string> = {
   p: "block px-3.5 py-2.5",
@@ -22,19 +22,13 @@ const ELEMENT_CLASSES: Record<InlineAlertProps["as"] & string, string> = {
 
 export interface InlineAlertProps {
   tone?: InlineAlertTone;
-  /**
-   * `p` : erreur bloquante (annonce via role="alert") ·
-   * `output` : résultat d'action (confirmation, envoi…).
-   */
+  /** `p`: blocking error (announced via role="alert") · `output`: action result (confirmation). */
   as?: "p" | "output" | "div";
   className?: string;
   children: ReactNode;
 }
 
-/**
- * Message inline de formulaire — regroupe les styles précédemment dupliqués
- * dans les pages d'authentification (erreurs et confirmations).
- */
+/** Form inline message — consolidates styles previously duplicated across auth pages. */
 export function InlineAlert({
   tone = "info",
   as: Component = "output",
