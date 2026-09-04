@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kineo — Frontend Next.js
 
-## Getting Started
+Interface publique et console membre de la plateforme de remplacement médical Kineo.
 
-First, run the development server:
+## Commandes
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install        # installer les dépendances (packageManager: bun)
+bun run dev        # serveur de développement (port 3001)
+bun run build      # build de production (type-check + compilation Next.js)
+bun run lint       # lint + format check (Biome)
+bun run format     # format automatique (Biome)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Conforme à l'Atomic Design — chaque dossier de `src/components` n'importe que
+depuis les niveaux inférieurs ou égaux :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `atoms/` — primitives visuelles sans logique métier (Button, Card, Spinner, icônes…)
+- `molecules/` — assemblages d'atomes (HeaderNav, LoadingState, StatusCard…)
+- `organisms/` — blocs autonomes pilotés par les données (SiteHeader, ProfileForm…)
+- `templates/` — mise en page et conteneurs « orchestrateurs » (chargement/erreur/données)
 
-## Learn More
+Les pages (App Router) `src/app/` sont des coquilles le plus fines possible ;
+la logique d'orchestration vit dans `src/components/templates/`.
 
-To learn more about Next.js, take a look at the following resources:
+### Server / Client Components
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Les pages publiques, `error.tsx`, `not-found.tsx` et les layouts statiques
+  restent des Server Components.
+- Seuls les éléments interactifs portent `"use client"` : authentification,
+  formulaires, header (session), conteneurs qui chargent des données.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Couche de services (`src/lib`)
 
-## Deploy on Vercel
+Les composants ne parlent jamais au backend directement :
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `api-client.ts` — fetch partagé, `ApiError` typé, `notFoundAs` (404 attendus), `extractList`
+- `*‑service.ts` — appels API + adaptation vers les types de présentation (`dashboard-service`, `profile-service`)
+- Types bruts de l'API dans `types/api.ts` ; types de présentation dans `dashboard.ts` / `profile.ts`
+- Constantes et libellés français dans des modules dédiés (`marketing.ts`, `navigation.ts`, `auth-errors.ts`, `format.ts`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Conventions
+
+- Routes en anglais dans le code (convention projet), libellés affichés en français
+- Les contenus éditoriaux sont séparés des composants (`lib/marketing.ts`)
+- Erreurs API mappées en messages français dans `lib/auth-errors.ts` / `lib/profile-service.ts`
+- Le thème vit dans `src/app/globals.css` (variables CSS + Tailwind 4)
