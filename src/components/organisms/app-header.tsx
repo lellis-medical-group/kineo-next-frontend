@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/organisms/site-header";
 import { signOut, useSession } from "@/lib/auth-client";
 import type { UserSummary } from "@/lib/dashboard";
@@ -8,6 +8,7 @@ import { memberNav, publicNav } from "@/lib/navigation";
 
 /** App header: manages session and active route, then delegates to presentational SiteHeader. */
 export function AppHeader() {
+  const router = useRouter();
   const pathname = usePathname();
   const { data: session } = useSession();
   const user = session?.user;
@@ -33,8 +34,10 @@ export function AppHeader() {
         links={memberNav}
         activeHref={activeLink?.href}
         user={identity}
-        onSignOut={() => {
-          void signOut();
+        onSignOut={async () => {
+          await signOut();
+          router.push("/signin");
+          router.refresh();
         }}
       />
     );
