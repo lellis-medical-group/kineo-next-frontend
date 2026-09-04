@@ -1,13 +1,12 @@
 "use client";
 
 import Form from "next/form";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { AuthCard } from "@/components/organisms/auth-card";
-import { signUp } from "@/lib/auth-client";
+import { sendVerificationEmail, signUp } from "@/lib/auth-client";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -28,11 +27,16 @@ function SubmitButton() {
   );
 }
 
+type ResendStatus = "idle" | "sending" | "sent" | "error";
+
 export default function SignUpPage() {
-  const router = useRouter();
   const [error, setError] = useState("");
   const [existingAccount, setExistingAccount] = useState(false);
   const [passwordLength, setPasswordLength] = useState(0);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(
+    null,
+  );
+  const [resend, setResend] = useState<ResendStatus>("idle");
 
   async function handleSubmit(formData: FormData) {
     setError("");
@@ -72,10 +76,95 @@ export default function SignUpPage() {
         return;
       }
 
-      router.push("/");
+      setConfirmationEmail(email);
     } catch {
       setError("Impossible de contacter le serveur. Réessayez plus tard.");
     }
+  }
+
+  async function handleResend() {
+    if (!confirmationEmail) {
+      return;
+    }
+
+    setResend("sending");
+    try {
+      const { error } = await sendVerificationEmail({
+        email: confirmationEmail,
+      });
+      setResend(error ? "error" : "sent");
+    } catch {
+      setResend("error");
+    }
+  }
+
+  if (confirmationEmail) {
+    return (
+      <AuthCard
+        title="Vérifiez votre boîte mail"
+        subtitle="Une dernière étape avant votre première connexion"
+      >
+        <div className="space-y-6 text-center">
+          <output className="block rounded-lg border border-primary/30 bg-primary/10 px-4 py-3.5 text-sm leading-relaxed">
+            Un lien de vérification vient d&apos;être envoyé à{" "}
+            <strong className="font-semibold text-foreground">
+              {confirmationEmail}
+            </strong>
+            . Ouvrez-le pour activer votre compte.
+          </output>
+
+          <p className="text-sm leading-relaxed text-muted">
+            Le lien est valable 1 heure. Pensez à vérifier vos spams si vous ne
+            le trouvez pas.
+          </p>
+
+          {resend === "sent" ? (
+            <output className="block rounded-lg border border-primary/30 bg-primary/10 px-4 py-3.5 text-sm leading-relaxed">
+              Si un compte existe avec cette adresse, un nouvel email de
+              vérification vient de partir.
+            </output>
+          ) : null}
+
+          {resend !== "sent" ? (
+            <>
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={resend === "sending"}
+                className="flex w-full items-center justify-center gap-2.5 rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-60"
+              >
+                {resend === "sending" && (
+                  <span
+                    aria-hidden="true"
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground"
+                  />
+                )}
+                {resend === "sending"
+                  ? "Envoi en cours..."
+                  : "Renvoyer l'email de vérification"}
+              </button>
+
+              {resend === "error" ? (
+                <p
+                  role="alert"
+                  className="rounded-lg border border-danger/25 bg-danger/10 px-3.5 py-2.5 text-sm text-danger"
+                >
+                  L&apos;envoi a échoué. Vérifiez votre connexion, puis
+                  réessayez.
+                </p>
+              ) : null}
+            </>
+          ) : null}
+
+          <a
+            href="/signin"
+            className="flex w-full items-center justify-center rounded-[0.625rem] bg-primary py-3.5 text-base font-bold text-primary-foreground transition-colors hover:bg-primary-hover"
+          >
+            Aller à la connexion
+          </a>
+        </div>
+      </AuthCard>
+    );
   }
 
   return (
