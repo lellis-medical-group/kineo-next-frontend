@@ -4,6 +4,7 @@ import Form from "next/form";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
+import { EmailField } from "@/components/molecules/email-field";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
@@ -81,18 +82,7 @@ export default function ForgotPasswordPage() {
       ) : (
         <>
           <Form action={handleSubmit} className="flex flex-col gap-5">
-            <label className="flex flex-col gap-2" htmlFor="email">
-              <span className="field-label">Adresse e-mail</span>
-              <input
-                name="email"
-                id="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="jean.dupont@exemple.fr"
-                className="field-input"
-              />
-            </label>
+            <EmailField id="email" />
 
             {error && (
               <InlineAlert as="p" tone="danger">

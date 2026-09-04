@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
+import { EmailField } from "@/components/molecules/email-field";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
@@ -58,17 +59,7 @@ export default function SignInPage() {
       subtitle="Accédez à la console de remplacement Kineo"
     >
       <Form action={handleSubmit} className="flex flex-col gap-5">
-        <label className="flex flex-col gap-2">
-          <span className="field-label">Adresse e-mail</span>
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="jean.dupont@exemple.fr"
-            className="field-input"
-          />
-        </label>
+        <EmailField />
 
         <label className="flex flex-col gap-2" htmlFor="password">
           <span className="flex items-center justify-between">

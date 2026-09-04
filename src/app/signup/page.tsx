@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
 import { Spinner } from "@/components/atoms/spinner";
+import { EmailField } from "@/components/molecules/email-field";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
@@ -132,17 +133,7 @@ export default function SignUpPage() {
           />
         </label>
 
-        <label className="flex flex-col gap-2">
-          <span className="field-label">Adresse e-mail</span>
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="jean.dupont@exemple.fr"
-            className="field-input"
-          />
-        </label>
+        <EmailField />
 
         <label className="flex flex-col gap-2" htmlFor="password">
           <span className="flex items-center justify-between">
