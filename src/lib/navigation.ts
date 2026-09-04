@@ -16,6 +16,7 @@ export const publicNav: HeaderLink[] = [
 
 export const memberNav: HeaderLink[] = [
   // Routes stay in English (project convention), labels in French.
+  { label: "Accueil", href: "/" },
   { label: "Annonces", href: "/listings" },
   { label: "Cabinets", href: "/practices" },
   { label: "Mes candidatures", href: "/applications" },
