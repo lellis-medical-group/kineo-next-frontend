@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/atoms/card";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
-import { Spinner } from "@/components/atoms/spinner";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
 import type { ProfileFormData } from "@/lib/profile";
@@ -58,13 +58,7 @@ export function ProfileCreateContainer() {
   }
 
   if (status === "loading") {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center px-4">
-        <output aria-label="Chargement">
-          <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-        </output>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (status === "error") {

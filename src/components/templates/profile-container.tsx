@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Spinner } from "@/components/atoms/spinner";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileView } from "@/components/templates/profile-view";
 import { useSession } from "@/lib/auth-client";
@@ -50,13 +50,7 @@ export function ProfileContainer() {
   }, [load]);
 
   if (status === "loading") {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center px-4">
-        <output aria-label="Chargement">
-          <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-        </output>
-      </div>
-    );
+    return <LoadingState className="min-h-[60vh]" />;
   }
 
   if (status === "error") {

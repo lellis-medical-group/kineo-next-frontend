@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Spinner } from "@/components/atoms/spinner";
 import { InlineAlert } from "@/components/molecules/inline-alert";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { checkAlreadyVerified, verifyEmail } from "@/lib/auth-client";
 import { mapVerificationError } from "@/lib/auth-errors";
@@ -21,16 +22,6 @@ function safeCallbackURL(raw: string | null): string {
     return raw;
   }
   return "/";
-}
-
-function FullscreenSpinner() {
-  return (
-    <main className="flex min-h-dvh items-center justify-center bg-background">
-      <output aria-label="Chargement">
-        <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-      </output>
-    </main>
-  );
 }
 
 function VerifyEmailContent() {
@@ -187,7 +178,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<FullscreenSpinner />}>
+    <Suspense fallback={<LoadingState className="min-h-dvh bg-background" />}>
       <VerifyEmailContent />
     </Suspense>
   );
