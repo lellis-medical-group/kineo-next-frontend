@@ -25,21 +25,45 @@ depuis les niveaux inférieurs ou égaux :
 Les pages (App Router) `src/app/` sont des coquilles le plus fines possible ;
 la logique d'orchestration vit dans `src/components/templates/`.
 
-### Server / Client Components
+### Rendu serveur / client (RSC)
 
-- Les pages publiques, `error.tsx`, `not-found.tsx` et les layouts statiques
-  restent des Server Components.
+- La page d'accueil est un **Server Component** : la session est validée côté
+  serveur (`lib/server-session.ts` → proxy `/api/auth/get-session`) et la page
+  sert soit la console membre, soit le contenu marketing — sans hydratation du
+  contenu public ni flash après hydratation. Les pages marketing, `error.tsx`,
+  `not-found.tsx` et le layout `(site)` restent des Server Components.
 - Seuls les éléments interactifs portent `"use client"` : authentification,
-  formulaires, header (session), conteneurs qui chargent des données.
+  formulaires, header (session/active route), conteneurs qui chargent des données.
+- Le proxy Next 16 (`src/proxy.ts`, ex-middleware) fait un contrôle optimiste
+  du cookie de session (`getSessionCookie`) sur `/profile`, `/dashboard`,
+  `/settings` ; la validation réelle est faite par le backend à chaque appel API.
 
 ### Couche de services (`src/lib`)
 
 Les composants ne parlent jamais au backend directement :
 
 - `api-client.ts` — fetch partagé, `ApiError` typé, `notFoundAs` (404 attendus), `extractList`
-- `*‑service.ts` — appels API + adaptation vers les types de présentation (`dashboard-service`, `profile-service`)
-- Types bruts de l'API dans `types/api.ts` ; types de présentation dans `dashboard.ts` / `profile.ts`
+- `dashboard/` — service + contrats de présentation + un adaptateur par section
+  (`greeting`, `actions`, `stats`, `activity`, `reactivity`) ; point d'entrée `@/lib/dashboard`
+- `profile-service.ts` / `profile.ts` — appels API profil et contrats/labels/validations
+- Types bruts de l'API dans `types/api.ts` ; types de présentation dans `dashboard/contracts.ts` / `profile.ts`
 - Constantes et libellés français dans des modules dédiés (`marketing.ts`, `navigation.ts`, `auth-errors.ts`, `format.ts`)
+
+### Auth & cookies
+
+- Better-Auth vit dans le backend (`kineo-nest-backend/src/lib/auth.ts`) avec
+  les défauts de la lib : `better-auth.session_token` (+ `better-auth.session_data`,
+  cache signé 5 min). Le frontend n'a **pas** besoin de `BETTER_AUTH_SECRET`
+  (les noms sont documentés dans `lib/auth.ts`).
+- Côté serveur, la session est résolue en validant les cookies via le proxy
+  (`lib/server-session.ts`) ; côté client via `lib/auth-client.ts` (`useSession`…).
+- Les erreurs d'auth sont mappées en messages français dans `lib/auth-errors.ts`.
+
+### Utilitaires UI
+
+- `lib/cn.ts` (`tailwind-merge`) — fusion de classes Tailwind avec résolution
+  des conflits (le dernier gagne). À utiliser pour toute prop `className` d'un
+  composant (voir `Card`, `Button`, `InlineAlert`…).
 
 ### Conventions
 
