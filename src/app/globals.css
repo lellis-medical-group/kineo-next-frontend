@@ -485,7 +485,9 @@
   *,
   ::before,
   ::after {
+    /* biome-ignore lint/complexity/noImportantStyles: global reduced-motion kill switch — must beat utility classes (e.g. .animate-spin) which live in a later cascade layer, so !important is required here */
     transition-duration: 0s !important;
+    /* biome-ignore lint/complexity/noImportantStyles: same — utilities win over plain media-query rules, the a11y guarantee needs !important */
     animation-duration: 0s !important;
   }
 }
