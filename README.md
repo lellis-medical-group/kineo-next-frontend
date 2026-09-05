@@ -65,6 +65,23 @@ Les composants ne parlent jamais au backend directement :
   des conflits (le dernier gagne). À utiliser pour toute prop `className` d'un
   composant (voir `Card`, `Button`, `InlineAlert`…).
 
+### Performance
+
+- **Session serveur** (`lib/server-session.ts`) : requêtes anonymes
+  court-circuitées avant tout appel réseau (`getSessionCookie`), validation
+  directe serveur-à-serveur vers le backend (pas de self-fetch via le proxy),
+  déduplication par render pass via React `cache()`.
+- **Streaming** : `app/(site)/loading.tsx` streame le shell instantanément sur
+  la route dynamique `/` et la rend partiellement préfetchable par `<Link>`.
+- **Polices** : `next/font` auto-héberge la police (zéro requête externe,
+  préchargement, `display: swap` par défaut).
+- **Aucune image bitmap** : les icônes sont des SVG inline ; si des images
+  arrivent, utiliser `next/image`.
+- Prochaines étapes possibles : activer `cacheComponents: true` (PPR + `use cache`,
+  shell statique + contenu dynamique streame), servir le header via RSC
+  (supprimerait le `useSession` client — nécessite PPR pour garder les autres
+  routes statiques), mesurer les Web Vitals (`useReportWebVitals`).
+
 ### Conventions
 
 - Routes en anglais dans le code (convention projet), libellés affichés en français
