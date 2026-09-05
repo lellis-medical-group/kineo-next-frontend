@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
+  // Don't advertise the framework version via `X-Powered-By` (hardening).
+  poweredByHeader: false,
 };
 
 export default nextConfig;
