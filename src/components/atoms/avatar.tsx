@@ -1,16 +1,18 @@
+import Image from "next/image";
 import { forwardRef } from "react";
 import { cn } from "@/lib/cn";
 
 export interface AvatarProps {
-  /** Full name; initial displayed ("Dr." prefix stripped). */
   name: string;
+  /** Image URL — when provided, renders the picture instead of the initial. */
+  image?: string | null;
   /** Additional classes (size…). */
   className?: string;
 }
 
-/** Circular avatar with initial. */
+/** Circular avatar with initial or profile image. */
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
-  { name, className },
+  { name, image, className },
   ref,
 ) {
   const initial =
@@ -24,11 +26,15 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       ref={ref}
       aria-hidden="true"
       className={cn(
-        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary/60 bg-surface text-sm font-bold text-primary",
+        "relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-primary/60 bg-surface text-sm font-bold text-primary",
         className,
       )}
     >
-      {initial}
+      {image ? (
+        <Image src={image} alt="" fill unoptimized className="object-cover" />
+      ) : (
+        initial
+      )}
     </span>
   );
 });

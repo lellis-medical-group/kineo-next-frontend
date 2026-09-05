@@ -13,17 +13,17 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
   const router = useRouter();
   const [editing, setEditing] = useState<"name" | "email" | null>(null);
   const [error, setError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [success, setSuccess] = useState("");
 
   async function handleNameSubmit(formData: FormData) {
     setError("");
-    setSaved(false);
+    setSuccess("");
     const name = (formData.get("name") as string).trim();
     const image = (formData.get("image") as string).trim() || null;
 
     try {
       await updateUserInfo({ name, image });
-      setSaved(true);
+      setSuccess("Informations mises à jour.");
       setEditing(null);
       router.refresh();
     } catch (err) {
@@ -33,12 +33,12 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
 
   async function handleEmailSubmit(formData: FormData) {
     setError("");
-    setSaved(false);
+    setSuccess("");
     const newEmail = (formData.get("email") as string).trim();
 
     try {
-      await changeEmail(newEmail);
-      setSaved(true);
+      const { message } = await changeEmail(newEmail);
+      setSuccess(message);
       setEditing(null);
       router.refresh();
     } catch (err) {
@@ -165,9 +165,7 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
         </div>
       )}
 
-      {saved && (
-        <InlineAlert tone="success">Informations mises à jour.</InlineAlert>
-      )}
+      {success && <InlineAlert tone="success">{success}</InlineAlert>}
     </div>
   );
 }

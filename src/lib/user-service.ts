@@ -32,16 +32,23 @@ export async function updateUserInfo(payload: {
  * verification, a confirmation link is sent to the new address and the email
  * is only updated once verified.
  */
-export async function changeEmail(newEmail: string): Promise<ApiUser> {
+export async function changeEmail(newEmail: string): Promise<{
+  user: ApiUser;
+  message: string;
+}> {
   const { data, error } = await authClient.changeEmail({ newEmail });
   if (error) {
     throw error;
   }
+  const message =
+    (data as { message?: string }).message === "Email updated"
+      ? "Email mis à jour."
+      : "Un email de vérification a été envoyé à la nouvelle adresse.";
   const user = (data as { user?: ApiUser }).user;
   if (user) {
-    return user as ApiUser;
+    return { user: user as ApiUser, message };
   }
-  return fetchUserInfo();
+  return { user: await fetchUserInfo(), message };
 }
 
 /** Maps an API error to a user-facing French message. */

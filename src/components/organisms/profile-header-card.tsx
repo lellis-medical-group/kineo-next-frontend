@@ -28,6 +28,7 @@ export function ProfileHeaderCard({
         <div className="flex min-w-0 items-center gap-4">
           <Avatar
             name={user.name ?? user.email}
+            image={user.image}
             className="h-14 w-14 shrink-0 text-lg"
           />
           <div className="min-w-0">
@@ -54,9 +55,7 @@ export function ProfileHeaderCard({
         </div>
         <div className="flex items-center justify-between gap-4 py-3">
           <dt className="text-muted">Membre depuis</dt>
-          <dd className="font-medium">
-            {formatMemberSince(profile.createdAt)}
-          </dd>
+          <dd className="font-medium">{formatMemberSince(user.createdAt)}</dd>
         </div>
         <div className="flex items-center justify-between gap-4 py-3">
           <dt className="text-muted">Email vérifié</dt>
