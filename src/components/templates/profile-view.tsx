@@ -1,41 +1,21 @@
-import { Avatar } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
-import { Card } from "@/components/atoms/card";
-import {
-  FileTextIcon,
-  PencilIcon,
-  ShieldIcon,
-  UsersIcon,
-} from "@/components/atoms/icons";
+import { FileTextIcon, ShieldIcon } from "@/components/atoms/icons";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { ProfileSection } from "@/components/molecules/profile-section";
 import { StatRow } from "@/components/molecules/stat-row";
-import { UserInfoCard } from "@/components/organisms/user-info-card";
-import {
-  formatMemberSince,
-  PROFILE_TYPE_DESCRIPTIONS,
-  PROFILE_TYPE_LABELS,
-  SPECIALTY_LABELS,
-} from "@/lib/profile";
+import { ProfileHeaderCard } from "@/components/organisms/profile-header-card";
 import type { ApiProfile, ApiUser } from "@/lib/types/api";
 
 type Feedback = "created" | "saved" | null;
 
-/**
- * Profile page (read-only view mode): identity card + read-only sections.
- * Create/edit flows live in their own containers (/profile/create, /profile/edit)
- * and share the ProfileFormPage shell.
- */
 export function ProfileView({
   profile,
   user,
-  userName,
   feedback,
   onEdit,
 }: {
   profile: ApiProfile;
   user: ApiUser;
-  userName: string;
   feedback: Feedback;
   onEdit: () => void;
 }) {
@@ -58,46 +38,11 @@ export function ProfileView({
       )}
 
       <div className="space-y-6">
-        <UserInfoCard user={user} />
-
-        <Card className="p-6 sm:p-8">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 items-center gap-4">
-              <Avatar name={userName} className="h-14 w-14 shrink-0 text-lg" />
-              <div className="min-w-0">
-                <h1 className="truncate text-xl font-bold tracking-tight">
-                  {userName}
-                </h1>
-                <p className="mt-0.5 text-sm text-muted">
-                  {PROFILE_TYPE_LABELS[profile.profileType]} ·{" "}
-                  {SPECIALTY_LABELS[profile.specialty]}
-                </p>
-                <p className="mt-1 text-xs text-faint">
-                  Membre depuis {formatMemberSince(profile.createdAt)}
-                </p>
-              </div>
-            </div>
-
-            <Button variant="outline" onClick={onEdit} className="shrink-0">
-              <PencilIcon className="h-4 w-4" />
-              Modifier
-            </Button>
-          </div>
-        </Card>
-
-        <ProfileSection icon={UsersIcon} title="Pratique">
-          <StatRow
-            label="Statut"
-            value={PROFILE_TYPE_LABELS[profile.profileType]}
-          />
-          <StatRow
-            label="Spécialité"
-            value={SPECIALTY_LABELS[profile.specialty]}
-          />
-          <p className="mt-3 text-sm text-muted">
-            {PROFILE_TYPE_DESCRIPTIONS[profile.profileType]}
-          </p>
-        </ProfileSection>
+        <ProfileHeaderCard
+          user={user}
+          profile={profile}
+          onEditProfile={onEdit}
+        />
 
         <ProfileSection
           icon={FileTextIcon}
@@ -120,7 +65,7 @@ export function ProfileView({
           title="Visibilité"
           description={
             profile.isPublic
-              ? "Votre profil apparaît dans l'annuaire public des professionnels de santé."
+              ? "Votre profil apparaît dans l'annuaire public."
               : "Votre profil n'apparaît pas dans l'annuaire public."
           }
         >

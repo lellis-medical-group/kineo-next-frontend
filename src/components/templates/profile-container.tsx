@@ -66,7 +66,6 @@ export function ProfileContainer() {
     <ProfileView
       profile={profile}
       user={user}
-      userName={user.name || "Professionnel"}
       feedback={feedback}
       onEdit={() => {
         setFeedback(null);
