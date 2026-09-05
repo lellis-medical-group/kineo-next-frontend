@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ErrorState } from "@/components/organisms/error-state";
 import { MemberHome } from "@/components/templates/member-home";
-import type { DashboardData } from "@/lib/dashboard";
-import { fetchDashboardData } from "@/lib/dashboard-service";
+import { type DashboardData, fetchDashboardData } from "@/lib/dashboard";
 
 type Status = "loading" | "error" | "success";
 
