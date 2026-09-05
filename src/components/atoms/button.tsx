@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
 
@@ -36,13 +37,18 @@ export interface ButtonProps {
 export function Button({
   variant = "primary",
   size = "md",
-  className = "",
+  className,
   children,
   href,
   type,
   ...rest
 }: ButtonProps) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-[0.625rem] font-bold transition-colors disabled:pointer-events-none disabled:opacity-60 ${SIZE_CLASSES[size]} ${VARIANT_CLASSES[variant]} ${className}`;
+  const classes = cn(
+    "inline-flex items-center justify-center gap-2 rounded-[0.625rem] font-bold transition-colors disabled:pointer-events-none disabled:opacity-60",
+    SIZE_CLASSES[size],
+    VARIANT_CLASSES[variant],
+    className,
+  );
 
   if (href) {
     return (

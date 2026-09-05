@@ -5,16 +5,15 @@ import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Spinner } from "@/components/atoms/spinner";
 import { InlineAlert } from "@/components/molecules/inline-alert";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { AuthCard } from "@/components/organisms/auth-card";
-import {
-  checkAlreadyVerified,
-  sendVerificationEmail,
-  verifyEmail,
-} from "@/lib/auth-client";
+import { checkAlreadyVerified, verifyEmail } from "@/lib/auth-client";
+import { mapVerificationError } from "@/lib/auth-errors";
+import { useResendVerification } from "@/lib/use-resend-verification";
 
 type VerificationStatus = "verifying" | "success" | "error" | "invalid";
-type ResendStatus = "idle" | "sending" | "sent" | "error";
 
+/** Shape of the fallback error used when the server can't be reached. */
 type AuthError = Parameters<typeof mapVerificationError>[0];
 
 /** Accepts only an internal path (single leading "/") to prevent open redirects. */
@@ -23,44 +22,6 @@ function safeCallbackURL(raw: string | null): string {
     return raw;
   }
   return "/";
-}
-
-/** Maps a better-auth error to a user-friendly French message. Checks `error.code` first, then `error.message`. */
-function mapVerificationError(error: {
-  code?: string | null;
-  message?: string | null;
-  status?: number;
-}): string {
-  const code = (error.code ?? "").toUpperCase();
-  const message = (error.message ?? "").toUpperCase();
-
-  if (code === "TOKEN_EXPIRED" || message.includes("TOKEN_EXPIRED")) {
-    return "Ce lien de vérification a expiré. Demandez un nouvel email ci-dessous.";
-  }
-
-  if (code === "INVALID_TOKEN" || message.includes("INVALID_TOKEN")) {
-    return "Ce lien de vérification est invalide ou a déjà été utilisé.";
-  }
-
-  if (code === "USER_NOT_FOUND" || message.includes("USER_NOT_FOUND")) {
-    return "Aucun compte ne correspond à ce lien de vérification.";
-  }
-
-  if (!error.status || error.status >= 500) {
-    return "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.";
-  }
-
-  return "Vérification impossible pour le moment. Réessayez ou demandez un nouvel email.";
-}
-
-function FullscreenSpinner() {
-  return (
-    <main className="flex min-h-dvh items-center justify-center bg-background">
-      <output aria-label="Chargement">
-        <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-      </output>
-    </main>
-  );
 }
 
 function VerifyEmailContent() {
@@ -73,7 +34,7 @@ function VerifyEmailContent() {
     token ? "verifying" : "invalid",
   );
   const [verifyError, setVerifyError] = useState("");
-  const [resend, setResend] = useState<ResendStatus>("idle");
+  const { status: resend, resend: resendEmail } = useResendVerification(email);
 
   useEffect(() => {
     if (!token) {
@@ -117,20 +78,6 @@ function VerifyEmailContent() {
     };
   }, [token]);
 
-  async function handleResend() {
-    if (!email) {
-      return;
-    }
-
-    setResend("sending");
-    try {
-      const { error } = await sendVerificationEmail({ email });
-      setResend(error ? "error" : "sent");
-    } catch {
-      setResend("error");
-    }
-  }
-
   if (status === "invalid" || status === "error") {
     return (
       <AuthCard
@@ -158,7 +105,7 @@ function VerifyEmailContent() {
           {email && resend !== "sent" ? (
             <>
               <Button
-                onClick={handleResend}
+                onClick={resendEmail}
                 disabled={resend === "sending"}
                 size="lg"
                 className="w-full"
@@ -231,7 +178,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<FullscreenSpinner />}>
+    <Suspense fallback={<LoadingState className="min-h-dvh bg-background" />}>
       <VerifyEmailContent />
     </Suspense>
   );

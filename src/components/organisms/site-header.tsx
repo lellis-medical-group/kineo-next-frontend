@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BellIcon, LogOutIcon, MenuIcon } from "@/components/atoms/icons";
 import { KineoLogo } from "@/components/atoms/kineo-logo";
+import { HeaderNav } from "@/components/molecules/header-nav";
 import { UserIdentity } from "@/components/molecules/user-identity";
 import type { UserSummary } from "@/lib/dashboard";
 import type { HeaderLink } from "@/lib/navigation";
@@ -14,47 +15,6 @@ function NotificationsButton() {
     >
       <BellIcon />
     </button>
-  );
-}
-
-function HeaderNav({
-  links,
-  activeHref,
-  orientation,
-}: {
-  links: HeaderLink[];
-  activeHref?: string;
-  orientation: "horizontal" | "vertical";
-}) {
-  const isHorizontal = orientation === "horizontal";
-
-  return (
-    <nav
-      aria-label="Navigation principale"
-      className={
-        isHorizontal
-          ? "hidden items-center gap-1.5 lg:flex"
-          : "flex flex-col gap-1"
-      }
-    >
-      {links.map((link) => {
-        const isActive = activeHref === link.href;
-        return (
-          <Link
-            key={`${link.href}-${link.label}`}
-            href={link.href}
-            aria-current={isActive ? "page" : undefined}
-            className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-              isActive
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-muted hover:bg-surface hover:text-foreground"
-            }`}
-          >
-            {link.label}
-          </Link>
-        );
-      })}
-    </nav>
   );
 }
 

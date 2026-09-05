@@ -6,13 +6,14 @@ import { useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
 import { Spinner } from "@/components/atoms/spinner";
+import { EmailField } from "@/components/molecules/email-field";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
-import { sendVerificationEmail, signUp } from "@/lib/auth-client";
-
-type ResendStatus = "idle" | "sending" | "sent" | "error";
+import { signUp } from "@/lib/auth-client";
+import { mapSignUpError } from "@/lib/auth-errors";
+import { useResendVerification } from "@/lib/use-resend-verification";
 
 export default function SignUpPage() {
   const [error, setError] = useState("");
@@ -21,7 +22,8 @@ export default function SignUpPage() {
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(
     null,
   );
-  const [resend, setResend] = useState<ResendStatus>("idle");
+  const { status: resend, resend: resendEmail } =
+    useResendVerification(confirmationEmail);
 
   async function handleSubmit(formData: FormData) {
     setError("");
@@ -39,47 +41,17 @@ export default function SignUpPage() {
       });
 
       if (error) {
-        const message = (error.message ?? "").toLowerCase();
-        if (
-          message.includes("already exists") ||
-          message.includes("user exists")
-        ) {
+        const mapped = mapSignUpError(error);
+        if (mapped.existingAccount) {
           setExistingAccount(true);
-          setError(
-            "Un compte existe déjà avec cet e-mail. Vous pouvez vous connecter directement.",
-          );
-        } else if (
-          message.includes("too short") ||
-          message.includes("too long")
-        ) {
-          setError("Le mot de passe doit contenir entre 8 et 128 caractères.");
-        } else {
-          setError(
-            "Inscription impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
-          );
         }
+        setError(mapped.message);
         return;
       }
 
       setConfirmationEmail(email);
     } catch {
       setError("Impossible de contacter le serveur. Réessayez plus tard.");
-    }
-  }
-
-  async function handleResend() {
-    if (!confirmationEmail) {
-      return;
-    }
-
-    setResend("sending");
-    try {
-      const { error } = await sendVerificationEmail({
-        email: confirmationEmail,
-      });
-      setResend(error ? "error" : "sent");
-    } catch {
-      setResend("error");
     }
   }
 
@@ -113,7 +85,7 @@ export default function SignUpPage() {
           {resend !== "sent" ? (
             <>
               <Button
-                onClick={handleResend}
+                onClick={resendEmail}
                 disabled={resend === "sending"}
                 size="lg"
                 className="w-full"
@@ -161,17 +133,7 @@ export default function SignUpPage() {
           />
         </label>
 
-        <label className="flex flex-col gap-2">
-          <span className="field-label">Adresse e-mail</span>
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="jean.dupont@exemple.fr"
-            className="field-input"
-          />
-        </label>
+        <EmailField />
 
         <label className="flex flex-col gap-2" htmlFor="password">
           <span className="flex items-center justify-between">

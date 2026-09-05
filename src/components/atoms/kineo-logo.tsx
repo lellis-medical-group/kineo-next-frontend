@@ -1,6 +1,8 @@
-export function KineoLogo({ className = "" }: { className?: string }) {
+import { cn } from "@/lib/cn";
+
+export function KineoLogo({ className }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
       <span
         aria-hidden="true"
         className="flex h-9 w-9 items-center justify-center rounded-[0.7rem] border-2 border-primary text-lg font-bold text-primary"

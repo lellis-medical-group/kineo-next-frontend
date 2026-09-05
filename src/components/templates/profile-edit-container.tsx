@@ -2,20 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/atoms/button";
-import { Card } from "@/components/atoms/card";
-import { ArrowLeftIcon } from "@/components/atoms/icons";
-import { Spinner } from "@/components/atoms/spinner";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
-import type { ProfileFormData } from "@/lib/profile";
-import { profileToFormValues } from "@/lib/profile";
+import { type ProfileFormData, profileToFormValues } from "@/lib/profile";
 import {
   fetchMyProfile,
   mapProfileError,
   updateProfile,
 } from "@/lib/profile-service";
 import type { ApiProfile } from "@/lib/types/api";
+import { ProfileFormPage } from "./profile-form-page";
 
 type Status = "loading" | "error" | "ready";
 
@@ -70,13 +67,7 @@ export function ProfileEditContainer() {
   }
 
   if (status === "loading") {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center px-4">
-        <output aria-label="Chargement">
-          <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-        </output>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (status === "error") {
@@ -89,34 +80,18 @@ export function ProfileEditContainer() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-      <Button
-        variant="ghost"
-        onClick={() => router.replace("/profile")}
-        className="mb-6"
-      >
-        <ArrowLeftIcon className="h-4 w-4" />
-        Retour au profil
-      </Button>
-
-      <Card className="p-6 sm:p-8">
-        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-          Modifier le profil professionnel
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
-          Mettez à jour vos informations professionnelles. Les changements
-          seront visibles après enregistrement.
-        </p>
-
-        <div className="mt-6">
-          <ProfileForm
-            initialValues={profileToFormValues(profile)}
-            submitLabel="Enregistrer les modifications"
-            pendingLabel="Enregistrement…"
-            onSubmit={handleSubmit}
-          />
-        </div>
-      </Card>
-    </div>
+    <ProfileFormPage
+      backLabel="Retour au profil"
+      onBack={() => router.replace("/profile")}
+      title="Modifier le profil professionnel"
+      subtitle="Mettez à jour vos informations professionnelles. Les changements seront visibles après enregistrement."
+    >
+      <ProfileForm
+        initialValues={profileToFormValues(profile)}
+        submitLabel="Enregistrer les modifications"
+        pendingLabel="Enregistrement…"
+        onSubmit={handleSubmit}
+      />
+    </ProfileFormPage>
   );
 }

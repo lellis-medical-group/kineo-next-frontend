@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 /**
  * Styled select — matches the field-input aesthetic.
@@ -22,16 +23,10 @@ export function Select({ label, hint, className, id, ...rest }: SelectProps) {
         <select
           id={id}
           aria-label={typeof label === "string" ? label : undefined}
-          className={[
-            "field-input",
-            "appearance-none",
-            "pr-10",
-            "focus:outline-none",
-            "focus:ring-2",
-            "focus:ring-ring",
-            "focus:ring-offset-0",
+          className={cn(
+            "field-input appearance-none pr-10 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0",
             className,
-          ].join(" ")}
+          )}
           {...rest}
         />
         <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted">

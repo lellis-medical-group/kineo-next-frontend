@@ -2,19 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/atoms/button";
-import { Card } from "@/components/atoms/card";
-import { ArrowLeftIcon } from "@/components/atoms/icons";
-import { Spinner } from "@/components/atoms/spinner";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
-import type { ProfileFormData } from "@/lib/profile";
-import { EMPTY_PROFILE_FORM } from "@/lib/profile";
+import { EMPTY_PROFILE_FORM, type ProfileFormData } from "@/lib/profile";
 import {
   createProfile,
   fetchMyProfile,
   mapProfileError,
 } from "@/lib/profile-service";
+import { ProfileFormPage } from "./profile-form-page";
 
 type Status = "loading" | "error" | "ready";
 
@@ -58,13 +55,7 @@ export function ProfileCreateContainer() {
   }
 
   if (status === "loading") {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center px-4">
-        <output aria-label="Chargement">
-          <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-        </output>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (status === "error") {
@@ -72,34 +63,18 @@ export function ProfileCreateContainer() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-      <Button
-        variant="ghost"
-        onClick={() => router.replace("/")}
-        className="mb-6"
-      >
-        <ArrowLeftIcon className="h-4 w-4" />
-        Retour à l&apos;accueil
-      </Button>
-
-      <Card className="p-6 sm:p-8">
-        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-          Créez votre profil professionnel
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
-          Renseignez votre spécialité et votre type de pratique pour publier des
-          annonces et candidater.
-        </p>
-
-        <div className="mt-6">
-          <ProfileForm
-            initialValues={EMPTY_PROFILE_FORM}
-            submitLabel="Créer mon profil"
-            pendingLabel="Création du profil…"
-            onSubmit={handleSubmit}
-          />
-        </div>
-      </Card>
-    </div>
+    <ProfileFormPage
+      backLabel="Retour à l&apos;accueil"
+      onBack={() => router.replace("/")}
+      title="Créez votre profil professionnel"
+      subtitle="Renseignez votre spécialité et votre type de pratique pour publier des annonces et candidater."
+    >
+      <ProfileForm
+        initialValues={EMPTY_PROFILE_FORM}
+        submitLabel="Créer mon profil"
+        pendingLabel="Création du profil…"
+        onSubmit={handleSubmit}
+      />
+    </ProfileFormPage>
   );
 }

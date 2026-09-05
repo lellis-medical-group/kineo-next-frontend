@@ -68,3 +68,14 @@ export function notFoundAs<T>(fallback: T) {
     throw error;
   };
 }
+
+/**
+ * Normalizes API responses — handles both paginated ({ data: [], meta: {} })
+ * and direct array responses. Returns a flat array.
+ */
+export function extractList<T>(raw: T[] | { data: T[] }): T[] {
+  if (Array.isArray(raw)) return raw;
+  if (raw && typeof raw === "object" && "data" in raw)
+    return (raw as { data: T[] }).data;
+  return [];
+}

@@ -4,22 +4,13 @@ import Form from "next/form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Button } from "@/components/atoms/button";
-import { Spinner } from "@/components/atoms/spinner";
 import { InlineAlert } from "@/components/molecules/inline-alert";
+import { LoadingState } from "@/components/molecules/loading-state";
 import { PasswordInput } from "@/components/molecules/password-input";
 import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { resetPassword } from "@/lib/auth-client";
-
-function FullscreenSpinner() {
-  return (
-    <main className="flex min-h-dvh items-center justify-center bg-background">
-      <output aria-label="Chargement">
-        <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
-      </output>
-    </main>
-  );
-}
+import { mapResetPasswordError } from "@/lib/auth-errors";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -41,21 +32,7 @@ function ResetPasswordForm() {
       const { error } = await resetPassword({ newPassword, token });
 
       if (error) {
-        const message = (error.message ?? "").toUpperCase();
-        if (message.includes("INVALID_TOKEN")) {
-          setError(
-            "Ce lien a expiré ou a déjà été utilisé. Demandez un nouveau lien.",
-          );
-        } else if (
-          message.includes("TOO_SHORT") ||
-          message.includes("TOO_LONG")
-        ) {
-          setError("Le mot de passe doit contenir entre 8 et 128 caractères.");
-        } else {
-          setError(
-            "Modification impossible. Vérifiez votre connexion, puis réessayez.",
-          );
-        }
+        setError(mapResetPasswordError(error));
         return;
       }
 
@@ -159,7 +136,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<FullscreenSpinner />}>
+    <Suspense fallback={<LoadingState className="min-h-dvh bg-background" />}>
       <ResetPasswordForm />
     </Suspense>
   );

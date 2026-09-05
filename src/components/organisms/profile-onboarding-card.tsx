@@ -1,16 +1,16 @@
 import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/atoms/card";
 
 /**
  * Onboarding banner when the user has no profile yet (GET /profile/me → 404,
  * documented by the API). Account is active, but business data is missing.
  *
- * Inline styled container instead of Card atom: the `primary` tint requires
- * overriding Card's border/background — without tailwind-merge, competing
- * classes have an unpredictable winner (same pitfall as InlineAlert).
+ * Built on Card with `cn` (tailwind-merge): the primary tint reliably
+ * overrides Card's default border/background.
  */
 export function ProfileOnboardingCard() {
   return (
-    <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
+    <Card className="border-primary/30 bg-primary/5 p-6 sm:p-8">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h2 className="text-base font-bold">
@@ -27,6 +27,6 @@ export function ProfileOnboardingCard() {
           Compléter mon profil
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }

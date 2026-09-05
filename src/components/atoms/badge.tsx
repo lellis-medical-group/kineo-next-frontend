@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 export type BadgeTone = "neutral" | "success" | "danger" | "info";
 
@@ -11,7 +12,7 @@ const TONE_CLASSES: Record<BadgeTone, string> = {
 
 export function Badge({
   tone = "neutral",
-  className = "",
+  className,
   children,
 }: {
   tone?: BadgeTone;
@@ -20,7 +21,11 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[0.65rem] font-bold tracking-wider uppercase ${TONE_CLASSES[tone]} ${className}`}
+      className={cn(
+        "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[0.65rem] font-bold tracking-wider uppercase",
+        TONE_CLASSES[tone],
+        className,
+      )}
     >
       {children}
     </span>
