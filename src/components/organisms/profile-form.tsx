@@ -148,7 +148,8 @@ export function ProfileForm({
       </label>
 
       {error && (
-        <InlineAlert as="p" tone="danger">
+        // whitespace-pre-wrap: Zod field errors are joined with newlines.
+        <InlineAlert as="p" tone="danger" className="whitespace-pre-wrap">
           {error}
         </InlineAlert>
       )}

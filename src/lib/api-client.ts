@@ -13,6 +13,8 @@ export class ApiError extends Error {
     path: string,
     /** Business message from the API body, if JSON. */
     public readonly apiMessage?: string,
+    /** Per-field Zod validation issues when the backend replies with { errors }. */
+    public readonly fieldErrors?: ReadonlyArray<FieldError>,
   ) {
     super(
       apiMessage
@@ -21,6 +23,13 @@ export class ApiError extends Error {
     );
     this.name = "ApiError";
   }
+}
+
+/** One validation issue surfaced by the backend `{ errors: [...] }` envelope. */
+export interface FieldError {
+  /** Path segments pointing at the invalid field (e.g. ["city"]). */
+  path: unknown[];
+  message: string;
 }
 
 /**
@@ -43,17 +52,26 @@ export async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    // NestJS returns { message, error, statusCode } — surface the business message.
+    // NestJS returns { message, error, statusCode } or, for Zod validation,
+    // { message: "Validation failed", errors: [{ path, message }] } — surface
+    // both the business message and the per-field issues.
     let apiMessage: string | undefined;
+    let fieldErrors: FieldError[] | undefined;
     try {
-      const body = (await res.json()) as { message?: unknown };
+      const body = (await res.json()) as {
+        message?: unknown;
+        errors?: unknown;
+      };
       if (typeof body.message === "string") {
         apiMessage = body.message;
+      }
+      if (Array.isArray(body.errors)) {
+        fieldErrors = body.errors as FieldError[];
       }
     } catch {
       // Non-JSON body (proxy, network cut) — nothing to extract.
     }
-    throw new ApiError(res.status, path, apiMessage);
+    throw new ApiError(res.status, path, apiMessage, fieldErrors);
   }
 
   return res.json() as Promise<T>;

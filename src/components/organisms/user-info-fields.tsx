@@ -48,6 +48,11 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
 
   return (
     <div className="space-y-3">
+      {success && (
+        <InlineAlert as="p" tone="success" className="text-sm">
+          {success}
+        </InlineAlert>
+      )}
       {editing === "email" ? (
         <form
           action={handleEmailSubmit}
@@ -71,7 +76,7 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
             </InlineAlert>
           )}
           <div className="flex gap-2">
-            <SubmitButton label="Envoyer" pendingLabel="Envoi..." />
+            <SubmitButton label="Envoyer" pendingLabel="Envoi…" />
             <Button
               type="button"
               variant="secondary"
@@ -91,7 +96,10 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
             type="button"
             variant="outline"
             size="md"
-            onClick={() => setEditing("email")}
+            onClick={() => {
+              setEditing("email");
+              setSuccess("");
+            }}
           >
             <MailIcon className="h-3.5 w-3.5" />
             Changer
@@ -132,7 +140,7 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
             </InlineAlert>
           )}
           <div className="flex gap-2">
-            <SubmitButton label="Enregistrer" pendingLabel="En cours..." />
+            <SubmitButton label="Enregistrer" pendingLabel="En cours…" />
             <Button
               type="button"
               variant="secondary"
@@ -157,15 +165,16 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
             type="button"
             variant="outline"
             size="md"
-            onClick={() => setEditing("name")}
+            onClick={() => {
+              setEditing("name");
+              setSuccess("");
+            }}
           >
             <PencilIcon className="h-3.5 w-3.5" />
             Modifier
           </Button>
         </div>
       )}
-
-      {success && <InlineAlert tone="success">{success}</InlineAlert>}
     </div>
   );
 }
