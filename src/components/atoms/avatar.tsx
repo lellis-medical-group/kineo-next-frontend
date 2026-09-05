@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import { cn } from "@/lib/cn";
 
 export interface AvatarProps {
   /** Full name; initial displayed ("Dr." prefix stripped). */
@@ -9,7 +10,7 @@ export interface AvatarProps {
 
 /** Circular avatar with initial. */
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
-  { name, className = "" },
+  { name, className },
   ref,
 ) {
   const initial =
@@ -22,7 +23,10 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
     <span
       ref={ref}
       aria-hidden="true"
-      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary/60 bg-surface text-sm font-bold text-primary ${className}`}
+      className={cn(
+        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary/60 bg-surface text-sm font-bold text-primary",
+        className,
+      )}
     >
       {initial}
     </span>

@@ -1,14 +1,17 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 export function Card({
-  className = "",
+  className,
   children,
 }: {
   className?: string;
   children: ReactNode;
 }) {
   return (
-    <div className={`rounded-2xl border border-border bg-surface ${className}`}>
+    <div
+      className={cn("rounded-2xl border border-border bg-surface", className)}
+    >
       {children}
     </div>
   );

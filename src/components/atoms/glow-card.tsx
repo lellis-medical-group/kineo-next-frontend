@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 export interface GlowCardProps {
   /** Wrapper classes (margin, width…). */
@@ -10,13 +11,13 @@ export interface GlowCardProps {
 
 /** Card with animated conic-gradient border and highlight halo. Background stays the theme surface. */
 export function GlowCard({
-  className = "",
-  innerClassName = "",
+  className,
+  innerClassName,
   children,
 }: GlowCardProps) {
   return (
-    <div className={`glow-card ${className}`}>
-      <div className={`glow-card-inner ${innerClassName}`}>{children}</div>
+    <div className={cn("glow-card", className)}>
+      <div className={cn("glow-card-inner", innerClassName)}>{children}</div>
     </div>
   );
 }
