@@ -3,6 +3,17 @@
  * Separate from presentation types in lib/dashboard.ts.
  */
 
+/** Better-Auth user (mirrors kineo-nest-backend Prisma User model). */
+export interface ApiUser {
+  id: string;
+  name: string | null;
+  email: string;
+  emailVerified: boolean;
+  image?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type Specialty =
   | "GENERALIST"
   | "DENTIST"
