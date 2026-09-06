@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/atoms/card";
 import { TrashIcon } from "@/components/atoms/icons";
 import { Spinner } from "@/components/atoms/spinner";
 import { InlineAlert } from "@/components/molecules/inline-alert";
@@ -42,7 +43,7 @@ export function DeleteAccountSection({
 
   return (
     <section aria-label="Suppression du compte">
-      <div className="rounded-2xl border border-danger/30 bg-danger/5 p-6">
+      <Card className="border-danger/30 bg-danger/5 p-6">
         <div className="flex items-start gap-3">
           <span
             aria-hidden="true"
@@ -50,11 +51,11 @@ export function DeleteAccountSection({
           >
             <TrashIcon className="h-5 w-5" />
           </span>
-          <div>
+          <div className="min-w-0">
             <h2 className="text-base font-bold text-danger">
               Supprimer mon compte
             </h2>
-            <p className="mt-0.5 max-w-lg text-sm text-muted">
+            <p className="mt-0.5 text-sm text-muted">
               Cette action est irréversible : votre profil, vos annonces et
               votre historique seront définitivement supprimés de la plateforme.
             </p>
@@ -62,12 +63,12 @@ export function DeleteAccountSection({
         </div>
 
         <div className="mt-4">
-          <label className="flex items-start gap-2.5 text-sm">
+          <label className="flex items-start gap-3 text-sm">
             <input
               type="checkbox"
               checked={confirmed}
               onChange={(e) => setConfirmed(e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 accent-danger"
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-danger"
             />
             <span className="text-foreground/85">
               Je comprends que cette action est irréversible et que toutes mes
@@ -77,7 +78,7 @@ export function DeleteAccountSection({
         </div>
 
         {error && (
-          <InlineAlert as="p" tone="danger" className="mt-3">
+          <InlineAlert as="p" tone="danger" className="mt-4">
             {error}
           </InlineAlert>
         )}
@@ -95,7 +96,7 @@ export function DeleteAccountSection({
             ? "Suppression du compte…"
             : "Supprimer définitivement mon compte"}
         </Button>
-      </div>
+      </Card>
     </section>
   );
 }
