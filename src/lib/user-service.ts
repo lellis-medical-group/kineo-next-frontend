@@ -3,6 +3,7 @@
  * (Better-Auth managed: name, image, email, emailVerified).
  */
 
+import { apiFetch } from "./api-client";
 import { authClient } from "./auth-client";
 import type { ApiUser } from "./types/api";
 
@@ -68,4 +69,18 @@ export function mapUserError(error: unknown): string {
   if (status === 403) return "Action non autorisée.";
   if (status === 409) return "Cet email est déjà utilisé.";
   return "Impossible de mettre à jour vos informations. Veuillez réessayer.";
+}
+
+/**
+ * DELETE endpoint that permanently removes the current account.
+ *
+ * NOTE: set this path to the route your backend exposes once account
+ * deletion is implemented (e.g. `DELETE /profile/me`). Until then the
+ * endpoint will 404 — the UI is wired but the backend route is pending.
+ */
+export const DELETE_ACCOUNT_PATH = "/profile/me";
+
+/** DELETE {DELETE_ACCOUNT_PATH} — permanently deletes the current account. */
+export async function deleteAccount(): Promise<void> {
+  await apiFetch<unknown>(DELETE_ACCOUNT_PATH, { method: "DELETE" });
 }

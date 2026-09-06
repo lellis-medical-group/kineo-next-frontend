@@ -208,3 +208,15 @@ export function AlertIcon(props: SVGProps<SVGSVGElement>) {
     </Svg>
   );
 }
+
+export function TrashIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Svg {...props}>
+      <path d="M3 6h18" />
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
+      <path d="M9 6V4a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3v2" />
+    </Svg>
+  );
+}

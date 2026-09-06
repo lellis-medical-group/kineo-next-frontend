@@ -23,6 +23,8 @@
   --ring: rgb(215 209 176 / 35%);
 
   --danger: #f87171;
+  --danger-hover: #f55757;
+  --danger-foreground: #ffffff;
   --warning: #fbbf24;
   --success: #4ade80;
   --info: #93c5fd;
@@ -57,6 +59,8 @@
   --color-border-strong: var(--border-strong);
   --color-ring: var(--ring);
   --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-foreground: var(--danger-foreground);
   --color-warning: var(--warning);
   --color-success: var(--success);
   --color-info: var(--info);

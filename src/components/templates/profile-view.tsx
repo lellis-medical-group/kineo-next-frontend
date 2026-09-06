@@ -3,6 +3,7 @@ import { FileTextIcon, ShieldIcon } from "@/components/atoms/icons";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { ProfileSection } from "@/components/molecules/profile-section";
 import { StatRow } from "@/components/molecules/stat-row";
+import { DeleteAccountSection } from "@/components/organisms/delete-account-section";
 import { ProfileHeaderCard } from "@/components/organisms/profile-header-card";
 import type { ApiProfile, ApiUser } from "@/lib/types/api";
 
@@ -13,11 +14,13 @@ export function ProfileView({
   user,
   feedback,
   onEdit,
+  onDeleteAccount,
 }: {
   profile: ApiProfile;
   user: ApiUser;
   feedback: Feedback;
   onEdit: () => void;
+  onDeleteAccount: () => Promise<void>;
 }) {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
@@ -75,6 +78,8 @@ export function ProfileView({
             accent={profile.isPublic}
           />
         </ProfileSection>
+
+        <DeleteAccountSection onDeleteAccount={onDeleteAccount} />
       </div>
     </div>
   );

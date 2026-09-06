@@ -74,7 +74,12 @@ export async function apiFetch<T>(
     throw new ApiError(res.status, path, apiMessage, fieldErrors);
   }
 
-  return res.json() as Promise<T>;
+  // 204 No Content / empty body (e.g. DELETE) → no JSON to parse.
+  const text = await res.text();
+  if (!text) {
+    return null as T;
+  }
+  return JSON.parse(text) as T;
 }
 
 /** Converts an expected 404 to a fallback; other errors keep propagating. */

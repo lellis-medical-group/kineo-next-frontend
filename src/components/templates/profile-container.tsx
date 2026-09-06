@@ -5,9 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileView } from "@/components/templates/profile-view";
-import { useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import { fetchMyProfile } from "@/lib/profile-service";
 import type { ApiProfile, ApiUser } from "@/lib/types/api";
+import { deleteAccount } from "@/lib/user-service";
 
 type Status = "loading" | "error" | "success";
 type Feedback = "created" | "saved" | null;
@@ -48,6 +49,13 @@ export function ProfileContainer() {
     load();
   }, [load]);
 
+  /** Deletes the account, then signs out and lands on the sign-in page. */
+  async function handleDeleteAccount() {
+    await deleteAccount();
+    await signOut();
+    router.replace("/signin");
+  }
+
   if (status === "loading") {
     return <LoadingState className="min-h-[60vh]" />;
   }
@@ -71,6 +79,7 @@ export function ProfileContainer() {
         setFeedback(null);
         router.push("/profile/edit");
       }}
+      onDeleteAccount={handleDeleteAccount}
     />
   );
 }
