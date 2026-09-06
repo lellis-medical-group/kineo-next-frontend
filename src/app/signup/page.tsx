@@ -13,6 +13,18 @@ import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { signUp } from "@/lib/auth-client";
 import { mapSignUpError } from "@/lib/auth-errors";
+import {
+  EMAIL_ERROR_MESSAGE,
+  isValidName,
+  isValidPasswordLength,
+  NAME_ERROR_MESSAGE,
+  NAME_MAX_LENGTH,
+  NAME_PATTERN,
+  normalizeEmail,
+  PASSWORD_LENGTH_MESSAGE,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from "@/lib/auth-validation";
 import { useResendVerification } from "@/lib/use-resend-verification";
 
 export default function SignUpPage() {
@@ -29,12 +41,27 @@ export default function SignUpPage() {
     setError("");
     setExistingAccount(false);
     const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
+    const email = normalizeEmail(formData.get("email") as string);
     const password = formData.get("password") as string;
+
+    // Client-side mirror of the backend `before` hook rules — instant UX
+    // feedback and no useless round-trip.
+    if (!isValidName(name)) {
+      setError(NAME_ERROR_MESSAGE);
+      return;
+    }
+    if (email.length > 254) {
+      setError(EMAIL_ERROR_MESSAGE);
+      return;
+    }
+    if (!isValidPasswordLength(password)) {
+      setError(PASSWORD_LENGTH_MESSAGE);
+      return;
+    }
 
     try {
       const { error } = await signUp.email({
-        name,
+        name: name.trim(),
         email,
         password,
         callbackURL: "/",
@@ -128,6 +155,8 @@ export default function SignUpPage() {
             type="text"
             required
             autoComplete="name"
+            maxLength={NAME_MAX_LENGTH}
+            pattern={NAME_PATTERN}
             placeholder="Dr Jean Dupont"
             className="field-input"
           />
@@ -140,19 +169,24 @@ export default function SignUpPage() {
             <span className="field-label">Mot de passe</span>
             <span
               className={`text-xs transition-colors ${
-                passwordLength >= 8 ? "font-medium text-primary" : "text-muted"
+                passwordLength >= PASSWORD_MIN_LENGTH &&
+                passwordLength <= PASSWORD_MAX_LENGTH
+                  ? "font-medium text-primary"
+                  : "text-muted"
               }`}
             >
-              {passwordLength >= 8
-                ? "✓ Longueur suffisante"
-                : "8 caractères min."}
+              {passwordLength >= PASSWORD_MIN_LENGTH &&
+              passwordLength <= PASSWORD_MAX_LENGTH
+                ? `✓ Longueur valide (${PASSWORD_MIN_LENGTH} à ${PASSWORD_MAX_LENGTH})`
+                : `${PASSWORD_MIN_LENGTH} à ${PASSWORD_MAX_LENGTH} caractères`}
             </span>
           </span>
           <PasswordInput
             name="password"
             id="password"
             required
-            minLength={8}
+            minLength={PASSWORD_MIN_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
             autoComplete="new-password"
             placeholder="••••••••••••"
             onInput={(event) =>

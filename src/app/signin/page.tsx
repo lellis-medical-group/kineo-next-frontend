@@ -18,6 +18,7 @@ import {
   mapNetworkSignInError,
   mapSignInError,
 } from "@/lib/auth-errors";
+import { normalizeEmail, PASSWORD_MAX_LENGTH } from "@/lib/auth-validation";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function SignInPage() {
 
   async function handleSubmit(formData: FormData) {
     setError("");
-    const email = formData.get("email") as string;
+    const email = normalizeEmail(formData.get("email") as string);
     const password = formData.get("password") as string;
 
     try {
@@ -75,6 +76,7 @@ export default function SignInPage() {
             name="password"
             id="password"
             required
+            maxLength={PASSWORD_MAX_LENGTH}
             autoComplete="current-password"
             placeholder="••••••••••••"
           />
