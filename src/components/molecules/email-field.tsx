@@ -1,3 +1,5 @@
+import { EMAIL_MAX_LENGTH } from "@/lib/auth-validation";
+
 export interface EmailFieldProps {
   /** Optional id + htmlFor pair (used when a label ref is needed). */
   id?: string;
@@ -15,6 +17,7 @@ export function EmailField({ id, name = "email" }: EmailFieldProps) {
         type="email"
         required
         autoComplete="email"
+        maxLength={EMAIL_MAX_LENGTH}
         placeholder="jean.dupont@exemple.fr"
         className="field-input"
       />

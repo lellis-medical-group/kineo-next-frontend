@@ -6,6 +6,18 @@ import { Button } from "@/components/atoms/button";
 import { MailIcon, PencilIcon } from "@/components/atoms/icons";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { SubmitButton } from "@/components/molecules/submit-button";
+import {
+  EMAIL_ERROR_MESSAGE,
+  EMAIL_MAX_LENGTH,
+  IMAGE_HTTPS_ERROR_MESSAGE,
+  IMAGE_MAX_LENGTH,
+  isValidHttpsUrl,
+  isValidName,
+  NAME_ERROR_MESSAGE,
+  NAME_MAX_LENGTH,
+  NAME_PATTERN,
+  normalizeEmail,
+} from "@/lib/auth-validation";
 import type { ApiUser } from "@/lib/types/api";
 import { changeEmail, mapUserError, updateUserInfo } from "@/lib/user-service";
 
@@ -21,6 +33,16 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
     const name = (formData.get("name") as string).trim();
     const image = (formData.get("image") as string).trim() || null;
 
+    // Client-side mirror of the backend `before` hook validation.
+    if (!isValidName(name)) {
+      setError(NAME_ERROR_MESSAGE);
+      return;
+    }
+    if (image && !isValidHttpsUrl(image)) {
+      setError(IMAGE_HTTPS_ERROR_MESSAGE);
+      return;
+    }
+
     try {
       await updateUserInfo({ name, image });
       setSuccess("Informations mises à jour.");
@@ -34,7 +56,12 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
   async function handleEmailSubmit(formData: FormData) {
     setError("");
     setSuccess("");
-    const newEmail = (formData.get("email") as string).trim();
+    const newEmail = normalizeEmail(formData.get("email") as string);
+
+    if (newEmail.length > EMAIL_MAX_LENGTH) {
+      setError(EMAIL_ERROR_MESSAGE);
+      return;
+    }
 
     try {
       const { message } = await changeEmail(newEmail);
@@ -64,6 +91,7 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
               name="email"
               type="email"
               required
+              maxLength={EMAIL_MAX_LENGTH}
               defaultValue={user.email}
               autoComplete="email"
               placeholder="jean.dupont@exemple.fr"
@@ -118,6 +146,8 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
               name="name"
               type="text"
               required
+              maxLength={NAME_MAX_LENGTH}
+              pattern={NAME_PATTERN}
               defaultValue={user.name ?? ""}
               autoComplete="name"
               placeholder="Dr Jean Dupont"
@@ -125,10 +155,11 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
             />
           </label>
           <label className="flex flex-col gap-1.5">
-            <span className="field-label">Image (URL)</span>
+            <span className="field-label">Image (URL https)</span>
             <input
               name="image"
               type="url"
+              maxLength={IMAGE_MAX_LENGTH}
               defaultValue={user.image ?? ""}
               placeholder="https://exemple.fr/photo.jpg"
               className="field-input"
