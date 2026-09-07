@@ -74,6 +74,7 @@ export interface ApiReplacementListing {
 
 export type ApplicationStatus =
   | "PENDING"
+  | "SHORTLISTED"
   | "ACCEPTED"
   | "REJECTED"
   | "WITHDRAWN";

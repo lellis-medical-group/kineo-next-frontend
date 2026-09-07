@@ -43,3 +43,21 @@ export function formatRelativeTime(dateStr: string): string {
   if (diffDays < 7) return `il y a ${diffDays} jours`;
   return `il y a ${Math.floor(diffDays / 7)} semaines`;
 }
+
+/** Absolute date in French — e.g. « 10 janv. 2026 ». */
+export function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+/** Absolute date and time in French — e.g. « 10 janv. 2026 à 14:32 ». */
+export function formatDateTime(dateStr: string): string {
+  const time = new Date(dateStr).toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${formatDate(dateStr)} à ${time}`;
+}
