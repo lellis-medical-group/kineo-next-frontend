@@ -14,10 +14,15 @@ export function JoinCta() {
           </p>
         </div>
 
-        <SignupEmailForm
-          placeholder={joinCta.emailPlaceholder}
-          submitLabel={joinCta.submitLabel}
-        />
+        <div className="flex w-full max-w-md flex-col gap-3">
+          <SignupEmailForm
+            placeholder={joinCta.emailPlaceholder}
+            submitLabel={joinCta.submitLabel}
+          />
+          <p className="text-xs leading-relaxed text-muted">
+            {joinCta.reassuranceNote}
+          </p>
+        </div>
       </div>
     </section>
   );
