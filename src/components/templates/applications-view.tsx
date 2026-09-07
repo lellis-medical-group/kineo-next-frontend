@@ -93,8 +93,7 @@ function ApplicationsHeader({ total }: { total: number }) {
         <Badge>{total} total</Badge>
       </div>
       <p className="mt-1.5 text-sm text-muted">
-        Suivez l'état de vos candidatures envoyées aux cabinets — vue,
-        présélectionnée, acceptée ou refusée.
+        Suivez l'état de vos candidatures envoyées aux cabinets.
       </p>
     </header>
   );

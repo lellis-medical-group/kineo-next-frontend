@@ -1,4 +1,3 @@
-import { Avatar } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Card } from "@/components/atoms/card";
 import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
@@ -24,21 +23,17 @@ export function ApplicationDetail({
   return (
     <Card className="p-6 sm:p-8">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-4">
-          <Avatar
-            name={listing.practiceName ?? listing.title}
-            className="h-14 w-14 text-lg"
-          />
-          <div className="min-w-0">
-            <h1 className="truncate text-xl font-bold text-foreground">
-              {listing.title}
-            </h1>
-            {practiceLabel && (
-              <p className="truncate text-sm text-muted">{practiceLabel}</p>
-            )}
-          </div>
+        <div className="min-w-0">
+          <h1 className="truncate text-xl font-bold text-foreground">
+            {listing.title}
+          </h1>
+          {practiceLabel && (
+            <p className="truncate text-sm text-muted">{practiceLabel}</p>
+          )}
         </div>
-        <Badge tone={meta.badgeTone}>{meta.label}</Badge>
+        <Badge tone={meta.badgeTone} className="shrink-0">
+          {meta.label}
+        </Badge>
       </div>
 
       <div className="mt-6 border-t border-border pt-6">
