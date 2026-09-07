@@ -1,40 +1,26 @@
-import { Avatar } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
-import { Card } from "@/components/atoms/card";
-import {
-  FileTextIcon,
-  PencilIcon,
-  ShieldIcon,
-  UsersIcon,
-} from "@/components/atoms/icons";
+import { FileTextIcon, ShieldIcon } from "@/components/atoms/icons";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { ProfileSection } from "@/components/molecules/profile-section";
 import { StatRow } from "@/components/molecules/stat-row";
-import {
-  formatMemberSince,
-  PROFILE_TYPE_DESCRIPTIONS,
-  PROFILE_TYPE_LABELS,
-  SPECIALTY_LABELS,
-} from "@/lib/profile";
-import type { ApiProfile } from "@/lib/types/api";
+import { DeleteAccountSection } from "@/components/organisms/delete-account-section";
+import { ProfileHeaderCard } from "@/components/organisms/profile-header-card";
+import type { ApiProfile, ApiUser } from "@/lib/types/api";
 
 type Feedback = "created" | "saved" | null;
 
-/**
- * Profile page (read-only view mode): identity card + read-only sections.
- * Create/edit flows live in their own containers (/profile/create, /profile/edit)
- * and share the ProfileFormPage shell.
- */
 export function ProfileView({
   profile,
-  userName,
+  user,
   feedback,
   onEdit,
+  onDeleteAccount,
 }: {
   profile: ApiProfile;
-  userName: string;
+  user: ApiUser;
   feedback: Feedback;
   onEdit: () => void;
+  onDeleteAccount: () => Promise<void>;
 }) {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
@@ -54,45 +40,12 @@ export function ProfileView({
         </InlineAlert>
       )}
 
-      <Card className="p-6 sm:p-8">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 items-center gap-4">
-            <Avatar name={userName} className="h-14 w-14 shrink-0 text-lg" />
-            <div className="min-w-0">
-              <h1 className="truncate text-xl font-bold tracking-tight">
-                {userName}
-              </h1>
-              <p className="mt-0.5 text-sm text-muted">
-                {PROFILE_TYPE_LABELS[profile.profileType]} ·{" "}
-                {SPECIALTY_LABELS[profile.specialty]}
-              </p>
-              <p className="mt-1 text-xs text-faint">
-                Membre depuis {formatMemberSince(profile.createdAt)}
-              </p>
-            </div>
-          </div>
-
-          <Button variant="outline" onClick={onEdit} className="shrink-0">
-            <PencilIcon className="h-4 w-4" />
-            Modifier
-          </Button>
-        </div>
-      </Card>
-
-      <div className="mt-6 space-y-6">
-        <ProfileSection icon={UsersIcon} title="Pratique">
-          <StatRow
-            label="Statut"
-            value={PROFILE_TYPE_LABELS[profile.profileType]}
-          />
-          <StatRow
-            label="Spécialité"
-            value={SPECIALTY_LABELS[profile.specialty]}
-          />
-          <p className="mt-3 text-sm text-muted">
-            {PROFILE_TYPE_DESCRIPTIONS[profile.profileType]}
-          </p>
-        </ProfileSection>
+      <div className="space-y-6">
+        <ProfileHeaderCard
+          user={user}
+          profile={profile}
+          onEditProfile={onEdit}
+        />
 
         <ProfileSection
           icon={FileTextIcon}
@@ -115,7 +68,7 @@ export function ProfileView({
           title="Visibilité"
           description={
             profile.isPublic
-              ? "Votre profil apparaît dans l'annuaire public des professionnels de santé."
+              ? "Votre profil apparaît dans l'annuaire public."
               : "Votre profil n'apparaît pas dans l'annuaire public."
           }
         >
@@ -125,6 +78,8 @@ export function ProfileView({
             accent={profile.isPublic}
           />
         </ProfileSection>
+
+        <DeleteAccountSection onDeleteAccount={onDeleteAccount} />
       </div>
     </div>
   );

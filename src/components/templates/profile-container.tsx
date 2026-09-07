@@ -5,9 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileView } from "@/components/templates/profile-view";
-import { useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import { fetchMyProfile } from "@/lib/profile-service";
-import type { ApiProfile } from "@/lib/types/api";
+import type { ApiProfile, ApiUser } from "@/lib/types/api";
+import { deleteAccount } from "@/lib/user-service";
 
 type Status = "loading" | "error" | "success";
 type Feedback = "created" | "saved" | null;
@@ -35,7 +36,6 @@ export function ProfileContainer() {
         setStatus("success");
       })
       .catch((err) => {
-        // 404 = no profile → redirect to creation form.
         if (err instanceof Error && /404/i.test(err.message)) {
           router.replace("/profile/create");
           return;
@@ -49,6 +49,13 @@ export function ProfileContainer() {
     load();
   }, [load]);
 
+  /** Deletes the account, then signs out and lands on the sign-in page. */
+  async function handleDeleteAccount() {
+    await deleteAccount();
+    await signOut();
+    router.replace("/signin");
+  }
+
   if (status === "loading") {
     return <LoadingState className="min-h-[60vh]" />;
   }
@@ -57,19 +64,22 @@ export function ProfileContainer() {
     return <ErrorState message={error} onRetry={load} />;
   }
 
-  if (!profile) {
+  if (!profile || !session?.user) {
     return null;
   }
+
+  const user = session.user as unknown as ApiUser;
 
   return (
     <ProfileView
       profile={profile}
-      userName={session?.user?.name || "Professionnel"}
+      user={user}
       feedback={feedback}
       onEdit={() => {
         setFeedback(null);
         router.push("/profile/edit");
       }}
+      onDeleteAccount={handleDeleteAccount}
     />
   );
 }

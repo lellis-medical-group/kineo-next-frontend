@@ -2,7 +2,12 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "danger";
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
@@ -11,6 +16,8 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   outline:
     "border border-border bg-transparent text-foreground hover:bg-surface-hover",
   ghost: "bg-transparent text-foreground hover:bg-surface-hover",
+  danger:
+    "bg-danger text-danger-foreground hover:bg-danger-hover focus:ring-2 focus:ring-danger/50 focus:ring-offset-2 focus:ring-offset-background",
 };
 
 export type ButtonSize = "md" | "lg";

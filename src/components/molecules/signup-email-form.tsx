@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
+import { EMAIL_MAX_LENGTH } from "@/lib/auth-validation";
 
 export interface SignupEmailFormProps {
   placeholder?: string;
@@ -32,6 +33,7 @@ export function SignupEmailForm({
           name="email"
           required
           autoComplete="email"
+          maxLength={EMAIL_MAX_LENGTH}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder={placeholder}

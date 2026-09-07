@@ -5,7 +5,9 @@
  */
 
 export const hero = {
-  title: "Le remplacement médical, simplifié.",
+  eyebrow: "Bêta ouverte",
+  title: "Le remplacement médical,",
+  titleAccent: "simplifié.",
   subtitle:
     "Médecin installé, publiez votre annonce et choisissez le remplaçant qui vous convient. Remplaçant, trouvez les remplacements qui correspondent à vos dates et candidatez en un clic.",
   primaryCta: { label: "Publier une annonce", href: "/signup" },
@@ -13,11 +15,35 @@ export const hero = {
 };
 
 export const trustBar = {
-  eyebrow: "Plateforme régulée & sécurisée",
+  eyebrow: "Une plateforme régulée, pensée pour la médecine française",
   items: [
-    { icon: "shield", label: "Vérification RPPS" },
-    { icon: "calendar", label: "Suivi en temps réel" },
-    { icon: "percent", label: "Gratuit en bêta" },
+    {
+      icon: "shield",
+      label: "Identités vérifiées",
+      detail: "Chaque profil RPPS est contrôlé avant activation.",
+    },
+    {
+      icon: "calendar",
+      label: "Suivi en temps réel",
+      detail: "Envoyée, vue, acceptée : chaque statut est visible.",
+    },
+    {
+      icon: "percent",
+      label: "Gratuit pendant la bêta",
+      detail: "Aucun frais, aucun engagement, dès aujourd'hui.",
+    },
+  ] as const,
+};
+
+/**
+ * ⚠️ PLACEHOLDER STATS — replace with real platform metrics (or remove the
+ * section) before going public.
+ */
+export const proofStats = {
+  items: [
+    { value: 250, suffix: "+", label: "Professionnels de santé inscrits" },
+    { value: 42, suffix: "", label: "Départements couverts" },
+    { value: 900, suffix: "+", label: "Candidatures traitées chaque mois" },
   ] as const,
 };
 
@@ -30,7 +56,7 @@ export interface FeatureItem {
 export const featuresSection = {
   title: "Deux rôles, une seule plateforme",
   subtitle:
-    "Vous pouvez être médecin installé, remplaçant, ou les deux — Kineo s'adapte à votre situation.",
+    "Vous pouvez être médecin installé, remplaçant, ou les deux. Kineo s'adapte à votre situation.",
   features: [
     {
       icon: "pencil",
@@ -53,12 +79,45 @@ export const featuresSection = {
   ] as FeatureItem[],
 };
 
+export interface HowItWorksStep {
+  icon: "pencil" | "users" | "check";
+  title: string;
+  description: string;
+}
+
+export const howItWorks = {
+  title: "Comment ça marche",
+  subtitle:
+    "Un parcours en trois étapes, pensé pour les deux côtés de la table — du besoin au remplacement finalisé.",
+  steps: [
+    {
+      icon: "pencil",
+      title: "Publiez votre annonce",
+      description:
+        "Dates, rétrocession, attentes : décrivez votre besoin en deux minutes, sans formalités inutiles.",
+    },
+    {
+      icon: "users",
+      title: "Recevez des candidatures vérifiées",
+      description:
+        "Les remplaçants RPPS vérifiés postulent avec un message personnalisé. Vous suivez tout en temps réel.",
+    },
+    {
+      icon: "check",
+      title: "Choisissez et validez",
+      description:
+        "Comparez les profils, échangez, puis acceptez la candidature idéale. Le reste se passe sereinement.",
+    },
+  ] as HowItWorksStep[],
+};
+
 export const joinCta = {
   title: "Rejoignez Kineo gratuitement",
   subtitle:
     "Créez votre compte : publiez vos annonces ou candidatez aux remplacements. Gratuit pendant la bêta, sans engagement.",
   emailPlaceholder: "prenom.nom@exemple.fr",
   submitLabel: "Commencer",
+  reassuranceNote: "Sans carte bancaire, annulable à tout moment.",
 };
 
 export const footerContent = {
@@ -66,7 +125,7 @@ export const footerContent = {
     "La plateforme moderne dédiée à la mise en relation et à la simplification administrative du remplacement médical en France.",
   productLinks: [
     { label: "Fonctionnalités", href: "#features" },
-    { label: "Comment ça marche", href: "#" },
+    { label: "Comment ça marche", href: "#how-it-works" },
     { label: "Tarifs", href: "#" },
   ],
   legalLinks: [

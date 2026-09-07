@@ -1,3 +1,12 @@
+import {
+  EMAIL_ERROR_MESSAGE,
+  NAME_ERROR_MESSAGE,
+  PASSWORD_LENGTH_MESSAGE,
+} from "@/lib/auth-validation";
+
+/** Re-exported for callers that imported it from this module before v2 of the validation constants. */
+export { PASSWORD_LENGTH_MESSAGE };
+
 /**
  * Auth error handling — user-friendly French messages and classification
  * helpers for the auth flows (signin, signup, password reset, email
@@ -20,10 +29,6 @@ export const EMAIL_NOT_VERIFIED_MESSAGE =
 /** Server outage / network cut — shared copy across the auth pages. */
 export const AUTH_SERVICE_UNAVAILABLE_MESSAGE =
   "Service d'authentification indisponible. Veuillez réessayer dans quelques instants.";
-
-/** Password policy message shared by signup and password reset. */
-export const PASSWORD_LENGTH_MESSAGE =
-  "Le mot de passe doit contenir entre 8 et 128 caractères.";
 
 /** Maps a better-auth sign-in error to a user-friendly French message. Checks `error.code` first, then `error.message`. */
 export function mapSignInError(error: {
@@ -75,8 +80,16 @@ export function mapSignUpError(error: {
   message?: string;
 }): SignUpErrorMapping {
   const message = (error.message ?? "").toLowerCase();
+  const code = (error.code ?? "").toUpperCase();
 
-  if (message.includes("already exists") || message.includes("user exists")) {
+  // better-auth 1.7: duplicate email is `USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL`
+  // (single caller may also receive older `USER_ALREADY_EXISTS` / `EMAIL_ALREADY_EXISTS`).
+  if (
+    code.includes("USER_ALREADY_EXISTS") ||
+    code === "EMAIL_ALREADY_EXISTS" ||
+    message.includes("already exists") ||
+    message.includes("user exists")
+  ) {
     return {
       existingAccount: true,
       message:
@@ -84,8 +97,19 @@ export function mapSignUpError(error: {
     };
   }
 
-  if (message.includes("too short") || message.includes("too long")) {
+  // Backend `before`-hook validation messages pass straight through.
+  if (
+    message.includes("8 et 128 caractères") ||
+    message.includes("too short") ||
+    message.includes("too long")
+  ) {
     return { existingAccount: false, message: PASSWORD_LENGTH_MESSAGE };
+  }
+  if (message.includes("nom contient des caractères non autorisés")) {
+    return { existingAccount: false, message: NAME_ERROR_MESSAGE };
+  }
+  if (message.includes("adresse e-mail invalide")) {
+    return { existingAccount: false, message: EMAIL_ERROR_MESSAGE };
   }
 
   return {
@@ -99,10 +123,18 @@ export function mapSignUpError(error: {
 export function mapResetPasswordError(error: { message?: string }): string {
   const message = (error.message ?? "").toUpperCase();
 
-  if (message.includes("INVALID_TOKEN")) {
+  if (
+    message.includes("INVALID_TOKEN") ||
+    message.includes("INVALID VERIFICATION TOKEN") ||
+    message.includes("INVALID_RESET_PASSWORD_TOKEN")
+  ) {
     return "Ce lien a expiré ou a déjà été utilisé. Demandez un nouveau lien.";
   }
-  if (message.includes("TOO_SHORT") || message.includes("TOO_LONG")) {
+  if (
+    message.includes("8 ET 128 CARACTÈRES") ||
+    message.includes("TOO_SHORT") ||
+    message.includes("TOO_LONG")
+  ) {
     return PASSWORD_LENGTH_MESSAGE;
   }
   return "Modification impossible. Vérifiez votre connexion, puis réessayez.";

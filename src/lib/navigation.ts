@@ -10,7 +10,7 @@ export interface HeaderLink {
 
 export const publicNav: HeaderLink[] = [
   { label: "Fonctionnalités", href: "#features" },
-  { label: "Comment ça marche", href: "#" },
+  { label: "Comment ça marche", href: "#how-it-works" },
   { label: "Tarifs", href: "#" },
 ];
 

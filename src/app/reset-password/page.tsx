@@ -11,6 +11,12 @@ import { SubmitButton } from "@/components/molecules/submit-button";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { resetPassword } from "@/lib/auth-client";
 import { mapResetPasswordError } from "@/lib/auth-errors";
+import {
+  isValidPasswordLength,
+  PASSWORD_LENGTH_MESSAGE,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from "@/lib/auth-validation";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -25,6 +31,11 @@ function ResetPasswordForm() {
 
     if (newPassword !== confirm) {
       setError("Les deux mots de passe ne sont pas identiques.");
+      return;
+    }
+    // Client-side mirror of the backend policy (8–128 chars, same as signup).
+    if (!isValidPasswordLength(newPassword)) {
+      setError(PASSWORD_LENGTH_MESSAGE);
       return;
     }
 
@@ -97,7 +108,8 @@ function ResetPasswordForm() {
             name="password"
             id="password"
             required
-            minLength={8}
+            minLength={PASSWORD_MIN_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
             autoComplete="new-password"
             placeholder="••••••••••••"
           />
@@ -109,6 +121,8 @@ function ResetPasswordForm() {
             name="confirm"
             id="confirm"
             required
+            minLength={PASSWORD_MIN_LENGTH}
+            maxLength={PASSWORD_MAX_LENGTH}
             autoComplete="new-password"
             placeholder="••••••••••••"
           />
@@ -126,8 +140,8 @@ function ResetPasswordForm() {
         />
 
         <p className="text-center text-xs text-muted">
-          8 caractères minimum. Astuce : une phrase longue est plus facile à
-          retenir qu&apos;un mot compliqué.
+          Entre 8 et 128 caractères. Astuce : une phrase longue est plus facile
+          à retenir qu&apos;un mot compliqué.
         </p>
       </Form>
     </AuthCard>

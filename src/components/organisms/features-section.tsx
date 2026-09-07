@@ -1,4 +1,5 @@
 import { MapPinIcon, PencilIcon, UsersIcon } from "@/components/atoms/icons";
+import { Reveal } from "@/components/atoms/reveal";
 import { SectionHeading } from "@/components/atoms/section-heading";
 import { FeatureCard } from "@/components/molecules/feature-card";
 import { featuresSection } from "@/lib/marketing";
@@ -22,13 +23,14 @@ export function FeaturesSection() {
         />
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featuresSection.features.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              icon={FEATURE_ICONS[feature.icon]}
-              title={feature.title}
-              description={feature.description}
-            />
+          {featuresSection.features.map((feature, index) => (
+            <Reveal key={feature.title} delay={index * 80}>
+              <FeatureCard
+                icon={FEATURE_ICONS[feature.icon]}
+                title={feature.title}
+                description={feature.description}
+              />
+            </Reveal>
           ))}
         </div>
       </div>
