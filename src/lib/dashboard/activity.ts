@@ -1,3 +1,4 @@
+import { LISTING_FALLBACK_TITLE } from "@/lib/applications";
 import { formatRelativeTime } from "../format";
 import type { ApiApplication, ApiReplacementListing } from "../types/api";
 import type { ActivityEntry } from "./contracts";
@@ -17,8 +18,7 @@ export function adaptActivity(
     .slice(0, 4)
     .map((app) => {
       const listingLabel =
-        listingTitles.get(app.listingId) ||
-        `Annonce #${app.listingId.slice(-4)}`;
+        listingTitles.get(app.listingId) || LISTING_FALLBACK_TITLE;
 
       let message: ActivityEntry["message"];
       switch (app.status) {

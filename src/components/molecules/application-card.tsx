@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Avatar } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { ArrowRightIcon } from "@/components/atoms/icons";
 import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
@@ -7,8 +6,8 @@ import { cn } from "@/lib/cn";
 
 /**
  * One application in the list — a whole-card link to its dedicated detail
- * page (`/applications/{id}`): identity block, message excerpt, viewed
- * indicator and status badge, kept airy.
+ * page (`/applications/{id}`): listing title, submission/practice line,
+ * message excerpt, viewed indicator and status badge, kept airy.
  */
 export function ApplicationCard({
   application,
@@ -16,24 +15,22 @@ export function ApplicationCard({
   application: ApplicationEntry;
 }) {
   const meta = STATUS_META[application.status];
+  const { practiceName, practiceCity } = application.listing;
+  const metaLine = [application.submittedLabel, practiceName, practiceCity]
+    .filter((part): part is string => Boolean(part))
+    .join(" · ");
 
   return (
     <Link
       href={`/applications/${application.id}`}
       className="group block w-full rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-border-strong hover:bg-surface-hover sm:p-6"
     >
-      <div className="flex items-center gap-4">
-        <Avatar
-          name={application.listing.practiceName ?? application.listing.title}
-          className="h-11 w-11"
-        />
-        <div className="min-w-0 flex-1">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
           <p className="truncate text-[0.9375rem] font-bold text-foreground">
             {application.listing.title}
           </p>
-          <p className="mt-0.5 text-xs text-muted">
-            {application.submittedLabel}
-          </p>
+          <p className="mt-0.5 truncate text-xs text-muted">{metaLine}</p>
         </div>
         <Badge tone={meta.badgeTone} className="shrink-0">
           {meta.label}

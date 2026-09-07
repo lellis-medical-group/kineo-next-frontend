@@ -28,7 +28,7 @@ export const APPLICATION_FILTERS: readonly ApplicationsFilterOption[] = [
 /** The listing an application was sent to (resolved from the API listing). */
 export interface ApplicationListingInfo {
   id: string;
-  /** Listing title — falls back to `Annonce #xxxx` when the listing is gone. */
+  /** Listing title — falls back to « Annonce indisponible » when the listing is gone. */
   title: string;
   /** Formatted period — e.g. « Du 15 oct. au 30 oct. 2025 ». */
   dateRange?: string;

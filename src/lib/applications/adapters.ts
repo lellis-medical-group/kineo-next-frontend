@@ -27,6 +27,9 @@ export const STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
   WITHDRAWN: { label: "Retirée", badgeTone: "neutral" },
 };
 
+/** Label shown when the targeted listing no longer resolves. */
+export const LISTING_FALLBACK_TITLE = "Annonce indisponible";
+
 /** Resolves the listing (and its practice) an application points at. */
 export function adaptListingInfo(
   application: ApiApplication,
@@ -38,8 +41,7 @@ export function adaptListingInfo(
 
   return {
     id: application.listingId,
-    // Listing deleted since the application — keep a stable label.
-    title: listing?.title ?? `Annonce #${application.listingId.slice(-4)}`,
+    title: listing?.title ?? LISTING_FALLBACK_TITLE,
     dateRange: listing
       ? formatDateRange(listing.startDate, listing.endDate)
       : undefined,

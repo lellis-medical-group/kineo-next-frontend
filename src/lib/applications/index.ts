@@ -3,7 +3,10 @@
  * service. Public surface of the module (imports stay `@/lib/applications`).
  */
 
-export { STATUS_META } from "./adapters";
+export {
+  LISTING_FALLBACK_TITLE,
+  STATUS_META,
+} from "./adapters";
 export type {
   ApplicationEntry,
   ApplicationListingInfo,
