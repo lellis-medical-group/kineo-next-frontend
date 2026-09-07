@@ -204,6 +204,12 @@
     border-color: rgb(248 113 113 / 20%);
   }
 
+  .badge-info {
+    color: var(--info);
+    background: rgb(147 197 253 / 8%);
+    border-color: rgb(147 197 253 / 20%);
+  }
+
   .status-text {
     font-size: 0.8125rem;
     font-weight: 500;

@@ -3,12 +3,16 @@ import { cn } from "@/lib/cn";
 
 export type BadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
 
+/**
+ * Tones map to the global badge classes of `globals.css` — the site's
+ * canonical badge look: pill, status dot and tinted variant per tone.
+ */
 const TONE_CLASSES: Record<BadgeTone, string> = {
-  neutral: "border-border bg-background/50 text-muted",
-  success: "border-success/30 bg-success/10 text-success",
-  warning: "border-warning/30 bg-warning/10 text-warning",
-  danger: "border-danger/30 bg-danger/10 text-danger",
-  info: "border-primary/30 bg-primary/10 text-primary",
+  neutral: "badge",
+  success: "badge badge-success",
+  warning: "badge badge-warning",
+  danger: "badge badge-danger",
+  info: "badge badge-info",
 };
 
 export function Badge({
@@ -20,15 +24,5 @@ export function Badge({
   className?: string;
   children: ReactNode;
 }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[0.65rem] font-bold tracking-wider uppercase",
-        TONE_CLASSES[tone],
-        className,
-      )}
-    >
-      {children}
-    </span>
-  );
+  return <span className={cn(TONE_CLASSES[tone], className)}>{children}</span>;
 }
