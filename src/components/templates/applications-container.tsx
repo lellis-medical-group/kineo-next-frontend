@@ -62,8 +62,8 @@ function ApplicationsSkeleton() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <div className="h-9 w-64 animate-pulse rounded-control bg-surface" />
-      <div className="h-5 w-96 max-w-full animate-pulse rounded-control bg-surface" />
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-3 h-5 w-96 max-w-full animate-pulse rounded-control bg-surface" />
+      <div className="mt-8 flex flex-wrap gap-2">
         {SKELETON_CHIPS.map((key) => (
           <div
             key={key}
@@ -71,16 +71,13 @@ function ApplicationsSkeleton() {
           />
         ))}
       </div>
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
-        <div className="space-y-3">
-          {SKELETON_CARDS.map((key) => (
-            <div
-              key={key}
-              className="h-32 animate-pulse rounded-2xl bg-surface"
-            />
-          ))}
-        </div>
-        <div className="hidden h-96 animate-pulse rounded-2xl bg-surface lg:block" />
+      <div className="mt-8 space-y-4">
+        {SKELETON_CARDS.map((key) => (
+          <div
+            key={key}
+            className="h-28 animate-pulse rounded-2xl bg-surface"
+          />
+        ))}
       </div>
     </div>
   );

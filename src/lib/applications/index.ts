@@ -12,4 +12,4 @@ export type {
   ApplicationsFilterOption,
 } from "./contracts";
 export { APPLICATION_FILTERS } from "./contracts";
-export { fetchApplicationsData } from "./service";
+export { fetchApplicationDetail, fetchApplicationsData } from "./service";

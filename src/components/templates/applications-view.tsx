@@ -6,22 +6,19 @@ import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/atoms/card";
 import { FileTextIcon } from "@/components/atoms/icons";
 import { FilterChips } from "@/components/molecules/filter-chips";
-import { ApplicationDetail } from "@/components/organisms/application-detail";
 import { ApplicationsList } from "@/components/organisms/applications-list";
 import {
   APPLICATION_FILTERS,
-  type ApplicationEntry,
   type ApplicationsData,
   type ApplicationsFilter,
 } from "@/lib/applications";
 
 /**
- * Applications tracking page — status filters, the list of sent applications
- * and the detail panel of the selected one.
+ * Applications tracking page — status filters and the airy list of sent
+ * applications; each card links to its dedicated detail page.
  */
 export function ApplicationsView({ data }: { data: ApplicationsData }) {
   const [filter, setFilter] = useState<ApplicationsFilter>("ALL");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -30,11 +27,6 @@ export function ApplicationsView({ data }: { data: ApplicationsData }) {
         : data.applications.filter((a) => a.status === filter),
     [data.applications, filter],
   );
-
-  // The panel always reflects a visible entry: falls back to the first of
-  // the filtered list when the selection is filtered out.
-  const selected: ApplicationEntry | undefined =
-    filtered.find((a) => a.id === selectedId) ?? filtered[0];
 
   const counts = useMemo(() => {
     const map = new Map<ApplicationsFilter, number>([
@@ -84,16 +76,8 @@ export function ApplicationsView({ data }: { data: ApplicationsData }) {
         onChange={setFilter}
       />
 
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
-        <div className="min-w-0">
-          <ApplicationsList
-            applications={filtered}
-            selectedId={selected?.id}
-            onSelect={setSelectedId}
-          />
-        </div>
-
-        {selected && <ApplicationDetail application={selected} />}
+      <div className="mt-8">
+        <ApplicationsList applications={filtered} />
       </div>
     </div>
   );

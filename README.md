@@ -84,7 +84,7 @@ bun run format     # auto-format code (Biome)
 | `/forgot-password` · `/reset-password` | Password recovery        |
 | `/verify-email`       | Email verification                        |
 | `/profile` (`/create`, `/edit`) | Member profile management          |
-| `/applications`       | Application tracking (locum side)          |
+| `/applications` (+ `/{id}`) | Application tracking (locum side)    |
 | `/terms`              | Legal / terms of use                      |
 
 Protected routes (`/profile`, `/dashboard`, `/settings`) are guarded by an optimistic

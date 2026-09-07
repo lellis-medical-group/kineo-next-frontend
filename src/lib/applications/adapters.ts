@@ -44,6 +44,7 @@ export function adaptListingInfo(
       ? formatDateRange(listing.startDate, listing.endDate)
       : undefined,
     remuneration: listing?.remuneration,
+    description: listing?.description?.trim() || undefined,
     practiceName: practice?.name,
     practiceCity: practice?.city,
   };

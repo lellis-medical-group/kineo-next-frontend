@@ -5,10 +5,10 @@ import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
 import { formatDateTime } from "@/lib/format";
 
 /**
- * Detail panel — everything about the selected application: the targeted
- * listing, the message sent, rejection/withdrawal reasons and the follow-up
- * timeline. Read-only: decision actions live on the practice side
- * (« Mes offres »).
+ * Full detail of one application, rendered on its dedicated page
+ * (`/applications/{id}`): the targeted listing, the message sent,
+ * rejection/withdrawal reasons and the follow-up timeline. Read-only:
+ * decision actions live on the practice side (« Mes offres »).
  */
 export function ApplicationDetail({
   application,
@@ -22,7 +22,7 @@ export function ApplicationDetail({
     : listing.practiceCity;
 
   return (
-    <Card className="p-5 sm:p-6">
+    <Card className="p-6 sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
           <Avatar
@@ -30,9 +30,9 @@ export function ApplicationDetail({
             className="h-14 w-14 text-lg"
           />
           <div className="min-w-0">
-            <h2 className="truncate text-lg font-bold text-foreground">
+            <h1 className="truncate text-xl font-bold text-foreground">
               {listing.title}
-            </h2>
+            </h1>
             {practiceLabel && (
               <p className="truncate text-sm text-muted">{practiceLabel}</p>
             )}
@@ -41,8 +41,8 @@ export function ApplicationDetail({
         <Badge tone={meta.badgeTone}>{meta.label}</Badge>
       </div>
 
-      <div className="mt-5 border-t border-border pt-5">
-        <h3 className="text-sm font-bold text-foreground">L'annonce</h3>
+      <div className="mt-6 border-t border-border pt-6">
+        <h2 className="text-sm font-bold text-foreground">L'annonce</h2>
         <dl className="mt-3 grid gap-4 sm:grid-cols-2">
           <div>
             <dt className="text-xs text-muted">Période</dt>
@@ -57,10 +57,15 @@ export function ApplicationDetail({
             </dd>
           </div>
         </dl>
+        {listing.description && (
+          <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-muted">
+            {listing.description}
+          </p>
+        )}
       </div>
 
-      <div className="mt-5 border-t border-border pt-5">
-        <h3 className="text-sm font-bold text-foreground">Votre message</h3>
+      <div className="mt-6 border-t border-border pt-6">
+        <h2 className="text-sm font-bold text-foreground">Votre message</h2>
         {application.message ? (
           <blockquote className="mt-3 whitespace-pre-line rounded-control bg-surface-2 p-4 text-sm leading-relaxed text-muted">
             {application.message}
@@ -73,8 +78,8 @@ export function ApplicationDetail({
       </div>
 
       {application.status === "REJECTED" && (
-        <div className="mt-5 rounded-control border border-danger/20 bg-danger/10 p-4">
-          <h3 className="text-sm font-bold text-danger">Motif du refus</h3>
+        <div className="mt-6 rounded-control border border-danger/20 bg-danger/10 p-4">
+          <h2 className="text-sm font-bold text-danger">Motif du refus</h2>
           <p className="mt-1.5 text-sm text-muted">
             {application.rejectionReason ??
               "Aucun motif n'a été communiqué par le cabinet."}
@@ -83,10 +88,10 @@ export function ApplicationDetail({
       )}
 
       {application.status === "WITHDRAWN" && (
-        <div className="mt-5 rounded-control border border-border bg-surface-2 p-4">
-          <h3 className="text-sm font-bold text-foreground">
+        <div className="mt-6 rounded-control border border-border bg-surface-2 p-4">
+          <h2 className="text-sm font-bold text-foreground">
             Motif du retrait
-          </h3>
+          </h2>
           <p className="mt-1.5 text-sm text-muted">
             {application.withdrawnReason ??
               "Vous avez retiré cette candidature sans préciser de motif."}
@@ -94,8 +99,8 @@ export function ApplicationDetail({
         </div>
       )}
 
-      <div className="mt-5 border-t border-border pt-5">
-        <h3 className="text-sm font-bold text-foreground">Suivi</h3>
+      <div className="mt-6 border-t border-border pt-6">
+        <h2 className="text-sm font-bold text-foreground">Suivi</h2>
         <ul className="mt-3 space-y-2 text-sm text-muted">
           <li>
             Envoyée le{" "}

@@ -1,61 +1,53 @@
+import Link from "next/link";
 import { Avatar } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
+import { ArrowRightIcon } from "@/components/atoms/icons";
 import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
 import { cn } from "@/lib/cn";
 
-interface ApplicationCardProps {
-  application: ApplicationEntry;
-  selected: boolean;
-  onSelect: (id: string) => void;
-}
-
 /**
- * One application in the list column — mirrors the design template:
- * identity block, message excerpt, viewed indicator and status badge.
+ * One application in the list — a whole-card link to its dedicated detail
+ * page (`/applications/{id}`): identity block, message excerpt, viewed
+ * indicator and status badge, kept airy.
  */
 export function ApplicationCard({
   application,
-  selected,
-  onSelect,
-}: ApplicationCardProps) {
+}: {
+  application: ApplicationEntry;
+}) {
   const meta = STATUS_META[application.status];
 
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(application.id)}
-      aria-pressed={selected}
-      className={cn(
-        "w-full rounded-2xl border p-4 text-left transition-colors sm:p-5",
-        selected
-          ? "border-primary/70 bg-surface-2"
-          : "border-border bg-surface hover:border-border-strong hover:bg-surface-hover",
-      )}
+    <Link
+      href={`/applications/${application.id}`}
+      className="group block w-full rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-border-strong hover:bg-surface-hover sm:p-6"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <Avatar
-            name={application.listing.practiceName ?? application.listing.title}
-            className="h-9 w-9 text-xs"
-          />
-          <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-foreground">
-              {application.listing.title}
-            </p>
-            <p className="text-xs text-muted">{application.submittedLabel}</p>
-          </div>
+      <div className="flex items-center gap-4">
+        <Avatar
+          name={application.listing.practiceName ?? application.listing.title}
+          className="h-11 w-11"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[0.9375rem] font-bold text-foreground">
+            {application.listing.title}
+          </p>
+          <p className="mt-0.5 text-xs text-muted">
+            {application.submittedLabel}
+          </p>
         </div>
-        <Badge tone={meta.badgeTone}>{meta.label}</Badge>
+        <Badge tone={meta.badgeTone} className="shrink-0">
+          {meta.label}
+        </Badge>
       </div>
 
       {application.message && (
-        <p className="mt-3 truncate text-sm text-muted">
+        <p className="mt-4 line-clamp-2 text-sm leading-relaxed text-muted">
           « {application.message} »
         </p>
       )}
 
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <span className="flex items-center gap-1.5">
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <span className="flex items-center gap-2">
           <span
             aria-hidden="true"
             className={cn(
@@ -67,10 +59,11 @@ export function ApplicationCard({
             {application.viewed ? "Consultée" : "Non consultée"}
           </span>
         </span>
-        <span className="shrink-0 text-xs text-faint">
-          Cliquer pour détails →
+        <span className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-faint transition-colors group-hover:text-primary">
+          Voir le détail
+          <ArrowRightIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </span>
       </div>
-    </button>
+    </Link>
   );
 }

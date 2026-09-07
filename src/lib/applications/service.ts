@@ -47,6 +47,27 @@ function toMap<T>(
   return map;
 }
 
+/**
+ * GET /applications/{id} — one application enriched with its listing and
+ * practice. Unlike the list, a 404 here is a real error (unknown or foreign
+ * id) and propagates to the caller.
+ */
+export async function fetchApplicationDetail(
+  id: string,
+): Promise<ApplicationEntry> {
+  const application = await apiFetch<ApiApplication>(`/applications/${id}`);
+
+  const listing = await fetchListing(application.listingId);
+  const listingMap = toMap([application.listingId], [listing]);
+
+  const resolved = listingMap.get(application.listingId);
+  const practiceMap = resolved
+    ? toMap([resolved.practiceId], [await fetchPractice(resolved.practiceId)])
+    : new Map<string, ApiPractice>();
+
+  return adaptApplicationEntry(application, listingMap, practiceMap);
+}
+
 export async function fetchApplicationsData(): Promise<ApplicationsData> {
   const applications = await fetchMyApplications();
 

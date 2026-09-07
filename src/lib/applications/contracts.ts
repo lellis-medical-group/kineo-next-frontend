@@ -33,6 +33,8 @@ export interface ApplicationListingInfo {
   /** Formatted period — e.g. « Du 15 oct. au 30 oct. 2025 ». */
   dateRange?: string;
   remuneration?: string;
+  /** Listing description — rendered on the dedicated detail page. */
+  description?: string;
   practiceName?: string;
   practiceCity?: string;
 }
