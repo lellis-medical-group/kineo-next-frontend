@@ -5,7 +5,7 @@ export type BadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
 
 /**
  * Tones map to the global badge classes of `globals.css` — the site's
- * canonical badge look: pill, status dot and tinted variant per tone.
+ * canonical badge look: button-shaped chip with a tinted variant per tone.
  */
 const TONE_CLASSES: Record<BadgeTone, string> = {
   neutral: "badge",
