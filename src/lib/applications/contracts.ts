@@ -28,7 +28,7 @@ export const APPLICATION_FILTERS: readonly ApplicationsFilterOption[] = [
   { id: "WITHDRAWN", label: "Retirées" },
 ] as const;
 
-/** The listing an application was sent to (resolved from the API listing). */
+/** The listing an application was sent to (embedded by the backend). */
 export interface ApplicationListingInfo {
   id: string;
   /** Listing title — falls back to « Annonce indisponible » when the listing is gone. */

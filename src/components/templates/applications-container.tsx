@@ -57,9 +57,7 @@ export function ApplicationsContainer() {
     setPage(1); // Reset to first page when filter changes
   }, []);
 
-  // While a refetch is in flight (page or filter change), keep rendering the
-  // previous data instead of flashing the skeleton: the tab counters come
-  // from the backend and must stay visually stable.
+  // Keep previous data on refetch so the tab counters don't flash.
   if (status === "loading" && !data) {
     return <ApplicationsSkeleton />;
   }

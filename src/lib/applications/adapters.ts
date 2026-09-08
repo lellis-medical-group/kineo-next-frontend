@@ -26,10 +26,8 @@ export const STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
 export const LISTING_FALLBACK_TITLE = "Titre d'annonce indisponible";
 
 /**
- * Resolves the listing (and its practice) an application points at from the
- * data embedded server-side in the application response — no extra fetches,
- * and it works even for listings the user could not fetch directly
- * (visibility rules on /replacement-listings/{id}).
+ * Resolves an application's listing from the data embedded server-side — no
+ * extra fetches, works for listings hidden to the user.
  */
 export function adaptListingInfo(
   application: ApiApplication,

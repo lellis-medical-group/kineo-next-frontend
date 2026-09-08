@@ -4,10 +4,9 @@ import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
 import { formatDateTime } from "@/lib/format";
 
 /**
- * Full detail of one application, rendered on its dedicated page
- * (`/applications/{id}`): the targeted listing, the message sent,
- * rejection/withdrawal reasons and the follow-up timeline. Read-only:
- * decision actions live on the practice side (« Mes offres »).
+ * Full detail of one application on its dedicated page: targeted listing,
+ * message, rejection/withdrawal reasons and timeline. Read-only — practice
+ * actions live on « Mes offres ».
  */
 export function ApplicationDetail({
   application,

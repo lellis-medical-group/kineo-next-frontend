@@ -5,9 +5,8 @@ import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
 import { cn } from "@/lib/cn";
 
 /**
- * One application in the list — a whole-card link to its dedicated detail
- * page (`/applications/{id}`): listing title, submission/practice line,
- * message excerpt, viewed indicator and status badge, kept airy.
+ * One application in the list — a whole-card link to its detail page: title,
+ * meta, message excerpt, viewed indicator and status badge.
  */
 export function ApplicationCard({
   application,

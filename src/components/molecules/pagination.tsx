@@ -21,7 +21,6 @@ export function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps) {
-  // Always render, but disable buttons if single page
   const hasPrevious = currentPage > 1;
   const hasNext = currentPage < totalPages;
 

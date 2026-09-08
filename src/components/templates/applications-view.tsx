@@ -21,12 +21,9 @@ interface ApplicationsViewProps {
 }
 
 /**
- * Applications tracking page — status filters and the airy list of sent
- * applications; each card links to its dedicated detail page.
- *
- * The status tab counters come exclusively from `data.counts`, which the
- * backend computes over the whole collection: they never change when the
- * applied filter or the page changes.
+ * Applications tracking page — status filters, list and pagination. Tab
+ * counters come exclusively from `data.counts` (backend-computed over the
+ * whole collection), so they never move when the filter or page changes.
  */
 export function ApplicationsView({
   data,
@@ -36,8 +33,7 @@ export function ApplicationsView({
 }: ApplicationsViewProps) {
   const filter = currentFilter;
 
-  // Backend handles filtering, so data.applications already contains only the
-  // filtered results
+  // Backend filters, so applications are already scoped.
   const filtered = data.applications;
 
   if (data.counts.total === 0) {

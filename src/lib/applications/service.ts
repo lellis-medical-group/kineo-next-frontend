@@ -1,9 +1,8 @@
 /**
- * Applications data service — fetches the user's own applications. The
- * backend embeds each application's listing (and its practice) directly in
- * the response, so a whole page loads in a single request and keeps working
- * for listings the user could not fetch themselves (closed, filled...).
- * Soft 404s: an empty application list is an expected state, not an error.
+ * Fetches the user's own applications. The backend embeds each listing and its
+ * practice, so a page loads in a single request (including listings otherwise
+ * hidden by visibility rules). A soft 404 (empty list) is expected, not an
+ * error.
  */
 
 import { apiFetch, notFoundAs } from "../api-client";
@@ -50,8 +49,7 @@ async function fetchMyApplications(params: PaginationParams): Promise<{
     `/applications/mine?${searchParams}`,
   ).catch(notFoundAs([]));
 
-  // Legacy shape (or soft-404): a bare array is the whole collection, so
-  // counts derived from it remain stable.
+  // Legacy shape: a bare array is the whole collection — counts stay stable.
   if (Array.isArray(raw)) {
     const counts = statusCounts(raw.length);
     for (const application of raw) {
