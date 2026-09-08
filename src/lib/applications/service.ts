@@ -1,8 +1,9 @@
 /**
- * Applications data service — fetches the user's own applications and
- * enriches them with the listings (and practices) they point at.
- * Soft 404s: an empty application list, a deleted listing or a missing
- * practice are expected states, not errors.
+ * Applications data service — fetches the user's own applications. The
+ * backend embeds each application's listing (and its practice) directly in
+ * the response, so a whole page loads in a single request and keeps working
+ * for listings the user could not fetch themselves (closed, filled...).
+ * Soft 404s: an empty application list is an expected state, not an error.
  */
 
 import { apiFetch, notFoundAs } from "../api-client";
@@ -10,8 +11,6 @@ import type {
   ApiApplication,
   ApiApplicationStatusCounts,
   ApiPaginated,
-  ApiPractice,
-  ApiReplacementListing,
 } from "../types/api";
 import { adaptApplicationEntry } from "./adapters";
 import type { ApplicationEntry, ApplicationsData } from "./contracts";
@@ -89,50 +88,16 @@ async function fetchMyApplications(params: PaginationParams): Promise<{
   };
 }
 
-async function fetchListing(id: string): Promise<ApiReplacementListing | null> {
-  return apiFetch<ApiReplacementListing>(`/replacement-listings/${id}`).catch(
-    notFoundAs(null),
-  );
-}
-
-async function fetchPractice(id: string): Promise<ApiPractice | null> {
-  return apiFetch<ApiPractice>(`/practices/${id}`).catch(notFoundAs(null));
-}
-
-/** Builds an id → value map, dropping the null (soft-404) results. */
-function toMap<T>(
-  ids: string[],
-  results: ReadonlyArray<T | null>,
-): Map<string, T> {
-  const map = new Map<string, T>();
-  ids.forEach((id, index) => {
-    const value = results[index];
-    if (value) {
-      map.set(id, value);
-    }
-  });
-  return map;
-}
-
 /**
- * GET /applications/{id} — one application enriched with its listing and
- * practice. Unlike the list, a 404 here is a real error (unknown or foreign
- * id) and propagates to the caller.
+ * GET /applications/{id} — one application with its listing and practice
+ * embedded by the backend: a single request (a 404 here is a real error,
+ * unknown or foreign id, and propagates to the caller).
  */
 export async function fetchApplicationDetail(
   id: string,
 ): Promise<ApplicationEntry> {
   const application = await apiFetch<ApiApplication>(`/applications/${id}`);
-
-  const listing = await fetchListing(application.listingId);
-  const listingMap = toMap([application.listingId], [listing]);
-
-  const resolved = listingMap.get(application.listingId);
-  const practiceMap = resolved
-    ? toMap([resolved.practiceId], [await fetchPractice(resolved.practiceId)])
-    : new Map<string, ApiPractice>();
-
-  return adaptApplicationEntry(application, listingMap, practiceMap);
+  return adaptApplicationEntry(application);
 }
 
 export async function fetchApplicationsData(
@@ -140,29 +105,14 @@ export async function fetchApplicationsData(
 ): Promise<ApplicationsData> {
   const { applications, meta } = await fetchMyApplications(params);
 
-  const listingIds = [...new Set(applications.map((a) => a.listingId))];
-  const listingMap = toMap(
-    listingIds,
-    await Promise.all(listingIds.map(fetchListing)),
-  );
-
-  const practiceIds = [
-    ...new Set([...listingMap.values()].map((l) => l.practiceId)),
-  ];
-  const practiceMap = toMap(
-    practiceIds,
-    await Promise.all(practiceIds.map(fetchPractice)),
-  );
-
+  // Newest submissions first — matches the backend orderBy, kept as a guard
   const entries: ApplicationEntry[] = applications
     .slice()
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
-    .map((application) =>
-      adaptApplicationEntry(application, listingMap, practiceMap),
-    );
+    .map(adaptApplicationEntry);
 
   return {
     total: meta.total,

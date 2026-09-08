@@ -80,6 +80,29 @@ export type ApplicationStatus =
   | "REJECTED"
   | "WITHDRAWN";
 
+/** Practice data embedded in an application response. */
+export interface ApiApplicationPractice {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+/** Listing data embedded in an application response. */
+export interface ApiApplicationListing {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  specialty: Specialty;
+  status: ReplacementListingStatus;
+  urgent: boolean;
+  description: string | null;
+  practice: ApiApplicationPractice;
+}
+
 export interface ApiApplication {
   id: string;
   listingId: string;
@@ -92,6 +115,8 @@ export interface ApiApplication {
   respondedAt?: string;
   createdAt: string;
   updatedAt: string;
+  /** Listing (with its practice) resolved server-side by the backend. */
+  listing?: ApiApplicationListing;
 }
 
 /** Server-computed totals for a collection of applications. */

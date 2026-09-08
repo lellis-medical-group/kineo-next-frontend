@@ -5,12 +5,7 @@
 
 import type { BadgeTone } from "@/components/atoms/badge";
 import { formatDateRange, formatRelativeTime } from "../format";
-import type {
-  ApiApplication,
-  ApiPractice,
-  ApiReplacementListing,
-  ApplicationStatus,
-} from "../types/api";
+import type { ApiApplication, ApplicationStatus } from "../types/api";
 import type { ApplicationEntry, ApplicationListingInfo } from "./contracts";
 
 export interface ApplicationStatusMeta {
@@ -30,32 +25,34 @@ export const STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
 /** Label shown when the targeted listing no longer resolves. */
 export const LISTING_FALLBACK_TITLE = "Titre d'annonce indisponible";
 
-/** Resolves the listing (and its practice) an application points at. */
+/**
+ * Resolves the listing (and its practice) an application points at from the
+ * data embedded server-side in the application response — no extra fetches,
+ * and it works even for listings the user could not fetch directly
+ * (visibility rules on /replacement-listings/{id}).
+ */
 export function adaptListingInfo(
   application: ApiApplication,
-  listings: ReadonlyMap<string, ApiReplacementListing>,
-  practices: ReadonlyMap<string, ApiPractice>,
 ): ApplicationListingInfo {
-  const listing = listings.get(application.listingId);
-  const practice = listing ? practices.get(listing.practiceId) : undefined;
+  const embedded = application.listing;
+
+  if (!embedded) {
+    // Legacy response without the embedded listing — nothing else to show.
+    return { id: application.listingId, title: LISTING_FALLBACK_TITLE };
+  }
 
   return {
-    id: application.listingId,
-    title: listing?.title ?? LISTING_FALLBACK_TITLE,
-    dateRange: listing
-      ? formatDateRange(listing.startDate, listing.endDate)
-      : undefined,
-    remuneration: listing?.remuneration,
-    description: listing?.description?.trim() || undefined,
-    practiceName: practice?.name,
-    practiceCity: practice?.city,
+    id: embedded.id,
+    title: embedded.title,
+    dateRange: formatDateRange(embedded.startDate, embedded.endDate),
+    description: embedded.description?.trim() || undefined,
+    practiceName: embedded.practice.name,
+    practiceCity: embedded.practice.city,
   };
 }
 
 export function adaptApplicationEntry(
   application: ApiApplication,
-  listings: ReadonlyMap<string, ApiReplacementListing>,
-  practices: ReadonlyMap<string, ApiPractice>,
 ): ApplicationEntry {
   const message = application.message?.trim();
 
@@ -70,6 +67,6 @@ export function adaptApplicationEntry(
     withdrawnReason: application.withdrawnReason?.trim() || undefined,
     viewedAt: application.viewedAt,
     respondedAt: application.respondedAt,
-    listing: adaptListingInfo(application, listings, practices),
+    listing: adaptListingInfo(application),
   };
 }
