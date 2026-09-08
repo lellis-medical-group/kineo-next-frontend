@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Badge } from "@/components/atoms/badge";
-import { ArrowRightIcon } from "@/components/atoms/icons";
+import { ApplicationCardFooter } from "@/components/molecules/application-card-footer";
+import { ApplicationCardMeta } from "@/components/molecules/application-card-meta";
 import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
-import { cn } from "@/lib/cn";
 
 /**
  * One application in the list — a whole-card link to its detail page: title,
@@ -14,10 +14,6 @@ export function ApplicationCard({
   application: ApplicationEntry;
 }) {
   const meta = STATUS_META[application.status];
-  const { practiceName, practiceCity } = application.listing;
-  const metaLine = [application.submittedLabel, practiceName, practiceCity]
-    .filter((part): part is string => Boolean(part))
-    .join(" · ");
 
   return (
     <Link
@@ -29,7 +25,7 @@ export function ApplicationCard({
           <p className="truncate text-[0.9375rem] font-bold text-foreground">
             {application.listing.title}
           </p>
-          <p className="mt-1 truncate text-xs text-muted">{metaLine}</p>
+          <ApplicationCardMeta application={application} />
         </div>
         <Badge tone={meta.badgeTone} className="shrink-0">
           {meta.label}
@@ -42,24 +38,7 @@ export function ApplicationCard({
         </p>
       )}
 
-      <div className="mt-5 flex items-center justify-between gap-4">
-        <span className="flex items-center gap-2">
-          <span
-            aria-hidden="true"
-            className={cn(
-              "h-1.5 w-1.5 shrink-0 rounded-full",
-              application.viewed ? "bg-success" : "bg-danger",
-            )}
-          />
-          <span className="status-text">
-            {application.viewed ? "Consultée" : "Non consultée"}
-          </span>
-        </span>
-        <span className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-faint transition-colors group-hover:text-primary">
-          Voir le détail
-          <ArrowRightIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </span>
-      </div>
+      <ApplicationCardFooter application={application} />
     </Link>
   );
 }

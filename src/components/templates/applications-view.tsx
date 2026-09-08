@@ -1,12 +1,11 @@
 "use client";
 
 import { Badge } from "@/components/atoms/badge";
-import { Button } from "@/components/atoms/button";
-import { Card } from "@/components/atoms/card";
 import { FileTextIcon } from "@/components/atoms/icons";
 import { FilterChips } from "@/components/molecules/filter-chips";
 import { Pagination } from "@/components/molecules/pagination";
 import { ApplicationsList } from "@/components/organisms/applications-list";
+import { EmptyState } from "@/components/organisms/empty-state";
 import {
   APPLICATION_FILTERS,
   type ApplicationsData,
@@ -40,21 +39,13 @@ export function ApplicationsView({
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <ApplicationsHeader allCount={data.counts.total} />
-        <Card className="mt-8 flex flex-col items-center p-8 text-center sm:p-10">
-          <div className="mb-4 rounded-full bg-primary/10 p-4">
-            <FileTextIcon className="h-8 w-8 text-primary" />
-          </div>
-          <h2 className="text-lg font-semibold text-foreground">
-            Aucune candidature pour l&apos;instant
-          </h2>
-          <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
-            Parcourez les annonces ouvertes et candidatez en un clic avec un
-            message personnalisé.
-          </p>
-          <Button href="/listings" className="mt-6">
-            Parcourir les annonces
-          </Button>
-        </Card>
+        <EmptyState
+          icon={<FileTextIcon className="h-8 w-8 text-primary" />}
+          title="Aucune candidature pour l'instant"
+          description="Parcourez les annonces ouvertes et candidatez en un clic avec un message personnalisé."
+          actionLabel="Parcourir les annonces"
+          actionHref="/listings"
+        />
       </div>
     );
   }
