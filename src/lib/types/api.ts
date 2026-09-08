@@ -54,7 +54,8 @@ export interface ApiPractice {
 export type ReplacementListingStatus =
   | "DRAFT"
   | "OPEN"
-  | "DISCUSSION"
+  | "IN_DISCUSSION"
+  | "FULL"
   | "FILLED"
   | "CLOSED"
   | "CANCELLED";
