@@ -2,6 +2,13 @@ import Link from "next/link";
 import { KineoLogo } from "@/components/atoms/kineo-logo";
 import { footerContent } from "@/lib/marketing";
 
+/**
+ * Static build-time constant: Next.js prerenders this footer, so a runtime
+ * `new Date()` would block the build ("unstable value during prerendering").
+ * Bump it on January 1st of each year.
+ */
+const COPYRIGHT_YEAR = 2026;
+
 function FooterLinkColumn({
   title,
   links,
@@ -54,7 +61,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Kineo. Tous droits réservés.</p>
+          <p>© {COPYRIGHT_YEAR} Kineo. Tous droits réservés.</p>
           <p>{footerContent.tagline}</p>
         </div>
       </div>
