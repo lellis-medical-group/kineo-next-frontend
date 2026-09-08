@@ -28,7 +28,7 @@ export const STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
 };
 
 /** Label shown when the targeted listing no longer resolves. */
-export const LISTING_FALLBACK_TITLE = "Annonce indisponible";
+export const LISTING_FALLBACK_TITLE = "Titre d'annonce indisponible";
 
 /** Resolves the listing (and its practice) an application points at. */
 export function adaptListingInfo(

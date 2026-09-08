@@ -5,10 +5,13 @@ import { ErrorState } from "@/components/organisms/error-state";
 import { ApplicationsView } from "@/components/templates/applications-view";
 import {
   type ApplicationsData,
+  type ApplicationsFilter,
   fetchApplicationsData,
 } from "@/lib/applications";
 
 type Status = "loading" | "error" | "success";
+
+const DEFAULT_PAGE_SIZE = 5;
 
 /**
  * Orchestrator for /applications: fetches data (loading/error/success) and
@@ -19,12 +22,18 @@ export function ApplicationsContainer() {
   const [status, setStatus] = useState<Status>("loading");
   const [data, setData] = useState<ApplicationsData | null>(null);
   const [error, setError] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState<ApplicationsFilter>("ALL");
 
   const load = useCallback(() => {
     setStatus("loading");
     setError("");
 
-    fetchApplicationsData()
+    fetchApplicationsData({
+      page,
+      limit: DEFAULT_PAGE_SIZE,
+      status: filter !== "ALL" ? filter : undefined,
+    })
       .then((applicationsData) => {
         setData(applicationsData);
         setStatus("success");
@@ -33,17 +42,29 @@ export function ApplicationsContainer() {
         setError(err instanceof Error ? err.message : "Erreur inconnue");
         setStatus("error");
       });
-  }, []);
+  }, [page, filter]);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  if (status === "loading") {
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const handleFilterChange = useCallback((newFilter: ApplicationsFilter) => {
+    setFilter(newFilter);
+    setPage(1); // Reset to first page when filter changes
+  }, []);
+
+  // While a refetch is in flight (page or filter change), keep rendering the
+  // previous data instead of flashing the skeleton: the tab counters come
+  // from the backend and must stay visually stable.
+  if (status === "loading" && !data) {
     return <ApplicationsSkeleton />;
   }
 
-  if (status === "error") {
+  if (status === "error" && !data) {
     return <ErrorState message={error} onRetry={load} />;
   }
 
@@ -51,7 +72,14 @@ export function ApplicationsContainer() {
     return null;
   }
 
-  return <ApplicationsView data={data} />;
+  return (
+    <ApplicationsView
+      data={data}
+      onPageChange={handlePageChange}
+      onFilterChange={handleFilterChange}
+      currentFilter={filter}
+    />
+  );
 }
 
 /** Static keys for the skeleton placeholders (no index keys). */

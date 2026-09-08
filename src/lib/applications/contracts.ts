@@ -5,7 +5,10 @@
  * adapted by the applications service (`./service`).
  */
 
-import type { ApplicationStatus } from "@/lib/types/api";
+import type {
+  ApiApplicationStatusCounts,
+  ApplicationStatus,
+} from "@/lib/types/api";
 
 /** Filter buckets above the list — "all" plus every application status. */
 export type ApplicationsFilter = "ALL" | ApplicationStatus;
@@ -59,8 +62,23 @@ export interface ApplicationEntry {
 }
 
 export interface ApplicationsData {
-  /** Total across all statuses. */
+  /** Filtered total for the current status (drives pagination). */
   total: number;
   /** Entries sorted by most recent submission first. */
   applications: ApplicationEntry[];
+  /** Pagination metadata. */
+  pagination: {
+    /** Current page number (1-based). */
+    page: number;
+    /** Number of items per page. */
+    limit: number;
+    /** Total number of pages. */
+    totalPages: number;
+  };
+  /**
+   * Server-computed totals over the WHOLE collection, independent of the
+   * applied status filter and of the current page. The status tabs render
+   * these numbers only — they are never derived from `applications`.
+   */
+  counts: ApiApplicationStatusCounts;
 }

@@ -15,4 +15,5 @@ export type {
   ApplicationsFilterOption,
 } from "./contracts";
 export { APPLICATION_FILTERS } from "./contracts";
+export type { PaginationParams } from "./service";
 export { fetchApplicationDetail, fetchApplicationsData } from "./service";

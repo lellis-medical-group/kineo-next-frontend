@@ -5,9 +5,10 @@
  * practice are expected states, not errors.
  */
 
-import { apiFetch, extractList, notFoundAs } from "../api-client";
+import { apiFetch, notFoundAs } from "../api-client";
 import type {
   ApiApplication,
+  ApiApplicationStatusCounts,
   ApiPaginated,
   ApiPractice,
   ApiReplacementListing,
@@ -15,11 +16,77 @@ import type {
 import { adaptApplicationEntry } from "./adapters";
 import type { ApplicationEntry, ApplicationsData } from "./contracts";
 
-async function fetchMyApplications(): Promise<ApiApplication[]> {
+/** Pagination parameters for fetching applications. */
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  status?: string;
+}
+
+function statusCounts(total: number): ApiApplicationStatusCounts {
+  return {
+    total,
+    PENDING: 0,
+    SHORTLISTED: 0,
+    ACCEPTED: 0,
+    REJECTED: 0,
+    WITHDRAWN: 0,
+  };
+}
+
+async function fetchMyApplications(params: PaginationParams): Promise<{
+  applications: ApiApplication[];
+  meta: ApiPaginated<ApiApplication>["meta"];
+}> {
+  const searchParams = new URLSearchParams({
+    page: String(params.page),
+    limit: String(params.limit),
+  });
+
+  if (params.status && params.status !== "ALL") {
+    searchParams.set("status", params.status);
+  }
+
   const raw = await apiFetch<ApiPaginated<ApiApplication> | ApiApplication[]>(
-    "/applications/mine",
+    `/applications/mine?${searchParams}`,
   ).catch(notFoundAs([]));
-  return extractList(raw);
+
+  // Legacy shape (or soft-404): a bare array is the whole collection, so
+  // counts derived from it remain stable.
+  if (Array.isArray(raw)) {
+    const counts = statusCounts(raw.length);
+    for (const application of raw) {
+      counts[application.status] += 1;
+    }
+    return {
+      applications: raw,
+      meta: {
+        total: raw.length,
+        page: 1,
+        limit: raw.length || 1,
+        totalPages: 1,
+        counts,
+      },
+    };
+  }
+
+  if (raw && typeof raw === "object" && "data" in raw && "meta" in raw) {
+    return {
+      applications: raw.data,
+      meta: raw.meta,
+    };
+  }
+
+  return {
+    applications: [],
+    meta: {
+      total: 0,
+      page: params.page,
+      limit: params.limit,
+      totalPages: 0,
+      counts: statusCounts(0),
+    },
+  };
 }
 
 async function fetchListing(id: string): Promise<ApiReplacementListing | null> {
@@ -68,8 +135,10 @@ export async function fetchApplicationDetail(
   return adaptApplicationEntry(application, listingMap, practiceMap);
 }
 
-export async function fetchApplicationsData(): Promise<ApplicationsData> {
-  const applications = await fetchMyApplications();
+export async function fetchApplicationsData(
+  params: PaginationParams = { page: 1, limit: 2 },
+): Promise<ApplicationsData> {
+  const { applications, meta } = await fetchMyApplications(params);
 
   const listingIds = [...new Set(applications.map((a) => a.listingId))];
   const listingMap = toMap(
@@ -95,5 +164,15 @@ export async function fetchApplicationsData(): Promise<ApplicationsData> {
       adaptApplicationEntry(application, listingMap, practiceMap),
     );
 
-  return { total: entries.length, applications: entries };
+  return {
+    total: meta.total,
+    applications: entries,
+    pagination: {
+      page: meta.page,
+      limit: meta.limit,
+      totalPages: meta.totalPages,
+    },
+    // Server-computed totals — never derived from the loaded page
+    counts: meta.counts ?? statusCounts(meta.total),
+  };
 }

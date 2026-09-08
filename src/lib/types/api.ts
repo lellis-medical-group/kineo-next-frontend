@@ -93,6 +93,17 @@ export interface ApiApplication {
   updatedAt: string;
 }
 
+/** Server-computed totals for a collection of applications. */
+export interface ApiApplicationStatusCounts {
+  /** Count across all statuses — backs the « Toutes » tab. */
+  total: number;
+  PENDING: number;
+  SHORTLISTED: number;
+  ACCEPTED: number;
+  REJECTED: number;
+  WITHDRAWN: number;
+}
+
 export interface ApiPaginated<T> {
   data: T[];
   meta: {
@@ -100,5 +111,6 @@ export interface ApiPaginated<T> {
     page: number;
     limit: number;
     totalPages: number;
+    counts?: ApiApplicationStatusCounts;
   };
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/atoms/card";
 import { FileTextIcon } from "@/components/atoms/icons";
 import { FilterChips } from "@/components/molecules/filter-chips";
+import { Pagination } from "@/components/molecules/pagination";
 import { ApplicationsList } from "@/components/organisms/applications-list";
 import {
   APPLICATION_FILTERS,
@@ -13,41 +13,43 @@ import {
   type ApplicationsFilter,
 } from "@/lib/applications";
 
+interface ApplicationsViewProps {
+  data: ApplicationsData;
+  onPageChange: (page: number) => void;
+  onFilterChange: (filter: ApplicationsFilter) => void;
+  currentFilter: ApplicationsFilter;
+}
+
 /**
  * Applications tracking page — status filters and the airy list of sent
  * applications; each card links to its dedicated detail page.
+ *
+ * The status tab counters come exclusively from `data.counts`, which the
+ * backend computes over the whole collection: they never change when the
+ * applied filter or the page changes.
  */
-export function ApplicationsView({ data }: { data: ApplicationsData }) {
-  const [filter, setFilter] = useState<ApplicationsFilter>("ALL");
+export function ApplicationsView({
+  data,
+  onPageChange,
+  onFilterChange,
+  currentFilter,
+}: ApplicationsViewProps) {
+  const filter = currentFilter;
 
-  const filtered = useMemo(
-    () =>
-      filter === "ALL"
-        ? data.applications
-        : data.applications.filter((a) => a.status === filter),
-    [data.applications, filter],
-  );
+  // Backend handles filtering, so data.applications already contains only the
+  // filtered results
+  const filtered = data.applications;
 
-  const counts = useMemo(() => {
-    const map = new Map<ApplicationsFilter, number>([
-      ["ALL", data.applications.length],
-    ]);
-    for (const entry of data.applications) {
-      map.set(entry.status, (map.get(entry.status) ?? 0) + 1);
-    }
-    return map;
-  }, [data.applications]);
-
-  if (data.total === 0) {
+  if (data.counts.total === 0) {
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <ApplicationsHeader total={data.total} />
+        <ApplicationsHeader allCount={data.counts.total} />
         <Card className="mt-8 flex flex-col items-center p-8 text-center sm:p-10">
           <div className="mb-4 rounded-full bg-primary/10 p-4">
             <FileTextIcon className="h-8 w-8 text-primary" />
           </div>
           <h2 className="text-lg font-semibold text-foreground">
-            Aucune candidature pour l'instant
+            Aucune candidature pour l&apos;instant
           </h2>
           <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
             Parcourez les annonces ouvertes et candidatez en un clic avec un
@@ -63,37 +65,44 @@ export function ApplicationsView({ data }: { data: ApplicationsData }) {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-      <ApplicationsHeader total={data.total} />
+      <ApplicationsHeader allCount={data.counts.total} />
 
       <FilterChips
         ariaLabel="Filtrer les candidatures par statut"
         className="mt-6"
         options={APPLICATION_FILTERS.map((option) => ({
           ...option,
-          count: counts.get(option.id) ?? 0,
+          count:
+            option.id === "ALL" ? data.counts.total : data.counts[option.id],
         }))}
         value={filter}
-        onChange={setFilter}
+        onChange={onFilterChange}
       />
 
       <div className="mt-8">
         <ApplicationsList applications={filtered} />
       </div>
+
+      <Pagination
+        currentPage={data.pagination.page}
+        totalPages={data.pagination.totalPages}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 }
 
-function ApplicationsHeader({ total }: { total: number }) {
+function ApplicationsHeader({ allCount }: { allCount: number }) {
   return (
     <header>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-medium tracking-tight sm:text-3xl">
           Mes candidatures
         </h1>
-        <Badge>{total} total</Badge>
+        <Badge>{allCount} total</Badge>
       </div>
       <p className="mt-1.5 text-sm text-muted">
-        Suivez l'état de vos candidatures envoyées aux cabinets.
+        Suivez l&apos;état de vos candidatures envoyées aux cabinets.
       </p>
     </header>
   );
