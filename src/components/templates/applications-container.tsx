@@ -11,7 +11,7 @@ import {
 
 type Status = "loading" | "error" | "success";
 
-const DEFAULT_PAGE_SIZE = 5;
+const DEFAULT_PAGE_SIZE = 10;
 
 /**
  * Orchestrator for /applications: fetches data (loading/error/success) and
