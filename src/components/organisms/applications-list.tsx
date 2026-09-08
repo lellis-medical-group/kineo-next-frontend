@@ -17,7 +17,7 @@ export function ApplicationsList({
   }
 
   return (
-    <ul className="space-y-4">
+    <ul className="space-y-5">
       {applications.map((application) => (
         <li key={application.id}>
           <ApplicationCard application={application} />

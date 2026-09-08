@@ -23,14 +23,14 @@ export function ApplicationCard({
   return (
     <Link
       href={`/applications/${application.id}`}
-      className="group block w-full rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-border-strong hover:bg-surface-hover sm:p-6"
+      className="group block w-full rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-border-strong hover:bg-surface-hover sm:p-7"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="truncate text-[0.9375rem] font-bold text-foreground">
             {application.listing.title}
           </p>
-          <p className="mt-0.5 truncate text-xs text-muted">{metaLine}</p>
+          <p className="mt-1 truncate text-xs text-muted">{metaLine}</p>
         </div>
         <Badge tone={meta.badgeTone} className="shrink-0">
           {meta.label}
@@ -38,12 +38,12 @@ export function ApplicationCard({
       </div>
 
       {application.message && (
-        <p className="mt-4 line-clamp-2 text-sm leading-relaxed text-muted">
+        <p className="mt-5 line-clamp-2 text-sm leading-relaxed text-muted">
           « {application.message} »
         </p>
       )}
 
-      <div className="mt-4 flex items-center justify-between gap-4">
+      <div className="mt-5 flex items-center justify-between gap-4">
         <span className="flex items-center gap-2">
           <span
             aria-hidden="true"
