@@ -54,7 +54,8 @@ export interface ApiPractice {
 export type ReplacementListingStatus =
   | "DRAFT"
   | "OPEN"
-  | "DISCUSSION"
+  | "IN_DISCUSSION"
+  | "FULL"
   | "FILLED"
   | "CLOSED"
   | "CANCELLED";
@@ -74,9 +75,33 @@ export interface ApiReplacementListing {
 
 export type ApplicationStatus =
   | "PENDING"
+  | "SHORTLISTED"
   | "ACCEPTED"
   | "REJECTED"
   | "WITHDRAWN";
+
+/** Practice data embedded in an application response. */
+export interface ApiApplicationPractice {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+/** Listing data embedded in an application response. */
+export interface ApiApplicationListing {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  specialty: Specialty;
+  status: ReplacementListingStatus;
+  urgent: boolean;
+  description: string | null;
+  practice: ApiApplicationPractice;
+}
 
 export interface ApiApplication {
   id: string;
@@ -90,6 +115,19 @@ export interface ApiApplication {
   respondedAt?: string;
   createdAt: string;
   updatedAt: string;
+  /** Listing (with its practice) resolved server-side by the backend. */
+  listing?: ApiApplicationListing;
+}
+
+/** Server-computed totals for a collection of applications. */
+export interface ApiApplicationStatusCounts {
+  /** Count across all statuses — backs the « Toutes » tab. */
+  total: number;
+  PENDING: number;
+  SHORTLISTED: number;
+  ACCEPTED: number;
+  REJECTED: number;
+  WITHDRAWN: number;
 }
 
 export interface ApiPaginated<T> {
@@ -99,5 +137,6 @@ export interface ApiPaginated<T> {
     page: number;
     limit: number;
     totalPages: number;
+    counts?: ApiApplicationStatusCounts;
   };
 }

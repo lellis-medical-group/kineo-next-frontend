@@ -7,7 +7,9 @@ export function adaptStats(
   applications: ApiApplication[],
 ): DashboardStat[] {
   const open = listings.filter((l) => l.status === "OPEN").length;
-  const discussion = listings.filter((l) => l.status === "DISCUSSION").length;
+  const discussion = listings.filter(
+    (l) => l.status === "IN_DISCUSSION",
+  ).length;
   // Applications SENT by the user (source: /applications/mine).
   const pendingApps = applications.filter((a) => a.status === "PENDING").length;
   // viewedAt is set when the practice views the application.

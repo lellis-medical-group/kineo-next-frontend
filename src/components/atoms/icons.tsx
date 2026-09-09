@@ -35,6 +35,14 @@ export function ArrowLeftIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ArrowRightIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <Svg {...props}>
+      <path d="M5 12h14m-7-7 7 7-7 7" />
+    </Svg>
+  );
+}
+
 export function LayersIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Svg {...props}>

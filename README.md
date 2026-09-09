@@ -84,6 +84,7 @@ bun run format     # auto-format code (Biome)
 | `/forgot-password` · `/reset-password` | Password recovery        |
 | `/verify-email`       | Email verification                        |
 | `/profile` (`/create`, `/edit`) | Member profile management          |
+| `/applications` (+ `/{id}`) | Application tracking (locum side)    |
 | `/terms`              | Legal / terms of use                      |
 
 Protected routes (`/profile`, `/dashboard`, `/settings`) are guarded by an optimistic
@@ -98,6 +99,7 @@ src/
 ├── app/              # Routes (App Router) — thin page shells
 │   ├── (site)/       # Routes behind the shared site layout
 │   │   ├── page.tsx  # Home: member dashboard or marketing content
+│   │   ├── applications/  # Application tracking (locum side)
 │   │   ├── profile/  # Profile management
 │   │   └── terms/
 │   ├── signin/ signup/
@@ -106,6 +108,7 @@ src/
 ├── components/       # Reusable presentational blocks
 └── lib/              # Services & shared logic
 │   ├── dashboard/    # Dashboard service + presentation contracts
+│   ├── applications/ # Applications service + presentation contracts
 │   ├── types/        # Raw API types
 │   └── …             # Auth client, marketing content, navigation, formatting
 └── proxy.ts          # Next 16 proxy: optimistic auth guard

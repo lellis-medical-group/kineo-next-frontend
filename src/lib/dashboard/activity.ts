@@ -1,3 +1,4 @@
+import { LISTING_FALLBACK_TITLE } from "@/lib/applications";
 import { formatRelativeTime } from "../format";
 import type { ApiApplication, ApiReplacementListing } from "../types/api";
 import type { ActivityEntry } from "./contracts";
@@ -15,10 +16,9 @@ export function adaptActivity(
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     )
     .slice(0, 4)
-    .map((app, i) => {
+    .map((app) => {
       const listingLabel =
-        listingTitles.get(app.listingId) ||
-        `Annonce #${app.listingId.slice(-4)}`;
+        listingTitles.get(app.listingId) || LISTING_FALLBACK_TITLE;
 
       let message: ActivityEntry["message"];
       switch (app.status) {
@@ -50,12 +50,13 @@ export function adaptActivity(
       }
 
       return {
-        id: `act-${i + 1}`,
+        id: app.id,
         icon:
           app.status === "ACCEPTED" ? ("check" as const) : ("file" as const),
         message,
         timestamp: formatRelativeTime(app.createdAt),
-        href: "/applications",
+        // Deep-link straight to the application's dedicated detail page.
+        href: `/applications/${app.id}`,
       };
     });
 }

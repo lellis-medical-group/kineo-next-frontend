@@ -35,7 +35,7 @@ export function adaptGreeting(
     : "";
 
   const activeListings = listings.filter(
-    (l) => l.status === "OPEN" || l.status === "DISCUSSION",
+    (l) => l.status === "OPEN" || l.status === "IN_DISCUSSION",
   ).length;
   const pendingApps = applications.filter((a) => a.status === "PENDING").length;
 
