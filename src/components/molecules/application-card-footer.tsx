@@ -2,15 +2,18 @@ import { ArrowRightIcon } from "@/components/atoms/icons";
 import type { ApplicationEntry } from "@/lib/applications";
 import { cn } from "@/lib/cn";
 
-/** Card footer: viewed indicator and the link to the detail page. */
+/**
+ * Card footer — the state zone, separated from the content above by a
+ * divider: viewed indicator, submission time and the detail link.
+ */
 export function ApplicationCardFooter({
   application,
 }: {
   application: ApplicationEntry;
 }) {
   return (
-    <div className="mt-5 flex items-center justify-between gap-4">
-      <span className="flex items-center gap-2">
+    <div className="mt-5 flex items-center justify-between gap-4 border-t border-border pt-4">
+      <span className="flex min-w-0 items-center gap-2">
         <span
           aria-hidden="true"
           className={cn(
@@ -20,6 +23,9 @@ export function ApplicationCardFooter({
         />
         <span className="status-text">
           {application.viewed ? "Consultée" : "Non consultée"}
+        </span>
+        <span className="truncate text-xs text-faint">
+          · {application.submittedLabel}
         </span>
       </span>
       <span className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-faint transition-colors group-hover:text-primary">
