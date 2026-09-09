@@ -145,3 +145,23 @@ export async function withdrawApplication(
   }
   return null;
 }
+
+/**
+ * PATCH /applications/{id} — edits the message of a pending application
+ * (required, 1-2000 chars; backend 400s once the status moves). Returns the
+ * updated entry when echoed, else null (caller refetches).
+ */
+export async function updateApplicationMessage(
+  id: string,
+  message: string,
+): Promise<ApplicationEntry | null> {
+  const raw = await apiFetch<unknown>(`/applications/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ message: message.trim() }),
+  });
+
+  if (raw && typeof raw === "object" && "id" in raw && "status" in raw) {
+    return adaptApplicationEntry(raw as ApiApplication);
+  }
+  return null;
+}

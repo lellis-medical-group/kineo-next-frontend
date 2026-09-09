@@ -37,7 +37,7 @@ export function ApplicationDetailContainer({ id }: { id: string }) {
   }, [load]);
 
   // Instant update when the API echoes the entry, refetch otherwise.
-  const handleWithdrawn = useCallback(
+  const handleEntryUpdated = useCallback(
     (updated: ApplicationEntry | null) => {
       if (updated) {
         setApplication(updated);
@@ -63,7 +63,8 @@ export function ApplicationDetailContainer({ id }: { id: string }) {
   return (
     <ApplicationDetailView
       application={application}
-      onWithdrawn={handleWithdrawn}
+      onWithdrawn={handleEntryUpdated}
+      onMessageSaved={handleEntryUpdated}
     />
   );
 }

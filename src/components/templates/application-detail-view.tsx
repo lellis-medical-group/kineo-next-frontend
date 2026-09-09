@@ -11,9 +11,11 @@ import {
 export function ApplicationDetailView({
   application,
   onWithdrawn,
+  onMessageSaved,
 }: {
   application: ApplicationEntry;
   onWithdrawn: (updated: ApplicationEntry | null) => void;
+  onMessageSaved: (updated: ApplicationEntry | null) => void;
 }) {
   const canWithdraw = WITHDRAWABLE_STATUSES.has(application.status);
 
@@ -28,7 +30,10 @@ export function ApplicationDetailView({
       </Link>
 
       <div className="mt-8">
-        <ApplicationDetail application={application} />
+        <ApplicationDetail
+          application={application}
+          onMessageSaved={onMessageSaved}
+        />
       </div>
 
       {canWithdraw && (

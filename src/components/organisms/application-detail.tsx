@@ -18,8 +18,10 @@ function DetailSection({ children }: { children: React.ReactNode }) {
 /** Full application detail — read-only (practice actions live on "Mes offres"). */
 export function ApplicationDetail({
   application,
+  onMessageSaved,
 }: {
   application: ApplicationEntry;
+  onMessageSaved?: (updated: ApplicationEntry | null) => void;
 }) {
   return (
     <Card className="p-6 sm:p-8">
@@ -32,7 +34,12 @@ export function ApplicationDetail({
       </DetailSection>
 
       <DetailSection>
-        <ApplicationMessage message={application.message} />
+        <ApplicationMessage
+          applicationId={application.id}
+          message={application.message}
+          canEdit={application.status === "PENDING"}
+          onSaved={onMessageSaved}
+        />
       </DetailSection>
 
       <DetailSection>

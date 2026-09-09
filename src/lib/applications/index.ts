@@ -20,5 +20,6 @@ export type { PaginationParams } from "./service";
 export {
   fetchApplicationDetail,
   fetchApplicationsData,
+  updateApplicationMessage,
   withdrawApplication,
 } from "./service";
