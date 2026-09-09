@@ -1,28 +1,8 @@
-import type { ComponentType, SVGProps } from "react";
 import type { BadgeTone } from "@/components/atoms/badge";
-import {
-  AlertIcon,
-  ArrowLeftIcon,
-  BellIcon,
-  CheckIcon,
-  StarIcon,
-} from "@/components/atoms/icons";
 import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
 import { cn } from "@/lib/cn";
 import { formatDateTime } from "@/lib/format";
 import type { ApplicationStatus } from "@/lib/types/api";
-
-/** Icon per status — the outcome at a glance. */
-const STATUS_ICONS: Record<
-  ApplicationStatus,
-  ComponentType<SVGProps<SVGSVGElement>>
-> = {
-  PENDING: BellIcon,
-  SHORTLISTED: StarIcon,
-  ACCEPTED: CheckIcon,
-  REJECTED: AlertIcon,
-  WITHDRAWN: ArrowLeftIcon,
-};
 
 /** Banner headline per status — more explicit than the chip labels. */
 const STATUS_HEADLINES: Record<ApplicationStatus, string> = {
@@ -65,10 +45,9 @@ function buildSummary(application: ApplicationEntry): string {
 }
 
 /**
- * Outcome banner — the first-glance answer of the detail page: status
- * headline, key dates or decision reason, tinted by the status tone.
- * Replaces both the header badge and the standalone decision note. The icon
- * is vertically centered on the text block (both-axis alignment).
+ * Outcome banner — the first-glance answer of the detail page: a tinted
+ * band, the status headline in the tone color and a summary line carrying
+ * the key dates or the decision reason. Pure typography — nothing to align.
  */
 export function ApplicationStatusBanner({
   application,
@@ -78,25 +57,21 @@ export function ApplicationStatusBanner({
   className?: string;
 }) {
   const meta = STATUS_META[application.status];
-  const Icon = STATUS_ICONS[application.status];
 
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-control border p-4 sm:p-5",
+        "rounded-control border p-4 sm:p-5",
         TONE_CLASSES[meta.badgeTone],
         className,
       )}
     >
-      <Icon className="h-5 w-5 shrink-0" />
-      <div className="min-w-0">
-        <p className="text-sm font-bold">
-          {STATUS_HEADLINES[application.status]}
-        </p>
-        <p className="mt-1 text-sm leading-relaxed text-muted">
-          {buildSummary(application)}
-        </p>
-      </div>
+      <p className="text-sm font-bold">
+        {STATUS_HEADLINES[application.status]}
+      </p>
+      <p className="mt-1.5 text-sm leading-relaxed text-muted">
+        {buildSummary(application)}
+      </p>
     </div>
   );
 }
