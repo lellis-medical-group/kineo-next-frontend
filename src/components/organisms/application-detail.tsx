@@ -1,24 +1,25 @@
 import { Card } from "@/components/atoms/card";
-import { ApplicationDecisionNote } from "@/components/molecules/application-decision-note";
 import { ApplicationDetailHeader } from "@/components/molecules/application-detail-header";
 import { ApplicationListingDetails } from "@/components/molecules/application-listing-details";
 import { ApplicationMessage } from "@/components/molecules/application-message";
+import { ApplicationStatusBanner } from "@/components/molecules/application-status-banner";
 import { ApplicationTimeline } from "@/components/molecules/application-timeline";
 import type { ApplicationEntry } from "@/lib/applications";
 
 /** Section wrapper with the top divider used across the detail card. */
 function DetailSection({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-6 border-t border-border pt-6 sm:mt-8 sm:pt-8">
+    <div className="mt-8 border-t border-border pt-8 sm:mt-10 sm:pt-10">
       {children}
     </div>
   );
 }
 
 /**
- * Full detail of one application on its dedicated page: targeted listing,
- * message, rejection/withdrawal reasons and timeline. Read-only — practice
- * actions live on « Mes offres ».
+ * Full detail of one application on its dedicated page, ordered by what the
+ * locum scans for: identity, outcome (tinted banner — includes the rejection
+ * or withdrawal reason), targeted listing, message and tracking. Read-only —
+ * practice actions live on « Mes offres ».
  */
 export function ApplicationDetail({
   application,
@@ -29,6 +30,8 @@ export function ApplicationDetail({
     <Card className="p-6 sm:p-8">
       <ApplicationDetailHeader application={application} />
 
+      <ApplicationStatusBanner application={application} className="mt-6" />
+
       <DetailSection>
         <ApplicationListingDetails listing={application.listing} />
       </DetailSection>
@@ -36,13 +39,6 @@ export function ApplicationDetail({
       <DetailSection>
         <ApplicationMessage message={application.message} />
       </DetailSection>
-
-      {application.status === "REJECTED" ||
-      application.status === "WITHDRAWN" ? (
-        <DetailSection>
-          <ApplicationDecisionNote application={application} />
-        </DetailSection>
-      ) : null}
 
       <DetailSection>
         <ApplicationTimeline application={application} />

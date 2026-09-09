@@ -4,11 +4,11 @@ export function ApplicationMessage({ message }: { message?: string }) {
     <section>
       <h2 className="text-sm font-bold text-foreground">Votre message</h2>
       {message ? (
-        <blockquote className="mt-3 whitespace-pre-line rounded-control bg-surface-2 p-4 text-sm leading-relaxed text-muted">
+        <blockquote className="mt-4 whitespace-pre-line rounded-control bg-surface-2 p-4 text-sm leading-relaxed text-muted sm:p-5">
           {message}
         </blockquote>
       ) : (
-        <p className="mt-3 text-sm italic text-muted">
+        <p className="mt-4 text-sm italic text-muted">
           Aucun message n'a été envoyé avec cette candidature.
         </p>
       )}

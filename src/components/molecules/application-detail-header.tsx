@@ -1,31 +1,31 @@
-import { Badge } from "@/components/atoms/badge";
-import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
+import { MapPinIcon } from "@/components/atoms/icons";
+import type { ApplicationEntry } from "@/lib/applications";
 
-/** Detail page header: listing title, practice label and status badge. */
+/**
+ * Detail page header: listing title and the targeted practice — identity
+ * only. The status lives in the outcome banner right below.
+ */
 export function ApplicationDetailHeader({
   application,
 }: {
   application: ApplicationEntry;
 }) {
-  const meta = STATUS_META[application.status];
   const { listing } = application;
   const practiceLabel = listing.practiceName
     ? `${listing.practiceName}${listing.practiceCity ? ` · ${listing.practiceCity}` : ""}`
     : listing.practiceCity;
 
   return (
-    <div className="flex items-start justify-between gap-4">
-      <div className="min-w-0">
-        <h1 className="truncate text-2xl font-bold tracking-tight text-foreground">
-          {listing.title}
-        </h1>
-        {practiceLabel && (
-          <p className="truncate text-sm text-muted">{practiceLabel}</p>
-        )}
-      </div>
-      <Badge tone={meta.badgeTone} className="shrink-0">
-        {meta.label}
-      </Badge>
+    <div className="min-w-0">
+      <h1 className="text-2xl font-bold leading-snug tracking-tight text-foreground">
+        {listing.title}
+      </h1>
+      {practiceLabel && (
+        <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted">
+          <MapPinIcon className="h-4 w-4 shrink-0 text-faint" />
+          <span className="truncate">{practiceLabel}</span>
+        </p>
+      )}
     </div>
   );
 }

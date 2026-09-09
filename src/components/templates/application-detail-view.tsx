@@ -19,7 +19,7 @@ export function ApplicationDetailView({
         Retour à mes candidatures
       </Link>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <ApplicationDetail application={application} />
       </div>
     </div>
