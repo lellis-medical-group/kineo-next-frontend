@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/atoms/badge";
 import { FileTextIcon } from "@/components/atoms/icons";
 import { FilterChips } from "@/components/molecules/filter-chips";
 import { Pagination } from "@/components/molecules/pagination";
@@ -38,7 +37,7 @@ export function ApplicationsView({
   if (data.counts.total === 0) {
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <ApplicationsHeader allCount={data.counts.total} />
+        <ApplicationsHeader />
         <EmptyState
           icon={<FileTextIcon className="h-8 w-8 text-primary" />}
           title="Aucune candidature pour l'instant"
@@ -52,7 +51,7 @@ export function ApplicationsView({
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-      <ApplicationsHeader allCount={data.counts.total} />
+      <ApplicationsHeader />
 
       <FilterChips
         ariaLabel="Filtrer les candidatures par statut"
@@ -70,25 +69,26 @@ export function ApplicationsView({
         <ApplicationsList applications={filtered} />
       </div>
 
-      <Pagination
-        currentPage={data.pagination.page}
-        totalPages={data.pagination.totalPages}
-        onPageChange={onPageChange}
-      />
+      {/* A single page needs no pagination controls — hide the noise. */}
+      {data.pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={data.pagination.page}
+          totalPages={data.pagination.totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
     </div>
   );
 }
 
-function ApplicationsHeader({ allCount }: { allCount: number }) {
+function ApplicationsHeader() {
   return (
     <header>
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-medium tracking-tight sm:text-3xl">
-          Mes candidatures
-        </h1>
-        <Badge>{allCount} total</Badge>
-      </div>
-      <p className="mt-1.5 text-sm text-muted">
+      {/* The total lives in the « Toutes (n) » chip — no redundant badge here. */}
+      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        Mes candidatures
+      </h1>
+      <p className="mt-1.5 text-sm leading-relaxed text-muted">
         Suivez l&apos;état de vos candidatures envoyées aux cabinets.
       </p>
     </header>

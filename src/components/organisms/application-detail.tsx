@@ -8,7 +8,11 @@ import type { ApplicationEntry } from "@/lib/applications";
 
 /** Section wrapper with the top divider used across the detail card. */
 function DetailSection({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6 border-t border-border pt-6">{children}</div>;
+  return (
+    <div className="mt-6 border-t border-border pt-6 sm:mt-8 sm:pt-8">
+      {children}
+    </div>
+  );
 }
 
 /**

@@ -10,7 +10,7 @@ export function ApplicationsList({
 }) {
   if (applications.length === 0) {
     return (
-      <Card className="p-6 text-sm text-muted">
+      <Card className="p-8 text-center text-sm text-muted">
         Aucune candidature dans ce statut.
       </Card>
     );

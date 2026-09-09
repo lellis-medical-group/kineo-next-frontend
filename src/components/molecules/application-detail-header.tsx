@@ -16,7 +16,7 @@ export function ApplicationDetailHeader({
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="min-w-0">
-        <h1 className="truncate text-xl font-bold text-foreground">
+        <h1 className="truncate text-2xl font-bold tracking-tight text-foreground">
           {listing.title}
         </h1>
         {practiceLabel && (

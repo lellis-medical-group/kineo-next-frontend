@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 export interface FilterChipOption<T extends string> {
   id: T;
   label: string;
-  /** Optional counter rendered as « Label (n) ». */
+  /** Optional counter rendered lighter after the label: « Label (n) ». */
   count?: number;
 }
 
@@ -42,7 +42,9 @@ export function FilterChips<T extends string>({
             onClick={() => onChange(option.id)}
           >
             {option.label}
-            {typeof option.count === "number" && ` (${option.count})`}
+            {typeof option.count === "number" && (
+              <span className="font-normal"> ({option.count})</span>
+            )}
           </button>
         );
       })}

@@ -1,3 +1,4 @@
+import { AlertIcon } from "@/components/atoms/icons";
 import type { ApplicationEntry } from "@/lib/applications";
 
 /** Rejection or withdrawal note, shown only for the matching status. */
@@ -9,7 +10,10 @@ export function ApplicationDecisionNote({
   if (application.status === "REJECTED") {
     return (
       <div className="rounded-control border border-danger/20 bg-danger/10 p-4">
-        <h2 className="text-sm font-bold text-danger">Motif du refus</h2>
+        <h2 className="flex items-center gap-1.5 text-sm font-bold text-danger">
+          <AlertIcon className="h-4 w-4 shrink-0" />
+          Motif du refus
+        </h2>
         <p className="mt-1.5 text-sm text-muted">
           {application.rejectionReason ??
             "Aucun motif n'a été communiqué par le cabinet."}

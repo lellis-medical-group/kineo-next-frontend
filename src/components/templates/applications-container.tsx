@@ -11,7 +11,7 @@ import {
 
 type Status = "loading" | "error" | "success";
 
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 5;
 
 /**
  * Orchestrator for /applications: fetches data (loading/error/success) and
@@ -81,7 +81,14 @@ export function ApplicationsContainer() {
 }
 
 /** Static keys for the skeleton placeholders (no index keys). */
-const SKELETON_CHIPS = ["chip-1", "chip-2", "chip-3", "chip-4", "chip-5"];
+const SKELETON_CHIPS = [
+  "chip-1",
+  "chip-2",
+  "chip-3",
+  "chip-4",
+  "chip-5",
+  "chip-6",
+];
 const SKELETON_CARDS = ["card-1", "card-2", "card-3"];
 
 function ApplicationsSkeleton() {
@@ -89,7 +96,7 @@ function ApplicationsSkeleton() {
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <div className="h-9 w-64 animate-pulse rounded-control bg-surface" />
       <div className="mt-3 h-5 w-96 max-w-full animate-pulse rounded-control bg-surface" />
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-wrap gap-2">
         {SKELETON_CHIPS.map((key) => (
           <div
             key={key}
@@ -97,11 +104,11 @@ function ApplicationsSkeleton() {
           />
         ))}
       </div>
-      <div className="mt-8 space-y-4">
+      <div className="mt-8 space-y-5">
         {SKELETON_CARDS.map((key) => (
           <div
             key={key}
-            className="h-28 animate-pulse rounded-2xl bg-surface"
+            className="h-36 animate-pulse rounded-2xl bg-surface"
           />
         ))}
       </div>
