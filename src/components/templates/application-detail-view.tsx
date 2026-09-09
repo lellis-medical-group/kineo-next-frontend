@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { ArrowLeftIcon } from "@/components/atoms/icons";
+import { ApplicationWithdraw } from "@/components/molecules/application-withdraw";
 import { ApplicationDetail } from "@/components/organisms/application-detail";
-import type { ApplicationEntry } from "@/lib/applications";
+import {
+  type ApplicationEntry,
+  WITHDRAWABLE_STATUSES,
+} from "@/lib/applications";
 
-/** Dedicated application page — back link and the full detail card. */
+/** Application detail page — back link, detail card, withdraw section. */
 export function ApplicationDetailView({
   application,
+  onWithdrawn,
 }: {
   application: ApplicationEntry;
+  onWithdrawn: (updated: ApplicationEntry | null) => void;
 }) {
+  const canWithdraw = WITHDRAWABLE_STATUSES.has(application.status);
+
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
       <Link
@@ -22,6 +30,14 @@ export function ApplicationDetailView({
       <div className="mt-8">
         <ApplicationDetail application={application} />
       </div>
+
+      {canWithdraw && (
+        <ApplicationWithdraw
+          application={application}
+          onWithdrawn={onWithdrawn}
+          className="mt-6"
+        />
+      )}
     </div>
   );
 }

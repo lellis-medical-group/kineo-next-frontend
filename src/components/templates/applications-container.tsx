@@ -13,11 +13,7 @@ type Status = "loading" | "error" | "success";
 
 const DEFAULT_PAGE_SIZE = 5;
 
-/**
- * Orchestrator for /applications: fetches data (loading/error/success) and
- * delegates rendering to ApplicationsView. Lives in `templates/` — organisms
- * must never import templates.
- */
+/** Orchestrator for /applications — fetches data (loading/error/success) and renders ApplicationsView. */
 export function ApplicationsContainer() {
   const [status, setStatus] = useState<Status>("loading");
   const [data, setData] = useState<ApplicationsData | null>(null);
@@ -80,7 +76,7 @@ export function ApplicationsContainer() {
   );
 }
 
-/** Static keys for the skeleton placeholders (no index keys). */
+/** Static skeleton keys — no index keys. */
 const SKELETON_CHIPS = [
   "chip-1",
   "chip-2",

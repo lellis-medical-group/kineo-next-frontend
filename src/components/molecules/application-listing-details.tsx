@@ -1,9 +1,6 @@
 import type { ApplicationListingInfo } from "@/lib/applications";
 
-/**
- * Targeted-listing facts — plain definition grid: quiet labels, prominent
- * values, nothing else. No icons: the values carry the section.
- */
+/** Targeted-listing facts (period, remuneration) and description. */
 export function ApplicationListingDetails({
   listing,
 }: {

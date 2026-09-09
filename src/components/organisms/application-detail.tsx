@@ -15,12 +15,7 @@ function DetailSection({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * Full detail of one application on its dedicated page, ordered by what the
- * locum scans for: identity, outcome (tinted banner — includes the rejection
- * or withdrawal reason), targeted listing, message and tracking. Read-only —
- * practice actions live on « Mes offres ».
- */
+/** Full application detail — read-only (practice actions live on "Mes offres"). */
 export function ApplicationDetail({
   application,
 }: {

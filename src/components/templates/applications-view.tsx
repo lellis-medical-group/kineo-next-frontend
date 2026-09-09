@@ -18,22 +18,13 @@ interface ApplicationsViewProps {
   currentFilter: ApplicationsFilter;
 }
 
-/**
- * Applications tracking page — status filters, list and pagination. Tab
- * counters come exclusively from `data.counts` (backend-computed over the
- * whole collection), so they never move when the filter or page changes.
- */
+/** Applications tracking page — status filters, list and pagination. Tab counters come from `data.counts` only. */
 export function ApplicationsView({
   data,
   onPageChange,
   onFilterChange,
   currentFilter,
 }: ApplicationsViewProps) {
-  const filter = currentFilter;
-
-  // Backend filters, so applications are already scoped.
-  const filtered = data.applications;
-
   if (data.counts.total === 0) {
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
@@ -61,15 +52,15 @@ export function ApplicationsView({
           count:
             option.id === "ALL" ? data.counts.total : data.counts[option.id],
         }))}
-        value={filter}
+        value={currentFilter}
         onChange={onFilterChange}
       />
 
       <div className="mt-8">
-        <ApplicationsList applications={filtered} />
+        <ApplicationsList applications={data.applications} />
       </div>
 
-      {/* A single page needs no pagination controls — hide the noise. */}
+      {/* Hidden for single-page results. */}
       {data.pagination.totalPages > 1 && (
         <Pagination
           currentPage={data.pagination.page}
@@ -84,7 +75,7 @@ export function ApplicationsView({
 function ApplicationsHeader() {
   return (
     <header>
-      {/* The total lives in the « Toutes (n) » chip — no redundant badge here. */}
+      {/* Total already shown by the « Toutes (n) » chip. */}
       <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
         Mes candidatures
       </h1>

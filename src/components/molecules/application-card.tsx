@@ -5,11 +5,7 @@ import { ApplicationCardFooter } from "@/components/molecules/application-card-f
 import { ApplicationCardMeta } from "@/components/molecules/application-card-meta";
 import { type ApplicationEntry, STATUS_META } from "@/lib/applications";
 
-/**
- * One application in the list — a whole-card link to its detail page. Three
- * clearly separated zones: identity (title, practice, status badge), key facts
- * (covered period, message excerpt) and state (footer).
- */
+/** One application in the list — whole-card link to its detail page. */
 export function ApplicationCard({
   application,
 }: {

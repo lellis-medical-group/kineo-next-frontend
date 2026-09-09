@@ -1,10 +1,7 @@
 import { MapPinIcon } from "@/components/atoms/icons";
 import type { ApplicationEntry } from "@/lib/applications";
 
-/**
- * Detail page header: listing title and the targeted practice — identity
- * only. The status lives in the outcome banner right below.
- */
+/** Listing title and targeted practice — the status lives in the banner below. */
 export function ApplicationDetailHeader({
   application,
 }: {

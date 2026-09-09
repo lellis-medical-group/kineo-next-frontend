@@ -9,10 +9,7 @@ interface TimelineEvent {
   dotClass: string;
 }
 
-/**
- * Submission / viewed / responded tracking — quiet divided rows sharing the
- * card footer's anatomy: semantic dot + label on the left, date on the right.
- */
+/** Submission / viewed / responded tracking as dot + label + date rows. */
 export function ApplicationTimeline({
   application,
 }: {

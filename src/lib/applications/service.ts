@@ -124,3 +124,24 @@ export async function fetchApplicationsData(
     counts: meta.counts ?? statusCounts(meta.total),
   };
 }
+
+/**
+ * PATCH /applications/{id}/withdraw — optional reason (trimmed, 1-500 chars).
+ * Backend 400s when the status forbids withdrawal. Returns the updated entry
+ * when echoed, else null (caller refetches).
+ */
+export async function withdrawApplication(
+  id: string,
+  withdrawnReason?: string,
+): Promise<ApplicationEntry | null> {
+  const trimmed = withdrawnReason?.trim();
+  const raw = await apiFetch<unknown>(`/applications/${id}/withdraw`, {
+    method: "PATCH",
+    body: JSON.stringify(trimmed ? { withdrawnReason: trimmed } : {}),
+  });
+
+  if (raw && typeof raw === "object" && "id" in raw && "status" in raw) {
+    return adaptApplicationEntry(raw as ApiApplication);
+  }
+  return null;
+}

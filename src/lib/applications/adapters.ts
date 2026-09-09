@@ -22,6 +22,12 @@ export const STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
   WITHDRAWN: { label: "Retirée", badgeTone: "neutral" },
 };
 
+/** Statuses open to withdrawal — the backend 400s on decided/withdrawn ones. */
+export const WITHDRAWABLE_STATUSES: ReadonlySet<ApplicationStatus> = new Set([
+  "PENDING",
+  "SHORTLISTED",
+]);
+
 /** Label shown when the targeted listing no longer resolves. */
 export const LISTING_FALLBACK_TITLE = "Titre d'annonce indisponible";
 

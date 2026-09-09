@@ -2,10 +2,7 @@ import { ArrowRightIcon } from "@/components/atoms/icons";
 import type { ApplicationEntry } from "@/lib/applications";
 import { cn } from "@/lib/cn";
 
-/**
- * Card footer — the state zone, separated from the content above by a
- * divider: viewed indicator, submission time and the detail link.
- */
+/** Card state row under a divider: viewed indicator, submission time, CTA. */
 export function ApplicationCardFooter({
   application,
 }: {

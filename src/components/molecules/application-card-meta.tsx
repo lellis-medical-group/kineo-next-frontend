@@ -1,11 +1,7 @@
 import { MapPinIcon } from "@/components/atoms/icons";
 import type { ApplicationEntry } from "@/lib/applications";
 
-/**
- * Meta line of an application card: the targeted practice (name · city), same
- * label as the detail header. Falls back to the submission time when the
- * listing carries no practice info.
- */
+/** Practice (name · city) under the title; falls back to the submission time. */
 export function ApplicationCardMeta({
   application,
 }: {

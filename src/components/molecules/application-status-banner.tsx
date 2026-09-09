@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 import { formatDateTime } from "@/lib/format";
 import type { ApplicationStatus } from "@/lib/types/api";
 
-/** Banner headline per status — more explicit than the chip labels. */
+/** Status headline — more explicit than the chip label. */
 const STATUS_HEADLINES: Record<ApplicationStatus, string> = {
   PENDING: "En attente de réponse",
   SHORTLISTED: "Présélectionnée",
@@ -13,7 +13,7 @@ const STATUS_HEADLINES: Record<ApplicationStatus, string> = {
   WITHDRAWN: "Candidature retirée",
 };
 
-/** Tone band classes per badge tone — same tints as the old decision note. */
+/** Band classes per badge tone. */
 const TONE_CLASSES: Record<BadgeTone, string> = {
   neutral: "border-border bg-surface-2 text-foreground",
   success: "border-success/20 bg-success/10 text-success",
@@ -22,7 +22,7 @@ const TONE_CLASSES: Record<BadgeTone, string> = {
   info: "border-info/20 bg-info/10 text-info",
 };
 
-/** Key dates or decision reason, per status — the banner's summary line. */
+/** Summary line: key dates, or the decision reason once decided. */
 function buildSummary(application: ApplicationEntry): string {
   const summaries: Record<ApplicationStatus, string> = {
     PENDING: application.viewedAt
@@ -44,11 +44,7 @@ function buildSummary(application: ApplicationEntry): string {
   return summaries[application.status];
 }
 
-/**
- * Outcome banner — the first-glance answer of the detail page: a tinted
- * band, the status headline in the tone color and a summary line carrying
- * the key dates or the decision reason. Pure typography — nothing to align.
- */
+/** Tinted outcome banner: status headline + summary (key dates or reason). */
 export function ApplicationStatusBanner({
   application,
   className,
