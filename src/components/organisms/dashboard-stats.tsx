@@ -1,6 +1,7 @@
 import type { ComponentType, SVGProps } from "react";
 import { CalendarIcon, LayersIcon, UsersIcon } from "@/components/atoms/icons";
 import { StatCard } from "@/components/molecules/stat-card";
+import { cn } from "@/lib/cn";
 import type { DashboardStat } from "@/lib/dashboard";
 
 const STAT_ICONS: Record<
@@ -20,9 +21,20 @@ function StatFooter({ stat }: { stat: DashboardStat }) {
   return null;
 }
 
-export function DashboardStats({ stats }: { stats: DashboardStat[] }) {
+export function DashboardStats({
+  stats,
+  className,
+}: {
+  stats: DashboardStat[];
+  className?: string;
+}) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
+    <div
+      className={cn(
+        "grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3",
+        className,
+      )}
+    >
       {stats.map((stat) => {
         const Icon = STAT_ICONS[stat.icon];
         return (
