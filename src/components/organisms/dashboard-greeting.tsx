@@ -36,7 +36,7 @@ export function DashboardGreeting({
               key={action.label}
               href={action.href}
               variant={action.variant ?? "outline"}
-              className="sm:w-auto"
+              className="w-full sm:w-auto"
             >
               {Icon && <Icon />}
               {action.label}

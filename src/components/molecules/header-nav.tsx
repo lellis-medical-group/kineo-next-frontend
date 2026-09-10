@@ -28,11 +28,19 @@ export function HeaderNav({ links, activeHref, orientation }: HeaderNavProps) {
             key={`${link.href}-${link.label}`}
             href={link.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-              isActive
-                ? "bg-primary font-semibold text-primary-foreground"
-                : "text-muted hover:bg-surface hover:text-foreground"
-            }`}
+            className={
+              isHorizontal
+                ? `rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive
+                      ? "bg-primary font-semibold text-primary-foreground"
+                      : "text-muted hover:bg-surface hover:text-foreground"
+                  }`
+                : `block w-full rounded-lg px-4 py-2.5 text-[15px] font-medium transition-colors ${
+                    isActive
+                      ? "bg-primary font-semibold text-primary-foreground"
+                      : "text-muted hover:bg-surface-hover hover:text-foreground"
+                  }`
+            }
           >
             {link.label}
           </Link>

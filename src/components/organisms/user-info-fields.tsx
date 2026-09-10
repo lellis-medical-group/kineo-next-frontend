@@ -26,7 +26,6 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
   const [editing, setEditing] = useState<"name" | "email" | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   async function handleNameSubmit(formData: FormData) {
     setError("");
     setSuccess("");
@@ -103,7 +102,7 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
               {error}
             </InlineAlert>
           )}
-          <div className="flex gap-2">
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <SubmitButton label="Envoyer" pendingLabel="Envoi…" />
             <Button
               type="button"
@@ -115,15 +114,18 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
           </div>
         </form>
       ) : (
-        <div className="flex items-center justify-between gap-4 rounded-lg bg-surface-2 px-3 py-2.5">
-          <div className="min-w-0">
+        <div className="flex items-center justify-between gap-3 rounded-lg bg-surface-2 px-3 py-2.5">
+          <div className="min-w-0 flex-1">
             <p className="text-xs text-muted">Email</p>
-            <p className="truncate text-sm font-medium">{user.email}</p>
+            <p className="truncate text-sm font-medium break-all">
+              {user.email}
+            </p>
           </div>
           <Button
             type="button"
             variant="outline"
             size="md"
+            className="shrink-0"
             onClick={() => {
               setEditing("email");
               setSuccess("");
@@ -170,7 +172,7 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
               {error}
             </InlineAlert>
           )}
-          <div className="flex gap-2">
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <SubmitButton label="Enregistrer" pendingLabel="En cours…" />
             <Button
               type="button"
@@ -182,20 +184,23 @@ export function UserInfoFields({ user }: { user: ApiUser }) {
           </div>
         </form>
       ) : (
-        <div className="flex items-center justify-between gap-4 rounded-lg bg-surface-2 px-3 py-2.5">
-          <div className="min-w-0">
+        <div className="flex items-center justify-between gap-3 rounded-lg bg-surface-2 px-3 py-2.5">
+          <div className="min-w-0 flex-1">
             <p className="text-xs text-muted">Nom</p>
             <p className="truncate text-sm font-medium">
               {user.name ?? "Non renseigné"}
             </p>
             {user.image && (
-              <p className="truncate text-xs text-faint">{user.image}</p>
+              <p className="truncate text-xs break-all text-faint">
+                {user.image}
+              </p>
             )}
           </div>
           <Button
             type="button"
             variant="outline"
             size="md"
+            className="shrink-0"
             onClick={() => {
               setEditing("name");
               setSuccess("");

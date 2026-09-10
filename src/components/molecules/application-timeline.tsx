@@ -46,9 +46,9 @@ export function ApplicationTimeline({
         {events.map((event) => (
           <li
             key={event.label}
-            className="flex items-center justify-between gap-4 py-3 first:pt-1 last:pb-0"
+            className="flex items-center justify-between gap-3 py-3 first:pt-1 last:pb-0"
           >
-            <span className="flex min-w-0 items-center gap-2.5">
+            <span className="flex min-w-0 flex-1 items-center gap-2.5">
               <span
                 aria-hidden="true"
                 className={cn(
@@ -56,11 +56,13 @@ export function ApplicationTimeline({
                   event.dotClass,
                 )}
               />
-              <span className="truncate text-sm text-foreground">
+              <span className="min-w-0 flex-1 text-sm break-words text-foreground">
                 {event.label}
               </span>
             </span>
-            <span className="shrink-0 text-xs text-muted">{event.date}</span>
+            <span className="max-w-[45%] shrink-0 text-right text-xs break-words text-muted">
+              {event.date}
+            </span>
           </li>
         ))}
       </ol>

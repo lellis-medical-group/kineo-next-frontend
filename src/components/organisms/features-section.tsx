@@ -22,9 +22,9 @@ export function FeaturesSection() {
           subtitle={featuresSection.subtitle}
         />
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 [&>*:last-child:nth-child(2n+1)]:sm:col-span-2 [&>*:last-child:nth-child(2n+1)]:lg:col-span-1">
           {featuresSection.features.map((feature, index) => (
-            <Reveal key={feature.title} delay={index * 80}>
+            <Reveal key={feature.title} delay={index * 80} className="h-full">
               <FeatureCard
                 icon={FEATURE_ICONS[feature.icon]}
                 title={feature.title}

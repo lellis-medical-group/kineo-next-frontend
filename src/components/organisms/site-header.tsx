@@ -11,7 +11,7 @@ function NotificationsButton() {
     <button
       type="button"
       aria-label="Notifications"
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-foreground/80 transition-colors hover:border-primary/50 hover:text-foreground"
+      className="hidden h-10 w-10 items-center justify-center rounded-lg border border-border text-foreground/80 transition-colors hover:border-primary/50 hover:text-foreground sm:flex"
     >
       <BellIcon />
     </button>
@@ -33,8 +33,8 @@ export function SiteHeader({
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-19 w-full max-w-360 items-center justify-between gap-6 px-4 sm:px-8 lg:px-10">
-        <div className="flex min-w-0 items-center gap-10">
+      <div className="mx-auto flex h-16 w-full max-w-360 items-center justify-between gap-2 px-4 sm:h-19 sm:gap-6 sm:px-8 lg:px-10">
+        <div className="flex min-w-0 items-center gap-6 lg:gap-10">
           <Link href="/" aria-label="Kineo — Accueil">
             <KineoLogo />
           </Link>
@@ -46,7 +46,7 @@ export function SiteHeader({
           />
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {user ? (
             <>
               <NotificationsButton />
@@ -80,7 +80,7 @@ export function SiteHeader({
 
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+                className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap text-primary-foreground transition-colors hover:bg-primary-hover sm:px-4 sm:py-2 sm:text-sm"
               >
                 Créer un compte
               </Link>
@@ -95,7 +95,7 @@ export function SiteHeader({
             >
               <MenuIcon />
             </summary>
-            <div className="absolute top-12 right-0 z-50 w-56 rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/50">
+            <div className="absolute top-12 right-0 z-50 max-h-[70dvh] w-56 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/50">
               <HeaderNav
                 links={links}
                 activeHref={activeHref}

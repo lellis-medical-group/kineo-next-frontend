@@ -9,7 +9,7 @@ export function ApplicationCardFooter({
   application: ApplicationEntry;
 }) {
   return (
-    <div className="mt-5 flex items-center justify-between gap-4 border-t border-border pt-4">
+    <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <span className="flex min-w-0 items-center gap-2">
         <span
           aria-hidden="true"
@@ -18,7 +18,7 @@ export function ApplicationCardFooter({
             application.viewed ? "bg-success" : "bg-danger",
           )}
         />
-        <span className="status-text">
+        <span className="status-text whitespace-nowrap">
           {application.viewed ? "Consultée" : "Non consultée"}
         </span>
         <span className="truncate text-xs text-faint">
