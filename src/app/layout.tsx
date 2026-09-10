@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   title: "Kineo — Console de remplacement",
   description:
     "Accédez à la console de remplacement Kineo : connectez-vous ou créez votre compte.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#11100f",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

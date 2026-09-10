@@ -30,7 +30,7 @@ export function MarketingHero() {
         </div>
 
         <h1
-          className="hero-enter mt-5 text-4xl leading-tight font-bold tracking-tight sm:text-5xl"
+          className="hero-enter mt-5 text-[2rem] leading-[1.15] font-bold tracking-tight text-balance sm:text-5xl sm:leading-tight"
           style={heroDelay(60)}
         >
           {hero.title} <span className="text-primary">{hero.titleAccent}</span>
@@ -44,13 +44,22 @@ export function MarketingHero() {
         </p>
 
         <div
-          className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row"
+          className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:items-center"
           style={heroDelay(200)}
         >
-          <Button href={hero.primaryCta.href} size="lg" className="btn-shine">
+          <Button
+            href={hero.primaryCta.href}
+            size="lg"
+            className="btn-shine w-full sm:w-auto"
+          >
             {hero.primaryCta.label}
           </Button>
-          <Button href={hero.secondaryCta.href} variant="outline" size="lg">
+          <Button
+            href={hero.secondaryCta.href}
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
             {hero.secondaryCta.label}
           </Button>
         </div>

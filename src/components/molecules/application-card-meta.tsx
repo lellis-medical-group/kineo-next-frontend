@@ -19,9 +19,9 @@ export function ApplicationCardMeta({
   }
 
   return (
-    <p className="mt-1.5 flex items-center gap-1.5 text-sm text-muted">
+    <p className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[13px] text-muted sm:text-sm">
       <MapPinIcon className="h-3.5 w-3.5 shrink-0 text-faint" />
-      <span className="truncate">{practiceLabel}</span>
+      <span className="min-w-0 flex-1 truncate">{practiceLabel}</span>
     </p>
   );
 }

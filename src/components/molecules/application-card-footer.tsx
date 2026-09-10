@@ -9,8 +9,8 @@ export function ApplicationCardFooter({
   application: ApplicationEntry;
 }) {
   return (
-    <div className="mt-5 flex items-center justify-between gap-4 border-t border-border pt-4">
-      <span className="flex min-w-0 items-center gap-2">
+    <div className="mt-5 flex flex-col gap-2 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
         <span
           aria-hidden="true"
           className={cn(
@@ -18,14 +18,14 @@ export function ApplicationCardFooter({
             application.viewed ? "bg-success" : "bg-danger",
           )}
         />
-        <span className="status-text">
+        <span className="status-text whitespace-nowrap">
           {application.viewed ? "Consultée" : "Non consultée"}
         </span>
-        <span className="truncate text-xs text-faint">
+        <span className="min-w-0 flex-1 truncate text-xs break-words text-faint sm:flex-none">
           · {application.submittedLabel}
         </span>
       </span>
-      <span className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-faint transition-colors group-hover:text-primary">
+      <span className="flex shrink-0 items-center gap-1.5 self-start text-xs font-medium text-faint transition-colors group-hover:text-primary sm:self-auto">
         Voir le détail
         <ArrowRightIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
       </span>

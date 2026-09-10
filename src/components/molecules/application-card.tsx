@@ -17,31 +17,35 @@ export function ApplicationCard({
   return (
     <Link
       href={`/applications/${application.id}`}
-      className="group block w-full rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-border-strong hover:bg-surface-hover sm:p-7"
+      className="group block w-full rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-border-strong hover:bg-surface-hover sm:p-7"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <p className="truncate text-base font-bold leading-snug text-foreground sm:text-lg">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-[15px] leading-snug font-bold break-words text-foreground sm:text-lg">
             {application.listing.title}
           </p>
           <ApplicationCardMeta application={application} />
         </div>
-        <Badge tone={meta.badgeTone} className="shrink-0">
+        <Badge tone={meta.badgeTone} className="w-fit shrink-0 sm:w-auto">
           {meta.label}
         </Badge>
       </div>
 
       {dateRange && (
-        <p className="mt-4 flex items-center gap-2 text-sm text-foreground">
+        <p className="mt-3 flex min-w-0 items-center gap-2 text-[13px] text-foreground sm:mt-4 sm:text-sm">
           <CalendarIcon className="h-4 w-4 shrink-0 text-faint" />
-          {dateRange}
+          <span className="min-w-0 flex-1 break-words">{dateRange}</span>
         </p>
       )}
 
       {application.message && (
-        <p className="mt-4 line-clamp-2 rounded-xl bg-background/40 px-4 py-3 text-sm leading-relaxed text-muted">
-          « {application.message} »
-        </p>
+        <div className="mt-3 rounded-xl bg-background/40 px-3 py-2.5 sm:mt-4 sm:px-4 sm:py-3">
+          <p className="line-clamp-2 overflow-hidden text-[13px] leading-snug break-words text-muted sm:line-clamp-3 sm:text-sm sm:leading-relaxed">
+            <span aria-hidden="true">«&nbsp;</span>
+            {application.message}
+            <span aria-hidden="true">&nbsp;»</span>
+          </p>
+        </div>
       )}
 
       <ApplicationCardFooter application={application} />

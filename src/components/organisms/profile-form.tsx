@@ -59,8 +59,8 @@ export function ProfileForm({
   }
 
   return (
-    <Form action={handleSubmit} className="flex flex-col gap-8 sm:gap-10">
-      <div className="flex flex-col gap-3">
+    <Form action={handleSubmit} className="flex flex-col gap-6 sm:gap-8">
+      <div className="flex min-w-0 flex-col gap-3">
         <span className="field-label">Spécialité</span>
         <Select
           id="specialty"
@@ -79,13 +79,13 @@ export function ProfileForm({
         </Select>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 flex-col gap-3">
         <span className="field-label">Type de pratique</span>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-2 sm:grid-cols-3 sm:gap-3">
           {Object.entries(PROFILE_TYPE_LABELS).map(([value, label]) => (
             <label
               key={value}
-              className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-surface-2 px-4 py-3 text-center text-sm text-muted hover:bg-surface-3 has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:font-semibold has-[:checked]:text-primary"
+              className="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-surface-2 px-4 py-3 text-center text-sm text-muted hover:bg-surface-3 has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:font-semibold has-[:checked]:text-primary"
             >
               <input
                 type="radio"
@@ -101,11 +101,11 @@ export function ProfileForm({
         </div>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <label className="flex flex-col gap-3">
-          <span className="flex items-center justify-between">
+      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+        <label className="flex min-w-0 flex-col gap-3">
+          <span className="flex items-center justify-between gap-2">
             <span className="field-label">Numéro RPPS</span>
-            <span className="text-xs text-muted">11 chiffres</span>
+            <span className="shrink-0 text-xs text-muted">11 chiffres</span>
           </span>
           <input
             name="rppsNumber"
@@ -119,10 +119,10 @@ export function ProfileForm({
           />
         </label>
 
-        <label className="flex flex-col gap-3">
-          <span className="flex items-center justify-between">
+        <label className="flex min-w-0 flex-col gap-3">
+          <span className="flex items-center justify-between gap-2">
             <span className="field-label">Ville principale</span>
-            <span className="text-xs text-muted">Optionnel</span>
+            <span className="shrink-0 text-xs text-muted">Optionnel</span>
           </span>
           <input
             name="city"

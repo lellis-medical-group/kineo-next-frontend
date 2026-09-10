@@ -17,23 +17,26 @@ export function ActivityItem({
   href,
 }: ActivityItemProps) {
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-border bg-background/40 px-4 py-3.5">
-      <span className="shrink-0 text-lg text-primary">
+    <div className="flex items-start gap-3 rounded-xl border border-border bg-background/40 px-3 py-3.5 sm:items-center sm:gap-4 sm:px-4">
+      <span className="mt-0.5 shrink-0 text-lg text-primary sm:mt-0">
         <Icon />
       </span>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm leading-snug">{children}</p>
+        <p className="text-sm leading-snug break-words">{children}</p>
         <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
-          <span aria-hidden="true" className="h-1 w-1 rounded-full bg-muted" />
-          {timestamp}
+          <span
+            aria-hidden="true"
+            className="h-1 w-1 shrink-0 rounded-full bg-muted"
+          />
+          <span className="truncate">{timestamp}</span>
         </p>
       </div>
 
       {href && (
         <Link
           href={href}
-          className="shrink-0 rounded-md px-2 py-1 text-sm text-muted transition-colors hover:text-primary"
+          className="inline-flex min-h-11 shrink-0 items-center rounded-md px-2 py-2 text-sm text-muted transition-colors hover:text-primary"
         >
           Voir
         </Link>

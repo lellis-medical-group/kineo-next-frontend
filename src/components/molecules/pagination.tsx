@@ -27,19 +27,21 @@ export function Pagination({
   return (
     <nav
       aria-label="Pagination"
-      className="mt-8 flex items-center justify-center gap-4"
+      className="mt-8 flex items-center justify-between gap-3 sm:justify-center sm:gap-4"
     >
       <Button
         variant="outline"
         size="md"
         disabled={!hasPrevious || totalPages <= 1}
         onClick={() => onPageChange(currentPage - 1)}
+        aria-label="Page précédente"
+        className="min-w-11 shrink-0 px-3 sm:min-w-0 sm:px-5"
       >
         <ArrowLeftIcon className="h-4 w-4" />
-        Précédent
+        <span className="hidden min-[400px]:inline">Précédent</span>
       </Button>
 
-      <span className="text-sm text-muted">
+      <span className="text-sm whitespace-nowrap text-muted">
         Page {currentPage} sur {totalPages}
       </span>
 
@@ -48,8 +50,10 @@ export function Pagination({
         size="md"
         disabled={!hasNext || totalPages <= 1}
         onClick={() => onPageChange(currentPage + 1)}
+        aria-label="Page suivante"
+        className="min-w-11 shrink-0 px-3 sm:min-w-0 sm:px-5"
       >
-        Suivant
+        <span className="hidden min-[400px]:inline">Suivant</span>
         <ArrowRightIcon className="h-4 w-4" />
       </Button>
     </nav>

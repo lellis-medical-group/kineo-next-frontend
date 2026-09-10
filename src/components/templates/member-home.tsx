@@ -25,7 +25,7 @@ export function MemberHome({ data }: { data: DashboardData }) {
           />
         </div>
 
-        <aside className="space-y-6">
+        <aside className="min-w-0 space-y-6">
           <ReactivityPanel
             title={data.reactivity.title}
             stats={data.reactivity.stats}

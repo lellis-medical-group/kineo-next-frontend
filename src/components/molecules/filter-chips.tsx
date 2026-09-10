@@ -29,7 +29,10 @@ export function FilterChips<T extends string>({
   return (
     <fieldset
       aria-label={ariaLabel}
-      className={cn("flex flex-wrap gap-2 border-0 p-0", className)}
+      className={cn(
+        "flex min-w-0 flex-nowrap gap-2 overflow-x-auto border-0 pt-1 pb-2 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible sm:py-0 [&::-webkit-scrollbar]:hidden",
+        className,
+      )}
     >
       {options.map((option) => {
         const active = option.id === value;
@@ -37,7 +40,10 @@ export function FilterChips<T extends string>({
           <button
             key={option.id}
             type="button"
-            className={cn("chip", active && "is-active")}
+            className={cn(
+              "chip shrink-0 whitespace-nowrap",
+              active && "is-active",
+            )}
             aria-pressed={active}
             onClick={() => onChange(option.id)}
           >
