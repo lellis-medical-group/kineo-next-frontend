@@ -24,6 +24,7 @@ export function SiteHeader({
   activeHref,
   user,
   onSignOut,
+  pathname,
 }: {
   links: HeaderLink[];
   activeHref?: string;
@@ -31,6 +32,8 @@ export function SiteHeader({
   user?: UserSummary;
   /** Sign-out callback (injected by AppHeader). */
   onSignOut?: () => void;
+  /** Current route path — forwarded to the mobile menu (see MobileMenu props). */
+  pathname?: string;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
@@ -94,6 +97,7 @@ export function SiteHeader({
             activeHref={activeHref}
             user={user}
             onSignOut={onSignOut}
+            pathname={pathname}
           />
         </div>
       </div>

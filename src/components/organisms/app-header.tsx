@@ -34,6 +34,7 @@ export function AppHeader() {
         links={memberNav}
         activeHref={activeLink?.href}
         user={identity}
+        pathname={pathname}
         onSignOut={async () => {
           await signOut();
           router.push("/signin");
@@ -43,5 +44,5 @@ export function AppHeader() {
     );
   }
 
-  return <SiteHeader links={publicNav} />;
+  return <SiteHeader links={publicNav} pathname={pathname} />;
 }
