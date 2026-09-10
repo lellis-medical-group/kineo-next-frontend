@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileView } from "@/components/templates/profile-view";
-import { signOut, useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 import { fetchMyProfile } from "@/lib/profile-service";
 import type { ApiProfile, ApiUser } from "@/lib/types/api";
 import { deleteAccount } from "@/lib/user-service";
@@ -49,11 +49,13 @@ export function ProfileContainer() {
     load();
   }, [load]);
 
-  /** Deletes the account, then signs out and lands on the sign-in page. */
+  /**
+   * Requests account deletion: better-auth emails a confirmation link and the
+   * account is hard-deleted only once that link is opened (see /goodbye).
+   * No sign-out here: the account stays active until confirmation.
+   */
   async function handleDeleteAccount() {
     await deleteAccount();
-    await signOut();
-    router.replace("/signin");
   }
 
   if (status === "loading") {
