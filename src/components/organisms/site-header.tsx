@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { BellIcon, LogOutIcon, MenuIcon } from "@/components/atoms/icons";
+import { BellIcon, LogOutIcon } from "@/components/atoms/icons";
 import { KineoLogo } from "@/components/atoms/kineo-logo";
 import { HeaderNav } from "@/components/molecules/header-nav";
+import { MobileMenu } from "@/components/molecules/mobile-menu";
 import { UserIdentity } from "@/components/molecules/user-identity";
 import type { UserSummary } from "@/lib/dashboard";
 import type { HeaderLink } from "@/lib/navigation";
@@ -87,36 +88,13 @@ export function SiteHeader({
             </>
           )}
 
-          {/* JS-free mobile menu: native <details> */}
-          <details className="relative lg:hidden">
-            <summary
-              aria-label="Ouvrir le menu"
-              className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-border text-foreground/80 [&::-webkit-details-marker]:hidden"
-            >
-              <MenuIcon />
-            </summary>
-            <div className="absolute top-12 right-0 z-50 max-h-[70dvh] w-56 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/50">
-              <HeaderNav
-                links={links}
-                activeHref={activeHref}
-                orientation="vertical"
-              />
-
-              {user && onSignOut && (
-                <>
-                  <div className="my-2 border-t border-border" />
-                  <button
-                    type="button"
-                    onClick={onSignOut}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-                  >
-                    <LogOutIcon />
-                    Se déconnecter
-                  </button>
-                </>
-              )}
-            </div>
-          </details>
+          {/* Mobile menu (animated dropdown with auth actions) */}
+          <MobileMenu
+            links={links}
+            activeHref={activeHref}
+            user={user}
+            onSignOut={onSignOut}
+          />
         </div>
       </div>
     </header>
