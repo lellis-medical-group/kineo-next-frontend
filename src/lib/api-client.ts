@@ -3,8 +3,13 @@
  * Consumed by the domain services (dashboard, profile…).
  */
 
-/** Backend base URL — set via NEXT_PUBLIC_BACKEND_URL (dev default: same-origin /api). */
-export const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "/api";
+/**
+ * Backend base URL — same-origin. Requests are sent to /api/* on this Next.js
+ * app and proxied server-side to the real backend (see
+ * src/app/api/[...path]/route.ts). No backend IP/port is ever embedded in
+ * client code, so the app works from any device/network (mobile included).
+ */
+export const API_BASE = "/api";
 
 /** Typed API error — exposes HTTP status and optional NestJS business message. */
 export class ApiError extends Error {
