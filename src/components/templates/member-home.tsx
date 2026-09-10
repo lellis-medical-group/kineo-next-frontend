@@ -9,23 +9,25 @@ import type { DashboardData } from "@/lib/dashboard";
 export function MemberHome({ data }: { data: DashboardData }) {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 space-y-6">
-          <DashboardGreeting greeting={data.greeting} actions={data.actions} />
+      <DashboardGreeting greeting={data.greeting} actions={data.actions} />
 
-          {data.needsProfile && <ProfileOnboardingCard />}
-
-          <DashboardStats stats={data.stats} />
-
-          <ActivityFeed
-            items={data.activity}
-            title="Vos dernières candidatures"
-            emptyMessage="Aucune candidature pour l'instant. Parcourez les annonces ouvertes pour trouver un remplacement."
-            seeAllHref="/applications"
-          />
+      {data.needsProfile && (
+        <div className="mt-6">
+          <ProfileOnboardingCard />
         </div>
+      )}
 
-        <aside className="min-w-0 space-y-6">
+      <DashboardStats stats={data.stats} className="mt-6" />
+
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <ActivityFeed
+          items={data.activity}
+          title="Activité récente"
+          emptyMessage="Aucune candidature pour l'instant. Parcourez les annonces ouvertes pour trouver un remplacement."
+          seeAllHref="/applications"
+        />
+
+        <aside className="min-w-0">
           <ReactivityPanel
             title={data.reactivity.title}
             stats={data.reactivity.stats}

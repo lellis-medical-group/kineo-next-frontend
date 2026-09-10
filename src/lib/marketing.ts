@@ -5,39 +5,44 @@
  */
 
 export const hero = {
-  eyebrow: "Bêta ouverte",
+  eyebrow: "Console Live",
   title: "Le remplacement médical,",
   titleAccent: "simplifié.",
   subtitle:
-    "Médecin installé, publiez votre annonce et choisissez le remplaçant qui vous convient. Remplaçant, trouvez les remplacements qui correspondent à vos dates et candidatez en un clic.",
-  primaryCta: { label: "Publier une annonce", href: "/signup" },
-  secondaryCta: { label: "Trouver un remplacement", href: "/signup" },
+    "Kineo connecte médecins installés et remplaçants avec un suivi transparent et une gestion administrative automatisée.",
+  primaryCta: { label: "Trouver un remplaçant", href: "/signup" },
+  secondaryCta: { label: "Chercher un remplacement", href: "/signup" },
+  /** Live console preview panel (hero side visual). */
+  livePreview: {
+    caption: "kineo-live-console",
+    contractTitle: "Contrat Généré #8012",
+    contractStatus: "Actif",
+    cabinet: "Cabinet Médical des Pins - Dr. J. Martin",
+    period: "Période: 15 Fév - 22 Fév (Gironde)",
+  },
 };
 
 export const trustBar = {
-  eyebrow: "Une plateforme régulée, pensée pour la médecine française",
+  eyebrow: "Plateforme régulée & sécurisée",
   items: [
     {
       icon: "shield",
-      label: "Identités vérifiées",
-      detail: "Chaque profil RPPS est contrôlé avant activation.",
+      label: "Vérification RPPS",
     },
     {
       icon: "calendar",
       label: "Suivi en temps réel",
-      detail: "Envoyée, vue, acceptée : chaque statut est visible.",
     },
     {
       icon: "percent",
-      label: "Gratuit pendant la bêta",
-      detail: "Aucun frais, aucun engagement, dès aujourd'hui.",
+      label: "Gratuit en bêta",
     },
   ] as const,
 };
 
 /**
- * ⚠️ PLACEHOLDER STATS — replace with real platform metrics (or remove the
- * section) before going public.
+ * PLACEHOLDER STATS — the proof bar was replaced by the testimonials section
+ * (landing mockup). Kept for a future "numbers" block; unused by PublicHome.
  */
 export const proofStats = {
   items: [
@@ -54,27 +59,25 @@ export interface FeatureItem {
 }
 
 export const featuresSection = {
-  title: "Deux rôles, une seule plateforme",
-  subtitle:
-    "Vous pouvez être médecin installé, remplaçant, ou les deux. Kineo s'adapte à votre situation.",
+  title: "Tout pour gérer vos remplacements",
   features: [
     {
       icon: "pencil",
-      title: "Vous cherchez un remplaçant ?",
+      title: "Publiez en 2 minutes",
       description:
-        "Publiez votre annonce en 2 minutes : dates, rétrocession, attentes. Les remplaçants vérifiés vous adressent leurs candidatures, et vous choisissez.",
+        "Remplissez un court questionnaire avec vos besoins, les dates et la rétrocession proposée.",
     },
     {
       icon: "users",
-      title: "Vous cherchez un remplacement ?",
+      title: "Candidatures transparentes",
       description:
-        "Parcourez les annonces ouvertes près de chez vous, consultez les dates et la rétrocession, puis candidatez en un clic avec un message personnalisé.",
+        "Consultez les profils qualifiés, vérifiés par l'Ordre des Médecins, et échangez en direct.",
     },
     {
       icon: "mapPin",
-      title: "Un suivi transparent, des deux côtés",
+      title: "Recherche géolocalisée",
       description:
-        "Envoyée, vue, acceptée, refusée : chaque candidature affiche son statut en temps réel. Fini les réponses qui se perdent.",
+        "Trouvez des opportunités ou des remplaçants ciblés dans votre département.",
     },
   ] as FeatureItem[],
 };
@@ -84,6 +87,38 @@ export interface HowItWorksStep {
   title: string;
   description: string;
 }
+
+export interface Testimonial {
+  quote: string;
+  name: string;
+  role: string;
+}
+
+export const testimonialsSection = {
+  title: "Plus de 2000 médecins nous font confiance",
+  rating: "4.9/5",
+  ratingLabel: "avis professionnels",
+  testimonials: [
+    {
+      quote:
+        "Grâce à Kineo, j'ai trouvé un remplaçant sérieux pour mes deux semaines de congés en moins de 48h.",
+      name: "Dr. Michel V.",
+      role: "Généraliste - Lyon",
+    },
+    {
+      quote:
+        "L'automatisation du contrat et de la signature électronique m'évite de longues heures de paperasse.",
+      name: "Dr. Clara D.",
+      role: "Médecin remplaçante - Bordeaux",
+    },
+    {
+      quote:
+        "Une interface claire et des profils vérifiés. C'est exactement ce qu'il manquait pour nos cabinets ruraux.",
+      name: "Dr. Étienne L.",
+      role: "Pédiatre - Dax",
+    },
+  ] as Testimonial[],
+};
 
 export const howItWorks = {
   title: "Comment ça marche",
@@ -114,10 +149,9 @@ export const howItWorks = {
 export const joinCta = {
   title: "Rejoignez Kineo gratuitement",
   subtitle:
-    "Créez votre compte : publiez vos annonces ou candidatez aux remplacements. Gratuit pendant la bêta, sans engagement.",
-  emailPlaceholder: "prenom.nom@exemple.fr",
+    "Inscrivez-vous dès aujourd'hui pour simplifier votre prochain remplacement médical.",
+  emailPlaceholder: "votre.email@rpps.fr",
   submitLabel: "Commencer",
-  reassuranceNote: "Sans carte bancaire, annulable à tout moment.",
 };
 
 export const footerContent = {
@@ -127,6 +161,7 @@ export const footerContent = {
     { label: "Fonctionnalités", href: "#features" },
     { label: "Comment ça marche", href: "#how-it-works" },
     { label: "Tarifs", href: "#" },
+    { label: "Console Live", href: "#" },
   ],
   legalLinks: [
     { label: "À propos", href: "#" },

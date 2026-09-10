@@ -1,20 +1,18 @@
 import { FeaturesSection } from "@/components/organisms/features-section";
-import { HowItWorksSection } from "@/components/organisms/how-it-works-section";
 import { JoinCta } from "@/components/organisms/join-cta";
 import { MarketingHero } from "@/components/organisms/marketing-hero";
-import { ProofStatsSection } from "@/components/organisms/proof-stats-section";
+import { TestimonialsSection } from "@/components/organisms/testimonials-section";
 
 /**
  * Public page content (unauthenticated visitor). Shell provided by the (site) layout.
- * Conversion flow: value proposition → social proof → method → benefits → action.
+ * Conversion flow (matches the landing mockup): hero → features → testimonials → action.
  */
 export function PublicHome() {
   return (
     <>
       <MarketingHero />
-      <ProofStatsSection />
-      <HowItWorksSection />
       <FeaturesSection />
+      <TestimonialsSection />
       <JoinCta />
     </>
   );

@@ -22,66 +22,105 @@ const heroDelay = (ms: number) =>
 export function MarketingHero() {
   return (
     <section className="border-b border-border">
-      <div className="mx-auto w-full max-w-4xl px-4 pb-2 pt-16 text-center sm:px-6 sm:pb-2 sm:pt-20 lg:pt-24">
-        <div className="hero-enter" style={heroDelay(0)}>
-          <span className="inline-flex items-center justify-center gap-2 rounded-full border border-border-strong bg-surface-2 px-3.5 py-1.5 text-sm font-bold text-foreground">
-            {hero.eyebrow}
-          </span>
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-10 px-4 pt-12 pb-10 sm:px-6 sm:pt-16 lg:grid-cols-2 lg:gap-14 lg:pt-20">
+        <div className="text-center lg:text-left">
+          <div className="hero-enter" style={heroDelay(0)}>
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-bold tracking-widest text-primary uppercase">
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-1.5 rounded-full bg-primary"
+              />
+              {hero.eyebrow}
+            </span>
+          </div>
+
+          <h1
+            className="hero-enter mt-5 text-[2.5rem] leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl"
+            style={heroDelay(60)}
+          >
+            {hero.title}{" "}
+            <span className="text-primary">{hero.titleAccent}</span>
+          </h1>
+
+          <p
+            className="hero-enter mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg lg:mx-0"
+            style={heroDelay(120)}
+          >
+            {hero.subtitle}
+          </p>
+
+          <div
+            className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:items-center lg:justify-start"
+            style={heroDelay(200)}
+          >
+            <Button
+              href={hero.primaryCta.href}
+              size="lg"
+              className="btn-shine w-full sm:w-auto"
+            >
+              {hero.primaryCta.label}
+            </Button>
+            <Button
+              href={hero.secondaryCta.href}
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto"
+            >
+              {hero.secondaryCta.label}
+            </Button>
+          </div>
         </div>
 
-        <h1
-          className="hero-enter mt-5 text-[2rem] leading-[1.15] font-bold tracking-tight text-balance sm:text-5xl sm:leading-tight"
-          style={heroDelay(60)}
-        >
-          {hero.title} <span className="text-primary">{hero.titleAccent}</span>
-        </h1>
-
-        <p
-          className="hero-enter mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
-          style={heroDelay(120)}
-        >
-          {hero.subtitle}
-        </p>
-
-        <div
-          className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:items-center"
-          style={heroDelay(200)}
-        >
-          <Button
-            href={hero.primaryCta.href}
-            size="lg"
-            className="btn-shine w-full sm:w-auto"
+        <div className="hero-enter" style={heroDelay(240)}>
+          <div
+            aria-hidden="true"
+            className="rounded-2xl border border-border bg-surface p-4 sm:p-5"
           >
-            {hero.primaryCta.label}
-          </Button>
-          <Button
-            href={hero.secondaryCta.href}
-            variant="outline"
-            size="lg"
-            className="w-full sm:w-auto"
-          >
-            {hero.secondaryCta.label}
-          </Button>
+            <div className="flex items-center justify-between px-1 pt-1 pb-4">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-muted/40" />
+                <span className="h-2.5 w-2.5 rounded-full bg-muted/30" />
+                <span className="h-2.5 w-2.5 rounded-full bg-muted/20" />
+              </span>
+              <span className="font-mono text-[11px] tracking-wide text-muted">
+                {hero.livePreview.caption}
+              </span>
+            </div>
+            <div className="rounded-xl bg-background p-4 sm:p-5">
+              <div className="flex items-center justify-between gap-3">
+                <p className="truncate text-sm font-bold text-foreground">
+                  {hero.livePreview.contractTitle}
+                </p>
+                <span className="shrink-0 text-xs font-medium text-success">
+                  {hero.livePreview.contractStatus}
+                </span>
+              </div>
+              <div className="mt-3 border-t border-border pt-3">
+                <p className="truncate text-[13px] text-muted">
+                  {hero.livePreview.cabinet}
+                </p>
+                <p className="mt-1.5 truncate text-[13px] text-muted">
+                  {hero.livePreview.period}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-12 lg:pb-20 lg:pt-14">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-6 pb-14 sm:px-6 sm:pb-16 lg:pb-20">
         <p
-          className="hero-enter mb-5 text-center text-xs font-bold tracking-widest text-muted uppercase"
+          className="hero-enter mb-5 text-xs font-bold tracking-widest text-muted uppercase"
           style={heroDelay(280)}
         >
           {trustBar.eyebrow}
         </p>
-        <div
-          className="hero-enter grid gap-3 sm:grid-cols-3"
-          style={heroDelay(340)}
-        >
+        <div className="hero-enter flex flex-wrap gap-3" style={heroDelay(340)}>
           {trustBar.items.map((item) => (
             <TrustBadge
               key={item.label}
               icon={TRUST_ICONS[item.icon]}
               label={item.label}
-              detail={item.detail}
             />
           ))}
         </div>
