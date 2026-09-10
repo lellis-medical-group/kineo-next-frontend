@@ -6,10 +6,17 @@ export interface HeaderNavProps {
   /** Highlighted link (aria-current="page"). */
   activeHref?: string;
   orientation: "horizontal" | "vertical";
+  /** Called when a link is activated (mobile menu close). */
+  onNavigate?: () => void;
 }
 
 /** Navigation link list — shared between the desktop bar and the mobile menu. */
-export function HeaderNav({ links, activeHref, orientation }: HeaderNavProps) {
+export function HeaderNav({
+  links,
+  activeHref,
+  orientation,
+  onNavigate,
+}: HeaderNavProps) {
   const isHorizontal = orientation === "horizontal";
 
   return (
@@ -28,6 +35,7 @@ export function HeaderNav({ links, activeHref, orientation }: HeaderNavProps) {
             key={`${link.href}-${link.label}`}
             href={link.href}
             aria-current={isActive ? "page" : undefined}
+            onClick={onNavigate}
             className={
               isHorizontal
                 ? `rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
