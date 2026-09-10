@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { CloseIcon, LogOutIcon, MenuIcon } from "@/components/atoms/icons";
 import { HeaderNav } from "@/components/molecules/header-nav";
@@ -16,6 +15,12 @@ export interface MobileMenuProps {
   user?: UserSummary;
   /** Sign-out callback (injected by AppHeader). */
   onSignOut?: () => void;
+  /**
+   * Current route path, injected by AppHeader. Read as a plain prop instead
+   * of `usePathname()` so this component stays safe inside a prerendered
+   * Suspense fallback (SiteHeader renders as the shell's fallback).
+   */
+  pathname?: string;
 }
 
 /**
@@ -30,18 +35,23 @@ export function MobileMenu({
   activeHref,
   user,
   onSignOut,
+  pathname,
 }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Close on navigation (link tap, back/forward, programmatic push).
-  // biome-ignore lint/correctness/useExhaustiveDependencies: closing on route change genuinely depends on pathname
+  // Close when the active route changes (back/forward, programmatic push).
+  // `pathname` is an injected prop (see the prop docs) — this effect only
+  // runs when the route actually changes.
+  const prevPathname = useRef(pathname);
   useEffect(() => {
-    setOpen(false);
+    if (prevPathname.current !== pathname) {
+      prevPathname.current = pathname;
+      setOpen(false);
+    }
   }, [pathname]);
 
   // Close on Escape + return focus to the trigger.
