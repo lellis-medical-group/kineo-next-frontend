@@ -5,7 +5,6 @@
  */
 
 export const hero = {
-  eyebrow: "Console Live",
   title: "Le remplacement médical,",
   titleAccent: "simplifié.",
   subtitle:

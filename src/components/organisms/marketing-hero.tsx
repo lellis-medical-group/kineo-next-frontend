@@ -24,19 +24,9 @@ export function MarketingHero() {
     <section className="border-b border-border">
       <div className="mx-auto grid w-full max-w-7xl items-center gap-10 px-4 pt-12 pb-10 sm:px-6 sm:pt-16 lg:grid-cols-2 lg:gap-14 lg:pt-20">
         <div className="text-center lg:text-left">
-          <div className="hero-enter" style={heroDelay(0)}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-bold tracking-widest text-primary uppercase">
-              <span
-                aria-hidden="true"
-                className="h-1.5 w-1.5 rounded-full bg-primary"
-              />
-              {hero.eyebrow}
-            </span>
-          </div>
-
           <h1
-            className="hero-enter mt-5 text-[2.5rem] leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl"
-            style={heroDelay(60)}
+            className="hero-enter text-[2.5rem] leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl"
+            style={heroDelay(0)}
           >
             {hero.title}{" "}
             <span className="text-primary">{hero.titleAccent}</span>
@@ -44,14 +34,14 @@ export function MarketingHero() {
 
           <p
             className="hero-enter mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg lg:mx-0"
-            style={heroDelay(120)}
+            style={heroDelay(60)}
           >
             {hero.subtitle}
           </p>
 
           <div
             className="hero-enter mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:items-center lg:justify-start"
-            style={heroDelay(200)}
+            style={heroDelay(120)}
           >
             <Button
               href={hero.primaryCta.href}
