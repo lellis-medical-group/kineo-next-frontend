@@ -11,6 +11,49 @@ import { deleteUser } from "@/lib/auth-client";
 
 type DeletionStatus = "deleting" | "success" | "error" | "invalid";
 
+type DeletionOutcome = { status: "success" | "error"; error?: string };
+
+/**
+ * One in-flight or completed deletion job per token, shared across component
+ * remounts (React StrictMode double-mounts effects in dev). The confirmation
+ * POST consumes a single-use server-side token, so it must be sent exactly
+ * once: a double request would delete the account on the first call and fail
+ * with an invalid-token error on the second.
+ */
+const deletionJobs = new Map<string, Promise<DeletionOutcome>>();
+
+function requestDeletion(token: string): Promise<DeletionOutcome> {
+  const existing = deletionJobs.get(token);
+  if (existing) {
+    return existing;
+  }
+
+  const job = (async (): Promise<DeletionOutcome> => {
+    const { error } = await deleteUser({ token }).catch(
+      (): { error: { status: number; message?: string } } => ({
+        error: { status: 0 },
+      }),
+    );
+
+    if (!error) {
+      // The API already deleted the account, revoked the session and
+      // cleared the session cookie on this response.
+      return { status: "success" };
+    }
+
+    return {
+      status: "error",
+      error:
+        error.status === 401
+          ? "Votre session a expiré. Reconnectez-vous, puis relancez la demande de suppression depuis votre profil."
+          : "Ce lien de confirmation est invalide ou a expiré (valable 24 heures). Votre compte n'a pas été supprimé ; vous pouvez relancer la demande depuis votre profil.",
+    };
+  })();
+
+  deletionJobs.set(token, job);
+  return job;
+}
+
 function GoodbyeContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -26,31 +69,13 @@ function GoodbyeContent() {
 
     let cancelled = false;
 
-    (async () => {
-      const { error: deletionError } = await deleteUser({ token }).catch(
-        (): { error: { status: number; message?: string } } => ({
-          error: { status: 0 },
-        }),
-      );
-
+    requestDeletion(token).then((outcome) => {
       if (cancelled) {
         return;
       }
-
-      if (!deletionError) {
-        // The API already deleted the account, revoked the session and
-        // cleared the session cookie on this response.
-        setStatus("success");
-        return;
-      }
-
-      setStatus("error");
-      setError(
-        deletionError.status === 401
-          ? "Votre session a expiré. Reconnectez-vous, puis relancez la demande de suppression depuis votre profil."
-          : "Ce lien de confirmation est invalide ou a expiré (valable 24 heures). Votre compte n'a pas été supprimé ; vous pouvez relancer la demande depuis votre profil.",
-      );
-    })();
+      setStatus(outcome.status);
+      setError(outcome.error ?? "");
+    });
 
     return () => {
       cancelled = true;
