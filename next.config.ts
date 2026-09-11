@@ -10,6 +10,19 @@ const nextConfig: NextConfig = {
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean),
+  // Edge privacy for the account-deletion confirmation page: its URL carries
+  // a single-use token from the email link, so it must never leak through the
+  // Referer, never be cached by browsers/proxies, never be indexed.
+  headers: async () => [
+    {
+      source: "/goodbye",
+      headers: [
+        { key: "Referrer-Policy", value: "no-referrer" },
+        { key: "Cache-Control", value: "no-store, max-age=0" },
+        { key: "X-Robots-Tag", value: "noindex, nofollow" },
+      ],
+    },
+  ],
 };
 
 export default nextConfig;

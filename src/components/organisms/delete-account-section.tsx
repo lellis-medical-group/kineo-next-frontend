@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/atoms/card";
@@ -56,6 +57,17 @@ export function DeleteAccountSection({
             votre compte. Ce lien est valable 24&nbsp;heures. Jusqu'à
             confirmation, votre compte reste actif.
           </InlineAlert>
+
+          <p className="mt-3 text-xs text-muted">
+            Conformément à notre{" "}
+            <Link
+              href="/privacy"
+              className="underline transition-colors hover:text-primary"
+            >
+              politique de confidentialité
+            </Link>
+            , la trace de cette demande est conservée pendant une durée limitée.
+          </p>
         </Card>
       </section>
     );

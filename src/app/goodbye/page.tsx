@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
@@ -134,6 +135,18 @@ function GoodbyeContent() {
             Votre profil, vos annonces et votre historique ont été supprimés de
             la plateforme. Merci d&apos;avoir utilisé Kineo.
           </InlineAlert>
+
+          <p className="mt-3 text-center text-xs leading-relaxed text-muted">
+            Conformément à notre{" "}
+            <Link
+              href="/privacy"
+              className="underline transition-colors hover:text-primary"
+            >
+              politique de confidentialité
+            </Link>
+            , seule la trace de votre demande (adresse e-mail et date) est
+            conservée pendant une durée limitée à des fins de preuve.
+          </p>
 
           {!signedOut ? (
             <div className="flex justify-center">
