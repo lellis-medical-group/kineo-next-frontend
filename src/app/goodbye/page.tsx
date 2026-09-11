@@ -7,7 +7,7 @@ import { Spinner } from "@/components/atoms/spinner";
 import { InlineAlert } from "@/components/molecules/inline-alert";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { AuthCard } from "@/components/organisms/auth-card";
-import { deleteUser } from "@/lib/auth-client";
+import { confirmAccountDeletion } from "@/lib/account-deletion-service";
 
 type DeletionStatus = "deleting" | "success" | "error" | "invalid";
 
@@ -28,27 +28,18 @@ function requestDeletion(token: string): Promise<DeletionOutcome> {
     return existing;
   }
 
-  const job = (async (): Promise<DeletionOutcome> => {
-    const { error } = await deleteUser({ token }).catch(
-      (): { error: { status: number; message?: string } } => ({
-        error: { status: 0 },
-      }),
-    );
-
-    if (!error) {
-      // The API already deleted the account, revoked the session and
-      // cleared the session cookie on this response.
-      return { status: "success" };
-    }
-
-    return {
+  // Sessionless confirmation: the email link alone is enough, no session
+  // cookie is needed (see @/lib/account-deletion-service).
+  const job = confirmAccountDeletion(token).then(
+    (): DeletionOutcome => ({ status: "success" }),
+    (error: unknown): DeletionOutcome => ({
       status: "error",
       error:
-        error.status === 401
-          ? "Votre session a expiré. Reconnectez-vous, puis relancez la demande de suppression depuis votre profil."
-          : "Ce lien de confirmation est invalide ou a expiré (valable 24 heures). Votre compte n'a pas été supprimé ; vous pouvez relancer la demande depuis votre profil.",
-    };
-  })();
+        error instanceof Error
+          ? error.message
+          : "Suppression impossible pour le moment. Vérifiez votre connexion, puis réessayez.",
+    }),
+  );
 
   deletionJobs.set(token, job);
   return job;
