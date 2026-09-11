@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileView } from "@/components/templates/profile-view";
+import { ApiError } from "@/lib/api-client";
 import { useSession } from "@/lib/auth-client";
 import { fetchMyProfile } from "@/lib/profile-service";
 import type { ApiProfile, ApiUser } from "@/lib/types/api";
@@ -36,7 +37,14 @@ export function ProfileContainer() {
         setStatus("success");
       })
       .catch((err) => {
-        if (err instanceof Error && /404/i.test(err.message)) {
+        if (
+          err instanceof ApiError &&
+          (err.status === 401 || err.status === 404)
+        ) {
+          if (err.status === 401) {
+            router.replace("/signup");
+            return;
+          }
           router.replace("/profile/create");
           return;
         }

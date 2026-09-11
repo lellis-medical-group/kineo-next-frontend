@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
+import { ApiError } from "@/lib/api-client";
 import { type ProfileFormData, profileToFormValues } from "@/lib/profile";
 import {
   fetchMyProfile,
@@ -36,6 +37,10 @@ export function ProfileEditContainer() {
         setStatus("ready");
       })
       .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          router.replace("/signup");
+          return;
+        }
         if (err instanceof Error && /404/i.test(err.message)) {
           router.replace("/profile/create");
           return;

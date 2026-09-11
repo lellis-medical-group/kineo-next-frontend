@@ -36,9 +36,15 @@ export function AppHeader() {
         user={identity}
         pathname={pathname}
         onSignOut={async () => {
-          await signOut();
-          router.push("/signin");
-          router.refresh();
+          try {
+            await signOut();
+          } finally {
+            // Sign-out clears cookies + the client session cache server-side
+            // (Set-Cookie); push even on failure so a stale cache can't keep
+            // rendering the member area.
+            router.push("/signup");
+            router.refresh();
+          }
         }}
       />
     );

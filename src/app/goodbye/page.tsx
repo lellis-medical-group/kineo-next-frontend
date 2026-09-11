@@ -8,6 +8,7 @@ import { InlineAlert } from "@/components/molecules/inline-alert";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { confirmAccountDeletion } from "@/lib/account-deletion-service";
+import { signOut } from "@/lib/auth-client";
 
 type DeletionStatus = "deleting" | "success" | "error" | "invalid";
 
@@ -52,6 +53,7 @@ function GoodbyeContent() {
     token ? "deleting" : "invalid",
   );
   const [error, setError] = useState("");
+  const [signedOut, setSignedOut] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -72,6 +74,33 @@ function GoodbyeContent() {
       cancelled = true;
     };
   }, [token]);
+
+  // The sessionless confirm-deletion endpoint wipes sessions server-side but
+  // can't clear browser cookies (no Set-Cookie on its response). Sign out to
+  // drop the ghost cookie + the cookie-cache JWT; it always clears cookies
+  // even when the session row is already gone. Never blocks the screen:
+  // failure just leaves the button to /signup, which is public anyway.
+  useEffect(() => {
+    if (status !== "success") {
+      return;
+    }
+
+    let cancelled = false;
+
+    signOut()
+      .catch(() => {
+        // Cookie cleanup best-effort — the account is already deleted.
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setSignedOut(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [status]);
 
   if (status === "invalid" || status === "error") {
     return (
@@ -103,12 +132,20 @@ function GoodbyeContent() {
         <div className="space-y-6">
           <InlineAlert tone="info">
             Votre profil, vos annonces et votre historique ont été supprimés de
-            la plateforme. Merci d'avoir utilisé Kineo.
+            la plateforme. Merci d&apos;avoir utilisé Kineo.
           </InlineAlert>
 
-          <Button href="/" size="lg" className="w-full">
-            Retour à l'accueil
-          </Button>
+          {!signedOut ? (
+            <div className="flex justify-center">
+              <output aria-label="Déconnexion en cours">
+                <Spinner className="h-8 w-8 border-primary/20 border-t-primary" />
+              </output>
+            </div>
+          ) : (
+            <Button href="/signup" size="lg" className="w-full">
+              Créer un nouveau compte
+            </Button>
+          )}
         </div>
       </AuthCard>
     );
