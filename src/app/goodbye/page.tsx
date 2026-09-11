@@ -9,7 +9,7 @@ import { InlineAlert } from "@/components/molecules/inline-alert";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { AuthCard } from "@/components/organisms/auth-card";
 import { confirmAccountDeletion } from "@/lib/account-deletion-service";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 
 type DeletionStatus = "deleting" | "success" | "error" | "invalid";
 
@@ -50,6 +50,8 @@ function requestDeletion(token: string): Promise<DeletionOutcome> {
 function GoodbyeContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const { data: session } = useSession();
+  const user = session?.user;
   const [status, setStatus] = useState<DeletionStatus>(
     token ? "deleting" : "invalid",
   );
@@ -116,8 +118,12 @@ function GoodbyeContent() {
         <div className="space-y-6 text-center">
           <p className="text-sm leading-relaxed text-muted">{error}</p>
 
-          <Button href="/profile" size="lg" className="w-full">
-            Retour à mon profil
+          <Button
+            href={user ? "/profile" : "/signin"}
+            size="lg"
+            className="w-full"
+          >
+            {user ? "Retour à mon profil" : "Se connecter"}
           </Button>
         </div>
       </AuthCard>
