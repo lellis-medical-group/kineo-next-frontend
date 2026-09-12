@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ErrorState } from "@/components/organisms/error-state";
 import { MemberHome } from "@/components/templates/member-home";
+import { ApiError } from "@/lib/api-client";
 import { type DashboardData, fetchDashboardData } from "@/lib/dashboard";
 
 type Status = "loading" | "error" | "success";
@@ -13,6 +15,7 @@ type Status = "loading" | "error" | "success";
  * must never import templates.
  */
 export function DashboardContainer({ userName }: { userName?: string }) {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("loading");
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string>("");
@@ -27,11 +30,17 @@ export function DashboardContainer({ userName }: { userName?: string }) {
         setStatus("success");
       })
       .catch((err) => {
+        // Deleted account or expired session: the home page itself renders
+        // PublicHome, but the client dashboard must not linger on an error.
+        if (err instanceof ApiError && err.status === 401) {
+          router.replace("/signup");
+          return;
+        }
         const message = err instanceof Error ? err.message : "Unknown error";
         setError(message);
         setStatus("error");
       });
-  }, [userName]);
+  }, [router, userName]);
 
   useEffect(() => {
     load();

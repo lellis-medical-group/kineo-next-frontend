@@ -3,7 +3,6 @@
  * (Better-Auth managed: name, image, email, emailVerified).
  */
 
-import { apiFetch } from "./api-client";
 import { authClient } from "./auth-client";
 import type { ApiUser } from "./types/api";
 
@@ -72,15 +71,24 @@ export function mapUserError(error: unknown): string {
 }
 
 /**
- * DELETE endpoint that permanently removes the current account.
- *
- * NOTE: set this path to the route your backend exposes once account
- * deletion is implemented (e.g. `DELETE /profile/me`). Until then the
- * endpoint will 404 — the UI is wired but the backend route is pending.
+ * POST /delete-user — requests account deletion. Better Auth emails a
+ * confirmation link (valid 24h) to the account address; the account and all
+ * its data are hard-deleted only once that link is opened (see /goodbye).
  */
-export const DELETE_ACCOUNT_PATH = "/profile/me";
-
-/** DELETE {DELETE_ACCOUNT_PATH} — permanently deletes the current account. */
 export async function deleteAccount(): Promise<void> {
-  await apiFetch<unknown>(DELETE_ACCOUNT_PATH, { method: "DELETE" });
+  const { error } = await authClient.deleteUser();
+  if (error) {
+    throw new Error(mapDeleteAccountError(error));
+  }
+}
+
+/** Maps a delete-account API error to a user-facing French message. */
+function mapDeleteAccountError(error: { status?: number; message?: string }) {
+  if (error.status === 401) {
+    return "Votre session a expiré. Veuillez vous reconnecter.";
+  }
+  if (error.status === 400 && /session/i.test(error.message ?? "")) {
+    return "Votre session est trop ancienne pour valider une suppression. Déconnectez-vous, reconnectez-vous, puis relancez la demande.";
+  }
+  return "Impossible d'envoyer la demande de suppression. Veuillez réessayer plus tard.";
 }

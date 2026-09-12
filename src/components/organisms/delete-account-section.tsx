@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/atoms/card";
@@ -22,6 +23,7 @@ export function DeleteAccountSection({
 }: DeleteAccountSectionProps) {
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [requested, setRequested] = useState(false);
   const [error, setError] = useState("");
 
   async function handleDelete() {
@@ -29,16 +31,46 @@ export function DeleteAccountSection({
     setError("");
     setSubmitting(true);
     try {
+      // Success = the deletion request is registered and a confirmation
+      // email is on its way; the account is deleted only once the email
+      // link is opened (see /goodbye).
       await onDeleteAccount();
-      // onSuccess: the container signs out and redirects — this component
-      // unmounts, so no pending state is rendered.
-    } catch {
+      setRequested(true);
+    } catch (e) {
       setError(
-        "Impossible de supprimer le compte pour le moment. Veuillez réessayer plus tard.",
+        e instanceof Error && e.message
+          ? e.message
+          : "Impossible de supprimer le compte pour le moment. Veuillez réessayer plus tard.",
       );
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (requested) {
+    return (
+      <section aria-label="Suppression du compte">
+        <Card className="border-danger/30 bg-danger/5 p-6">
+          <InlineAlert tone="info">
+            Votre demande est enregistrée. Un email de confirmation vient de
+            partir : ouvrez le lien qu'il contient pour supprimer définitivement
+            votre compte. Ce lien est valable 24&nbsp;heures. Jusqu'à
+            confirmation, votre compte reste actif.
+          </InlineAlert>
+
+          <p className="mt-3 text-xs text-muted">
+            Conformément à notre{" "}
+            <Link
+              href="/privacy"
+              className="underline transition-colors hover:text-primary"
+            >
+              politique de confidentialité
+            </Link>
+            , la trace de cette demande est conservée pendant une durée limitée.
+          </p>
+        </Card>
+      </section>
+    );
   }
 
   return (

@@ -1,8 +1,13 @@
 import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
-/** Optimistic auth guard: redirects to /signin when no session cookie is present. */
+// /goodbye edge headers (Cache-Control, Referrer-Policy, X-Robots-Tag) live in
+// next.config.ts `headers()`: for static pages it applies AFTER Next's own
+// cache header, which the proxy (middleware) cannot do for Cache-Control.
+
 export function proxy(request: NextRequest) {
+  // Optimistic auth guard: redirects to /signin when no session cookie is
+  // present.
   if (!getSessionCookie(request)) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
@@ -12,9 +17,9 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
+    "/profile",
     "/profile/:path*",
-    "/settings/:path*",
+    "/applications",
     "/applications/:path*",
   ],
 };

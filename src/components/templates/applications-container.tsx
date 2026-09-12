@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ApplicationsView } from "@/components/templates/applications-view";
+import { ApiError } from "@/lib/api-client";
 import {
   type ApplicationsData,
   type ApplicationsFilter,
@@ -15,6 +17,7 @@ const DEFAULT_PAGE_SIZE = 5;
 
 /** Orchestrator for /applications — fetches data (loading/error/success) and renders ApplicationsView. */
 export function ApplicationsContainer() {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("loading");
   const [data, setData] = useState<ApplicationsData | null>(null);
   const [error, setError] = useState<string>("");
@@ -35,10 +38,16 @@ export function ApplicationsContainer() {
         setStatus("success");
       })
       .catch((err) => {
+        // Deleted account or expired session: don't linger on an error card,
+        // bounce to signup like the other protected areas.
+        if (err instanceof ApiError && err.status === 401) {
+          router.replace("/signup");
+          return;
+        }
         setError(err instanceof Error ? err.message : "Erreur inconnue");
         setStatus("error");
       });
-  }, [page, filter]);
+  }, [router, page, filter]);
 
   useEffect(() => {
     load();

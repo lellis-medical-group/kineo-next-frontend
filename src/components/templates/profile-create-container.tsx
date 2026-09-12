@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { LoadingState } from "@/components/molecules/loading-state";
 import { ErrorState } from "@/components/organisms/error-state";
 import { ProfileForm } from "@/components/organisms/profile-form";
+import { ApiError } from "@/lib/api-client";
 import { EMPTY_PROFILE_FORM, type ProfileFormData } from "@/lib/profile";
 import {
   createProfile,
@@ -32,7 +33,11 @@ export function ProfileCreateContainer() {
         }
         setStatus("ready");
       })
-      .catch(() => {
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          router.replace("/signup");
+          return;
+        }
         setStatus("ready");
       });
   }, [router]);

@@ -166,7 +166,7 @@ export const footerContent = {
     { label: "À propos", href: "#" },
     { label: "Contact", href: "#" },
     { label: "CGU", href: "/terms" },
-    { label: "Confidentialité", href: "#" },
+    { label: "Confidentialité", href: "/privacy" },
   ],
   tagline: "Conçu pour les professionnels de santé français.",
 };
